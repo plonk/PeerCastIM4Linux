@@ -6,3 +6,4 @@ peercast-build-desktop-PATH*
 *.ini
 ui/linux/peercast
 ui/osx/peercast
+html/

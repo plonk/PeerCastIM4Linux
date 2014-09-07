@@ -21,108 +21,60 @@
  * Convert a string between UTF-8 and the locale's charset.
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <iconv.h>
 
 #include "common/utf8.h"
 #include "common/identify_encoding.h"
 
-#ifdef HAVE_LANGINFO_CODESET
-#include <langinfo.h>
-#endif
-
-int iconvert(const char *fromcode, const char *tocode,
-			 const char *from, size_t fromlen,
-			 char **to, size_t *tolen);
-
-static char *current_charset = 0; /* means "US-ASCII" */
-
-void convert_set_charset(const char *charset)
+static int convert(iconv_t cd, const char *inbuf, char **to)
 {
+    size_t inlen = strlen(inbuf);
+    size_t tolen = inlen * 3 + 1;
+    char* tobuf = static_cast<char*>(malloc(tolen));
+    char* head = tobuf;
+    size_t ret = iconv(cd, const_cast<char**>(&inbuf), &inlen, &tobuf, &tolen);
+    if (ret == (size_t) -1)
+    {
+        perror("iconv");
+        return -1;
+    }
+    *tobuf = '\0';
+    *to = static_cast<char*>( realloc(head, strlen(head) + 1) );
 
-	if (!charset)
-		charset = getenv("CHARSET");
-
-#ifdef HAVE_LANGINFO_CODESET
-	if (!charset)
-		charset = nl_langinfo(CODESET);
-#endif
-
-	free(current_charset);
-	current_charset = 0;
-	if (charset && *charset)
-		current_charset = strdup(charset);
+    return 0;
 }
 
-static int convert_buffer(const char *fromcode, const char *tocode,
-						  const char *from, size_t fromlen,
-						  char **to, size_t *tolen)
+int utf8_encode(const char *inbuf, char **to)
 {
-	int ret = -1;
+    iconv_t cd = iconv_open("UTF-8", "CP932");
 
-#ifdef HAVE_ICONV
-	ret = iconvert(fromcode, tocode, from, fromlen, to, tolen);
-	if (ret != -1)
-		return ret;
-#endif
+    if (cd == (iconv_t) -1)
+    {
+        perror("iconv_open");
+        return -1;
+    }
+    int ret = convert(cd, inbuf, to);
 
-#ifndef HAVE_ICONV /* should be ifdef USE_CHARSET_CONVERT */
-	ret = charset_convert(fromcode, tocode, from, fromlen, to, tolen);
-	if (ret != -1)
-		return ret;
-#endif
+    iconv_close(cd);
 
-	return ret;
+    return ret;
 }
 
-static int convert_string(const char *fromcode, const char *tocode,
-						  const char *from, char **to, char replace)
+int utf8_decode(const char *inbuf, char **to)
 {
-	int ret;
-	size_t fromlen;
-	char *s;
+    iconv_t cd = iconv_open("CP932", "UTF-8");
 
-	fromlen = strlen(from);
-	ret = convert_buffer(fromcode, tocode, from, fromlen, to, 0);
-	if (ret == -2)
-		return -1;
-	if (ret != -1)
-		return ret;
+    if (cd == (iconv_t) -1)
+    {
+        perror("iconv_open");
+        return -1;
+    }
+    int ret = convert(cd, inbuf, to);
 
-	s = malloc(fromlen + 1);
-	if (!s)
-		return -1;
-	strcpy(s, from);
-	*to = s;
-	for (; *s; s++)
-		if (*s & ~0x7f)
-			*s = replace;
-	return 3;
-}
+    iconv_close(cd);
 
-int utf8_encode(const char *from, char **to)
-{
-	char *charset;
-
-	if (!current_charset)
-		convert_set_charset(0);
-	charset = current_charset ? current_charset : "US-ASCII";
-	return convert_string(charset, "UTF-8", from, to, '#');
-}
-
-int utf8_decode(const char *from, char **to)
-{
-	char *charset;
-
-	if (*from == 0)
-	{
-		*to = malloc(1);
-		**to = 0;
-		return 1;
-	}
-
-	if (!current_charset)
-		convert_set_charset(0);
-	charset = current_charset ? current_charset : "US-ASCII";
-	return convert_string("UTF-8", charset, from, to, '?');
+    return 0;
 }

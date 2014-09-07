@@ -1,0 +1,24 @@
+---
+layout: default
+---
+<p class="normal">
+  <A href="/admin?cmd=clearlog">
+    {%t Clear Log %}
+    <BR>
+  </A>
+  <A href="#bottom">
+    {%t View tail %}
+  </A>
+  <a name="top"></a>
+</p>
+
+<p class="normal">
+  <span class="normal-small">{$sys.log.dumpHTML}</span>
+</p>
+
+<p class="normal">
+  <A href="#top">
+    <span class="normal">{%t View top %}</span>
+  </A>
+  <A name=bottom></A>
+</p>

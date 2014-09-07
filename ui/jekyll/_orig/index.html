@@ -1,0 +1,131 @@
+---
+layout: default
+---
+{@if servMgr.disabled}
+<p class="normal centered">
+  <strong class="red">{%t Broadcasting has been disabled %}</strong><br>
+  <strong class="red">{%t Please contact peercast_org %}</strong>
+</p>
+{@end}
+
+<TABLE class="column-container">
+  <TBODY>
+    <TR>
+      <TD class=pagecol>
+        <TABLE class=infotable>
+	  <TBODY>
+	    <TR class=legend>
+	      <TD colSpan=2>{%t Information %}</TD>
+	    </TR>
+	    <TR>
+	      <TD>{%t Server IP %}</TD>
+	      <TD>{$servMgr.serverIP}</TD>
+	    </TR>
+	    <TR>
+	      <TD>{%t Uptime %}</TD>
+	      <TD>{$servMgr.uptime}</TD>
+	    </TR>
+	    <TR>
+	      <TD>{%t Channel cache %}</TD>
+	      <TD>{$chanMgr.numHitLists} - <a href="/admin?cmd=clear&amp;hitlists=1">{%t Clear %}</a></TD>
+	    </TR>
+	    <TR>
+	      <TD>{%t Firewalled %}</TD>
+
+
+	      <TD>{@if servMgr.firewallKnown} {@if servMgr.isFirewalled}
+		<strong class=red>{%t Yes %}</strong> {@else} <span class=green>{%t No %}</span> {@end} {@else} {%t Unknown %} {@end} </TD>
+	    </TR>
+            <TR>
+	      <TD>{%t XML stats %}</TD>
+	      <TD><A href="/admin?cmd=viewxml">{%t View %}</A></TD>
+	    </TR>
+	    <TR>
+	      <TD>{%t GNet Host cache %}</TD>
+	      <TD>{$servMgr.numServHosts} - <A href="/admin?cmd=clear&amp;hostcache=1">{%t Clear %}</A></TD>
+	    </TR>
+	    <TR>
+	      <TD>{%t Host options %}</TD>
+	      <TD>{@if servMgr.isRoot}Root{@end} {@if servMgr.isPrivate}Licensed{@end} {@if servMgr.forceYP}ForceYP{@end}</TD>
+	    </TR>
+	  </TBODY>
+	</TABLE>
+
+      </TD>
+
+      <TD class=pagecol>
+
+        <TABLE class=infotable>
+	  <TBODY>
+	    <TR class=legend>
+	      <TD colSpan=4>{%t Bandwidth %}</TD>
+	    </TR>
+	    <TR>
+	      <TD></TD>
+	      <Th>{%t In %}</Th>
+	      <Th>{%t Out %}</Th>
+	      <Th>{%t Total %}</Th>
+	    </TR>
+	    <TR>
+	      <TD>{%t Total %} (Kbits/s)</TD>
+	      <TD>{$stats.totalInPerSec}</TD>
+	      <TD>{$stats.totalOutPerSec}</TD>
+	      <TD>{$stats.totalPerSec}</TD>
+	    </TR>
+	    <TR>
+	      <TD>{%t Internet %} (Kbits/s)</TD>
+	      <TD>{$stats.wanInPerSec}</TD>
+	      <TD>{$stats.wanOutPerSec}</TD>
+	      <TD>{$stats.wanTotalPerSec}</TD>
+	    </TR>
+	    <TR>
+	      <TD>GNet (Kbits/s)</TD>
+	      <TD>{$stats.netInPerSec}</TD>
+	      <TD>{$stats.netOutPerSec}</TD>
+	      <TD>{$stats.netTotalPerSec}</TD>
+	    </TR>
+	    <TR>
+	      <TD>{%t GNet packets/sec %}</TD>
+	      <TD>{$stats.packInPerSec}</TD>
+	      <TD>{$stats.packOutPerSec}</TD>
+	      <TD>{$stats.packTotalPerSec}</TD>
+	    </TR>
+	  </TBODY>
+	</TABLE>
+
+	<table class=infotable>
+	  <tr class=legend>
+	    <td colspan="2">{%t Connections %}</td>
+	  </tr>
+	  <tr>
+	    <td>{%t Direct %}
+	    </td>
+	    <td>{$servMgr.numDirect}</td>
+	  </tr>
+	  <tr>
+	    <td>{%t Relay %}</td>
+	    <td>{$servMgr.numRelays}</td>
+	  </tr>
+	  <tr>
+	    <td>CIN / COUT</td>
+	    <td>{$servMgr.numCIN}
+	      / {$servMgr.numCOUT}</td>
+	  </tr>
+	  <tr>
+	    <td>PGNU</td>
+	    <td>{$servMgr.numPGNU}</td>
+	  </tr>
+	  <tr>
+	    <td>{%t Incoming %}</td>
+	    <td>{$servMgr.numIncoming}</td>
+	  </tr>
+	  <tr>
+	    <td>{%t Port %} {$servMgr.serverPort1} / {$servMgr.serverPort2}</td>
+	    <td>{$servMgr.numActive1} / {$servMgr.numActive2}</td>
+	  </tr>
+	</table>
+
+      </TD>
+    </TR>
+  </TBODY>
+</TABLE>

@@ -1,0 +1,17 @@
+{@if servMgr.upgradeURL}
+
+<div class="normal centered">
+  <a href="{$servMgr.upgradeURL}" target="_blank">
+    <strong class="red">
+      {%t Please upgrade your client, click here to download the latest version_ %}
+    </strong>
+  </a>
+</div>
+
+{@else}
+
+<div class="normal-small centered">
+  {$servMgr.rootMsg}
+</div>
+
+{@end}

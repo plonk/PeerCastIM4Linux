@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    {% include head.html %}
+  </head>
+
+  <body>
+    <div id=container>
+      <div id=inner>
+        <table id=header>
+          <tr>
+            <td> {% include logo.html %} </td>
+            <td> {% include message.html %} </td>
+          </tr>
+        </table>
+
+        {% include navi.html %}
+
+        {{ content }}
+
+        {% include footer.html %}
+      </div>
+    </div>
+  </body>
+</html>

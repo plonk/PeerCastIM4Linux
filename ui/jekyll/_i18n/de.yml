@@ -1,0 +1,160 @@
+de:
+  # index
+  Broadcasting has been disabled: Broadcasting has been disabled
+  Please contact peercast_org: Please contact peercast.org
+  Information: Informationen
+  Server IP: Server IP
+  Uptime: Laufzeit
+  Channel cache: Channel cache
+  Clear: Löschen
+  Firewalled: Firewall vorhanden
+  "Yes": Ja
+  "No": Nein
+  Unknown: Unbekannt
+  XML stats: XML Statistik
+  View: Anzeigen
+  GNet Host cache: GNet Host cache
+  Host options: Host options
+
+  Bandwidth: Bandbreite
+  In: Eingehend
+  Out: Ausgehend
+  Total: Gesamt
+  Internet: Internet
+  GNet packets/sec: GNet Pakete/Sek.
+
+  Connections: Verbindungen
+  Direct: Direct
+  Relay: Relay
+  Incoming: Incoming
+  Port: Port
+
+  # navi
+  Relays: Relays (Weiterleitungen)
+  Broadcast: Sendung / Übertragung
+  Settings: Einstellungen
+  View Log: Log-Datei anzeigen
+  Quit: Abmelden
+
+  # relays
+
+  Channel: Programm
+  Bitrate: Bitrate
+  Stream: Typ
+  Total Relays: Total Relays
+  Local Relays: Local Relays
+  Status: Status
+  Keep: Keep
+
+  Info: Info
+  Tree: Tree
+  WWW: WWW
+  Bump: Verwerfen
+  Stop: Beenden
+
+  # broadcast
+  External Source: Externe Quelle
+  Required: erforderlich
+  Name: Name
+  Description: Beschreibung
+  Genre: Genre
+  Contact: Kontakt
+  Type: Typ
+  Extensions: Extensions
+  Clap: Clap
+  Create Relay: Relay erstellen
+
+  # connections
+  Type: Typ
+  Status: Status
+  Time: Dauer
+  Agent: Client
+
+  # settings
+  Basic Settings: Grundeinstellungen
+  Advanced Settings: Advanced Settings
+
+  Password: Passwort
+  Max_ Relays: Max. Anzahl Relays
+  Max_ Direct: Max. Direct
+  Language: Sprache
+
+  English: Englisch
+  French: French
+  German: Deutsch
+  Japanese: Japanisch
+
+  autoRelayKeep: Keep relays
+  autoMaxRelaySetting: Relay uppper limit (0 = Disabled)
+  autoBumpSkipCount: autoBumpSkipCount
+  kickPushStartRelays: kickPushStartRelays
+  kickPushInterval: kickPushInterval
+  allowConnectPCST: allowConnectPCST
+  enableGetName: Reverse lookup
+  autoPort0Kick: Kick firewalled hosts # when broadcasting
+  allowOnlyVP: Kick non-VP editions
+  Disabled: Disabled
+  Enabled: Enabled
+  kickKeepTime: kickKeepTime
+  maxRelaysIndexTxt: Relay ulimit for index.txt per channel
+  disableAutoBumpIfDirect: Disable auto bumping for direct connections
+  asxDetailedMode: Detailed ASX
+  until no relays: until no relays
+
+  Save Settings: Einstellungen speichern
+
+  Server: Server
+  DJ Message: DJ Nachricht
+  ICY MetaInterval: ICY MetaInterval
+  Mode: Betriebsart
+  Refresh HTML (sec): HTML-Aktualisierung (sec)
+
+  Network: Netzwerk
+  YP Address 1: Adresse 'Gelbe Seiten' 1
+  YP Address 2: Adresse 'Gelbe Seiten' 2
+  Max_ Output: Max. Ausgabe
+  Max_ Relays Per Channel: Max. Relays pro Programm
+  Max_ Controls In: Max. eingehende Controls
+  Max_ Connections In: Max. Connections In
+
+  Filters: Filter
+  IP Mask: IP Maske
+  Direct: Direkt
+  Private: Privat
+  Ban: sperren
+
+  Security: Sicherheit
+  Allow on port: Erlauben auf Port
+  Broadcasting: Übertragung
+
+  Authentication: Authentifizierung
+
+  HTML Authentication: HTML Authentifizierung
+  Cookies: Cookies
+  Basic HTTP:  Nur HTTP
+
+  Cookie Expire: Cookies verfallen...
+  End of session: ...am Ende der Session
+  Never: ...nie
+
+  Log: Inhalt des Logs
+  Debug: Fehlersuche (Debug)
+  Errors: Fehler
+  Channels: Kanäle
+
+  Root Mode: Root Mode
+  Host Update (sec): Host Aktualisierung (sec)
+  Message: Nachricht
+  Get Update: Get Update
+  Send: Senden
+
+  # viewlog
+  Clear Log: Log löschen
+  View tail: Zum Ende
+  View top: Zum Anfang
+
+  # logout
+  Logout: Abmelden
+  Shutdown: Peercast beenden
+
+  Please upgrade your client, click here to download the latest version_: Es ist eine neue Version verfügbar! Bitte hier klicken, um die neue Version herunterzuladen!

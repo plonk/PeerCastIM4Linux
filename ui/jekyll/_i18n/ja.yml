@@ -1,0 +1,159 @@
+ja:
+  # index
+  Broadcasting has been disabled: 配信機能は無効にされました
+  Please contact peercast_org: "peercast.org に連絡してください"
+  Information: 情報
+  Server IP: サーバーIP
+  Uptime: Uptime
+  Channel cache: チャンネルキャッシュ
+  Clear: クリア
+  Firewalled: ポート
+  "Yes": 開いてない
+  "No": "開いてる(OK!)"
+  Unknown: 不明
+  XML stats: XML統計
+  View: 見る
+  GNet Host cache: "GNetホストキャッシュ"
+  Host options: ホストオプション
+  Bandwidth: 帯域
+  In: 下り
+  Out: 上り
+  Total: 合計
+  Internet: インターネット
+  GNet packets/sec: GNet packets/sec
+
+  Connections: コネクション
+  Direct: ダイレクト
+  Relay: リレー
+  Incoming: 要求 # 検討する
+  Port: ポート
+
+  # navi
+  Relays: リレー
+  Broadcast: 配信する
+  Settings: 設定
+  View Log: ログ表示
+  Quit: ログアウト
+
+  # relays
+
+  Channel: チャンネル
+  Bitrate: ビットレート
+  Stream: ストリーム
+  Total Relays: リレー 合計
+  Local Relays: ローカル リレー
+  Status: ステータス
+  Keep: キープ
+
+  Info: 情報
+  Tree: リレーツリー
+  WWW: URL
+  Bump: 再接続
+  Stop: 停止
+
+  # broadcast
+  External Source: 外部ソース
+  Required: 必須
+  Name: 名前 # チャンネル名
+  Description: 説明 # 詳細
+  Genre: ジャンル
+  Contact: コンタクト # コンタクトURL
+  Type: タイプ
+  Extensions: 拡張機能
+  Clap: 拍手
+  Create Relay: リレー作成
+
+  # connections
+  Type: Type
+  Status: Status
+  Time: Time
+  Agent: Agent
+
+  # settings
+  Basic Settings: 基本設定
+  Advanced Settings: 詳細設定
+
+  Password: パスワード
+  Max_ Relays: Max. Relays
+  Max_ Direct: Max. Direct
+  Language: 言語
+
+  English: 英語
+  French: フランス語
+  German: ドイツ語
+  Japanese: 日本語
+
+  autoRelayKeep: オートキープ
+  autoMaxRelaySetting: "オート最大リレー数設定上限(0:無効)"
+  autoBumpSkipCount: オートBumpスキップカウント
+  kickPushStartRelays: 壁蹴り開始リレー数(0:無効)
+  kickPushInterval: 壁蹴り間隔(秒 ≧ 60)
+  allowConnectPCST: 0.119接続を許可
+  enableGetName: ホスト逆引き
+  autoPort0Kick: リレー不可ホスト自動切断
+  allowOnlyVP: VP版のみ接続受け入れ
+  Disabled: 無効
+  Enabled: 有効
+  kickKeepTime: 自動切断ホスト情報保持時間(秒、0:無効)
+  maxRelaysIndexTxt: "index.txt チャンネル毎の最大リレー本数"
+  disableAutoBumpIfDirect: オートBump無効
+  asxDetailedMode: ASX書き出し詳細モード
+  until no relays: リレー 0 で解除
+
+  Save Settings: 設定を保存
+
+  Server: サーバー
+  DJ Message: DJ Message
+  ICY MetaInterval: ICY MetaInterval
+  Mode: モード
+  Refresh HTML (sec): HTML更新間隔 (秒)
+
+  Network: Network
+  YP Address 1: イエローページ1
+  YP Address 2: イエローページ2
+  Max_ Output: 最大上り帯域幅
+  Max_ Relays Per Channel: チャンネル毎最大リレー数
+  Max_ Controls In: Max. Controls In
+  Max_ Connections In: Max. Connections In
+
+  Filters: Filters
+  IP Mask: IP Mask
+  Direct: Direct
+  Private: Private
+  Ban: Ban
+
+  Security: Security
+  Allow on port: Allow on port
+  Broadcasting: Broadcasting
+
+  Authentication: 認証
+
+  HTML Authentication: HTML 認証タイプ
+  Cookies: クッキー
+  Basic HTTP: Basic 認証
+
+  Cookie Expire: クッキー有効期限
+  End of session: セッションごと
+  Never: 期限なし
+
+  Log: Log
+  Debug: Debug
+  Errors: Errors
+  Channels: Channels
+
+  Root Mode: Root Mode
+  Host Update (sec): Host Update (sec)
+  Message: Message
+  Get Update: Get Update
+  Send: Send
+
+  # viewlog
+  Clear Log: ログを消去
+  View tail: 末尾へ
+  View top: 先頭へ
+
+  # logout
+  Logout: ログアウト
+  Shutdown: シャットダウン
+
+  Please upgrade your client, click here to download the latest version_: Please upgrade your client, click here to download the latest version.

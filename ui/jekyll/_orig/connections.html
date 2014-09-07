@@ -1,0 +1,28 @@
+---
+layout: default
+refresh: "{$servMgr.refreshHTML}"
+---
+<TABLE class=infotable>
+  <thead>
+    <TR class=legend> 
+      <TD>{%t Type %}</TD>
+      <TD>{%t Status %}</TD>
+      <TD>{%t Time %}</TD>
+      <TD>IP:Port</TD>
+      <TD>{%t Agent %}</TD>
+      <TD>Kbits/s</TD>
+    </TR>
+  </thead>
+  <TBODY>
+    {@loop servMgr.numServents} 
+    <tr>
+      <TD>{$loop.servent.type}</TD>
+      <TD>{$loop.servent.status}</TD>
+      <TD>{$loop.servent.uptime}</TD>
+      <TD>{$loop.servent.address}</TD>
+      <TD>{$loop.servent.agent}</TD>
+      <TD>{$loop.servent.bitrate}</TD>
+    </TR>
+    {@end} 
+  </tbody>
+</TABLE>

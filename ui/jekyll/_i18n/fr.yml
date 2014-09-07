@@ -1,0 +1,161 @@
+fr:
+  # index
+  Broadcasting has been disabled: Broadcasting has been disabled
+  Please contact peercast_org: Please contact peercast.org
+  Information: Informations
+  Server IP: IP du serveur
+  Uptime: En service depuis
+  Channel cache: Cache des canaux
+  Clear: Effacer
+  Firewalled: Y-a-t il un Firewall ?
+  "Yes": Oui
+  "No": Non
+  Unknown: Inconnu
+  XML stats: Statistiques XML
+  View: Voir
+  GNet Host cache: "Cache de l'hote GNet"
+  Host options: Host options
+  Bandwidth: Bande passante
+  In: Entrée
+  Out: Sortie
+  Total: Total
+  Internet: Internet
+  GNet packets/sec: GNet packets/sec
+
+  Connections: Connections
+  Direct: Direct
+  Relay: Relay
+  Incoming: Incoming
+  Port: Port
+
+  # navi
+  Relays: Relais
+  Broadcast: Diffuser
+  Settings: Préférences
+  View Log: Voir les journaux
+  Quit: Quitter
+
+  # relays
+
+  Channel: Canal
+  Bitrate: Bitrate
+  Stream: Flux
+  Total Relays: Total Relais
+  Local Relays: Local Relais
+  Status: Etat
+  Keep: Garder
+
+  Info: Info
+  Tree: Tree
+  WWW: WWW
+  Bump: Bump
+  Stop: Stop
+
+  # broadcast
+  External Source: Source Externe
+  Required: Requis
+  Name: Nom
+  Description: Description
+  Genre: Genre
+  Contact: Contact
+  Type: Type
+  Extensions: Extensions
+  Clap: Clap
+  Create Relay: Diffuser
+
+  # connections
+  Type: Type
+  Status: Etat
+  Time: Temps
+  Agent: Client
+
+  # settings
+  Basic Settings: Préférences de base
+  Advanced Settings: Advanced Settings
+
+  Password: Mot de passe
+  Max_ Relays: Nb Max. de flux
+  Max_ Direct: Max. Direct
+  Language: Langue
+
+  English: English
+  French: French
+  German: Deutsch
+  Japanese: Japanese
+
+  autoRelayKeep: Keep relays
+  autoMaxRelaySetting: Relay uppper limit (0 = Disabled)
+  autoBumpSkipCount: autoBumpSkipCount
+  kickPushStartRelays: kickPushStartRelays
+  kickPushInterval: kickPushInterval
+  allowConnectPCST: allowConnectPCST
+  enableGetName: Reverse lookup
+  autoPort0Kick: Kick firewalled hosts # when broadcasting
+  allowOnlyVP: Kick non-VP editions
+  Disabled: Disabled
+  Enabled: Enabled
+  kickKeepTime: kickKeepTime
+  maxRelaysIndexTxt: Relay ulimit for index.txt per channel
+  disableAutoBumpIfDirect: Disable auto bumping for direct connections
+  asxDetailedMode: Detailed ASX
+  until no relays: until no relays
+
+  Save Settings: Sauver
+
+  Server: Serveur
+  DJ Message: Message du DJ
+  ICY MetaInterval: MetaInterval ICY
+  Mode: Mode
+  Refresh HTML (sec): Rafraichir HTML (sec)
+  # Utiliser votre IP pour générer l'ID
+
+  Network: Réseau
+  YP Address 1: Pages Jaunes 1
+  YP Address 2: Pages Jaunes 2
+  Max_ Output: Débit Max. de sortie
+  Max_ Relays Per Channel: Nb Max. de flux par canaux
+  Max_ Controls In: Max. Controls In
+  Max_ Connections In: Limitation entrées
+
+  Filters: Filtres
+  IP Mask: Masque IP
+  Direct: Direct
+  Private: Privé
+  Ban: Ban
+
+  # security
+  Security: Sécurité
+  Allow on port: Autoriser le port
+  Broadcasting: Diffusion
+
+  Authentication: Authentification
+
+  HTML Authentication: Authentification HTML
+  Cookies: Cookies
+  Basic HTTP: Basique HTTP
+
+  Cookie Expire: Les Cookies expirent
+  End of session: fin de session
+  Never: Jamais
+
+  Log: Journaux
+  Debug: Debug
+  Errors: Erreurs
+  Channels: Canaux
+
+  Root Mode: Mode Root
+  Host Update (sec): "Mise a jour de l'Hote (sec)"
+  Message: Méssage
+  Get Update: Faire la mise a jour
+  Send: Envoyer
+
+  # viewlog
+  Clear Log: Effacer les journaux
+  View tail: Aller en bas
+  View top: Aller en haut
+
+  # logout
+  Logout: Sortir
+  Shutdown: Arreter
+
+  Please upgrade your client, click here to download the latest version_: Mise jour disponible, cliquez ici pour la tlcharger

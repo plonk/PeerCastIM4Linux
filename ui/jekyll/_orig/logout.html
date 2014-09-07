@@ -1,0 +1,25 @@
+---
+layout: default
+---
+<table width="50%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    {@if servMgr.auth.useCookies}  
+    <td>
+      <form action="/admin" method=get>
+        <div align="center"> 
+          <input type=hidden value=logout name=cmd>
+          <input type=submit value="{%t Logout %}" name=logout>
+        </div>
+      </form>
+    </td>
+    {@end}
+    <td>
+      <form action="/admin" method=get>
+        <div align="center"> 
+          <input type=hidden value=shutdown name=cmd>
+          <input name=shutdown type=submit id="shutdown" value="{%t Shutdown %}">
+        </div>
+      </form>
+    </td>
+  </tr>
+</table>

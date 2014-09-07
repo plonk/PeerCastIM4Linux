@@ -1,4 +1,4 @@
-CPPFLAGS = -Wall -Wno-parentheses -Wno-switch -Wno-unused-variable -Wno-unused-value -Wno-multichar -DENABLE_BINRELOC -pthread  -D__cplusplus -D_UNIX -D_REENTRANT $(INCLUDES)
+CPPFLAGS = -Wall -Wno-parentheses -Wno-switch -Wno-unused-variable -Wno-unused-value -Wno-multichar -DENABLE_BINRELOC -pthread -D_UNIX -D_REENTRANT $(INCLUDES)
 LDFLAGS = -pthread
 LDSOFLAGS = -shared -Wl,-soname
 
@@ -24,6 +24,7 @@ LIBOBJSTATIC = libpeercast.a
 CORESOURCE = $(CORE)/unix/compat.cpp \
 	 $(CORE)/unix/usys.cpp \
 	 $(CORE)/unix/usocket.cpp \
+	 $(CORE)/unix/utf8.cpp \
 	 $(CORE)/common/socket.cpp \
 	 $(CORE)/common/servent.cpp \
 	 $(CORE)/common/servhs.cpp \
@@ -46,7 +47,6 @@ CORESOURCE = $(CORE)/unix/compat.cpp \
 	 $(CORE)/common/icy.cpp \
 	 $(CORE)/common/pcp.cpp \
 	 $(CORE)/common/jis.cpp
-
 
 
 COREOBJ = $(CORESOURCE:.cpp=.o)

@@ -75,5 +75,8 @@ string_unittest.o : string_unittest.cc $(USER_DIR)/sys.h $(GTEST_HEADERS)
 utf8_unittest.o : utf8_unittest.cc $(USER_DIR)/utf8.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $<
 
-test_all : string_unittest.o utf8_unittest.o gtest_main.a ../ui/linux/libpeercast.a
+host_unittest.o : host_unittest.cc $(USER_DIR)/common.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $<
+
+test_all : host_unittest.o string_unittest.o utf8_unittest.o gtest_main.a ../ui/linux/libpeercast.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -lpthread -o $@

@@ -27,7 +27,7 @@ CXXFLAGS += -std=c++0x -g -Wall -Wextra
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS = string_unittest
+TESTS = test_all
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -70,7 +70,10 @@ gtest_main.a : gtest-all.o gtest_main.o
 # function.
 
 string_unittest.o : string_unittest.cc $(USER_DIR)/sys.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c string_unittest.cc
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $<
 
-string_unittest : string_unittest.o gtest_main.a ../ui/linux/libpeercast.a
+utf8_unittest.o : utf8_unittest.cc $(USER_DIR)/utf8.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $<
+
+test_all : string_unittest.o utf8_unittest.o gtest_main.a ../ui/linux/libpeercast.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -lpthread -o $@

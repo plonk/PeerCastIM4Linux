@@ -17,17 +17,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/*
- * Convert a string between UTF-8 and the locale's charset.
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <iconv.h>
 
 #include "common/utf8.h"
-#include "common/identify_encoding.h"
 
 static int convert(iconv_t cd, const char *inbuf, char **to)
 {

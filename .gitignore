@@ -2,6 +2,7 @@ peercast-build-desktop-PATH*
 .directory
 *~
 *.o
+*.a
 *.pro.user
 *.ini
 ui/linux/peercast

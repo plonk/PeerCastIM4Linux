@@ -2,10 +2,10 @@
 // File : lsocket.cpp
 // Date: 4-apr-2002
 // Author: giles
-// Desc: 
+// Desc:
 //		Linux version of ClientSocket. Handles the nitty gritty of actually
 //		reading and writing TCP
-//		
+//
 // (c) 2002 peercast.org
 // ------------------------------------------------
 // This program is free software; you can redistribute it and/or modify
@@ -29,7 +29,7 @@
 #include "unix/usocket.h"
 #include "common/stats.h"
 
-#ifdef __APPLE__ 
+#ifdef __APPLE__
 #include <netinet/in_systm.h> // for n_long definition
 #define MSG_NOSIGNAL 0        // doesn't seem to be defined under OS X
 #endif
@@ -126,7 +126,7 @@ void UClientSocket::setLinger(int sec)
 	linger.l_onoff = (sec>0)?1:0;
     linger.l_linger = sec;
 
-	if (setsockopt(sockNum, SOL_SOCKET, SO_LINGER, (const char *)&linger, sizeof (linger)) == -1) 
+	if (setsockopt(sockNum, SOL_SOCKET, SO_LINGER, (const char *)&linger, sizeof (linger)) == -1)
 		throw SockException("Unable to set LINGER");
 }
 
@@ -136,7 +136,7 @@ void UClientSocket::setNagle(bool on)
      int nodelay = (on==false);
      if (setsockopt(sockNum, IPPROTO_TCP, TCP_NODELAY, (void*) &nodelay,sizeof(nodelay)) < 0)
 		throw SockException("Unable to set NODELAY");
-}      
+}
 // --------------------------------------------------
 void UClientSocket::setBlocking(bool block)
 {
@@ -155,7 +155,7 @@ void UClientSocket::setReuse(bool yes)
 {
 
 	unsigned long op = yes ? 1 : 0;
-	if (setsockopt(sockNum,SOL_SOCKET,SO_REUSEADDR,(char *)&op,sizeof(op)) < 0) 
+	if (setsockopt(sockNum,SOL_SOCKET,SO_REUSEADDR,(char *)&op,sizeof(op)) < 0)
 		throw SockException("Unable to set REUSE");
 }
 
@@ -168,7 +168,7 @@ void UClientSocket::setBufSize(int size)
 	if (getsockopt(sockNum,SOL_SOCKET,SO_RCVBUF,(char *)&oldop,&len) == -1) {
 		LOG_DEBUG("Unable to get RCVBUF");
 	} else if (oldop < size) {
-		if (setsockopt(sockNum,SOL_SOCKET,SO_RCVBUF,(char *)&op,len) == -1) 
+		if (setsockopt(sockNum,SOL_SOCKET,SO_RCVBUF,(char *)&op,len) == -1)
 			LOG_DEBUG("Unable to set RCVBUF");
 		//else
 		//	LOG_DEBUG("*** recvbufsize:%d -> %d", oldop, op);
@@ -177,7 +177,7 @@ void UClientSocket::setBufSize(int size)
 	if (getsockopt(sockNum,SOL_SOCKET,SO_SNDBUF,(char *)&oldop,&len) == -1) {
 		LOG_DEBUG("Unable to get SNDBUF");
 	} else if (oldop < size) {
-		if (setsockopt(sockNum,SOL_SOCKET,SO_SNDBUF,(char *)&op,len) == -1) 
+		if (setsockopt(sockNum,SOL_SOCKET,SO_SNDBUF,(char *)&op,len) == -1)
 			LOG_DEBUG("Unable to set SNDBUF");
 		//else
 		//	LOG_DEBUG("*** sendbufsize: %d -> %d", oldop, op);
@@ -194,12 +194,12 @@ hostent *UClientSocket::resolveHost(char *hostName)
 		// if failed, try using gethostbyaddr instead
 
 		unsigned long ip = inet_addr(hostName);
-		
+
 		if (ip == INADDR_NONE)
 			return NULL;
 
 		if ((he = gethostbyaddr((char *)&ip,sizeof(ip),AF_INET)) == NULL)
-			return NULL;	
+			return NULL;
 	}
 	return he;
 }
@@ -601,7 +601,7 @@ ClientSocket *UClientSocket::accept()
 	if (conSock ==  INVALID_SOCKET)
 		return NULL;
 
-	
+
     UClientSocket *cs = new UClientSocket();
 	cs->sockNum = conSock;
 
@@ -647,7 +647,7 @@ void UClientSocket::close()
 			while (read(&c, sizeof(c)) > 0)
 				if (sys->getTime() - stime > 5)
 					break;
-		}catch(StreamException &e) 
+		}catch(StreamException &e)
 		{
 			LOG_ERROR("Socket close: %s",e.msg);
 		}
@@ -678,7 +678,7 @@ bool	UClientSocket::readReady()
 }
 
 // --------------------------------------------------
-int UClientSocket::numPending() 
+int UClientSocket::numPending()
 {
 	size_t len;
 
@@ -687,4 +687,3 @@ int UClientSocket::numPending()
 
 	return (int)len;
 }
-

@@ -2,7 +2,7 @@
 // File : stream.h
 // Date: 4-apr-2002
 // Author: giles
-// Desc: 
+// Desc:
 //
 // (c) 2002 peercast.org
 // ------------------------------------------------
@@ -75,7 +75,7 @@ public:
 	{
 	}
 
-	virtual void	setReadTimeout(unsigned int ) 
+	virtual void	setReadTimeout(unsigned int )
 	{
 	}
 	virtual void	setWriteTimeout(unsigned int )
@@ -565,4 +565,3 @@ public:
 };
 
 #endif
-

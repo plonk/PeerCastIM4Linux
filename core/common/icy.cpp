@@ -10,7 +10,7 @@
 void ICYSource::stream(Channel *ch)
 {
 	ChannelStream *source=NULL;
-	try 
+	try
 	{
 
 		if (!ch->sock)

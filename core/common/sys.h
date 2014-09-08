@@ -2,7 +2,7 @@
 // File : sys.h
 // Date: 4-apr-2002
 // Author: giles
-// Desc: 
+// Desc:
 //
 // (c) 2002 peercast.org
 // ------------------------------------------------
@@ -56,13 +56,13 @@ public:
 	};
 
 	String() {clear();}
-	String(const char *p, TYPE t=T_ASCII) 
+	String(const char *p, TYPE t=T_ASCII)
 	{
 		set(p,t);
 	}
 
 	// set from straight null terminated string
-	void set(const char *p, TYPE t=T_ASCII) 
+	void set(const char *p, TYPE t=T_ASCII)
 	{
 		strncpy(data,p,MAX_LEN-1);
 		data[MAX_LEN-1] = 0;
@@ -71,7 +71,7 @@ public:
 
 	// set from quoted or unquoted null terminated string
 	void setFromString(const char *str, TYPE t=T_ASCII);
-	
+
 	// set from stopwatch
 	void setFromStopwatch(unsigned int t);
 
@@ -94,7 +94,7 @@ public:
 
 
 	// set from null terminated string, remove first/last chars
-	void setUnquote(const char *p, TYPE t=T_ASCII) 
+	void setUnquote(const char *p, TYPE t=T_ASCII)
 	{
 		size_t slen = strlen(p);
 		if (slen > 2)
@@ -107,7 +107,7 @@ public:
 		type = t;
 	}
 
-	void clear() 
+	void clear()
 	{
 		memset(data, 0, MAX_LEN);
 		data[0]=0;
@@ -181,7 +181,7 @@ public:
 	{
 		setSeed(s);
 	}
-	
+
 	unsigned int next()
 	{
 		return RAND(a[0],a[1]);
@@ -190,8 +190,8 @@ public:
 	void setSeed(int s)
 	{
 		a[0] = a[1] = s;
-	}	
-	
+	}
+
 	unsigned long a[2];
 };
 }
@@ -207,8 +207,8 @@ public:
 	virtual bool			startThread(class ThreadInfo *) = 0;
 	virtual void			sleep(int) = 0;
 	virtual void			appMsg(long,long = 0) = 0;
-	virtual unsigned int	getTime() = 0;		
-	virtual double			getDTime() = 0;		
+	virtual unsigned int	getTime() = 0;
+	virtual double			getDTime() = 0;
 	virtual unsigned int	rnd() = 0;
 	virtual void			getURL(const char *) = 0;
 	virtual void			exit() = 0;
@@ -319,7 +319,7 @@ public:
 	{
 		LeaveCriticalSection(&cs);
 	}
-	
+
 	CRITICAL_SECTION cs;
 };
 #endif
@@ -338,7 +338,7 @@ public:
 //typedef long long int64_t;
 
 typedef int (*THREAD_FUNC)(ThreadInfo *);
-#define THREAD_PROC int 
+#define THREAD_PROC int
 typedef pthread_t THREAD_HANDLE;
 
 // ------------------------------------
@@ -370,22 +370,22 @@ public:
 };
 
 // ------------------------------------
-class WLock 
+class WLock
 {
 private:
 	pthread_mutex_t mutex;
 public:
 	WLock()
 	{
-	    const pthread_mutexattr_t mattr = 
+	    const pthread_mutexattr_t mattr =
 		{
-#ifdef __APPLE__		
+#ifdef __APPLE__
 			PTHREAD_MUTEX_RECURSIVE
 #else
 			PTHREAD_MUTEX_RECURSIVE_NP
 #endif
 		 };
-		 
+
         pthread_mutex_init( &mutex, &mattr );
 	}
 
@@ -404,7 +404,7 @@ public:
 	{
 		pthread_mutex_unlock(&mutex);
 	}
-	
+
 };
 #endif
 
@@ -456,14 +456,14 @@ public:
 	int		id;
 	THREAD_FUNC func;
 	THREAD_HANDLE handle;
-	
+
 
 	void	*data;
 };
 
 
 // ------------------------------------
-class LogBuffer 
+class LogBuffer
 {
 public:
 	enum TYPE
@@ -536,4 +536,3 @@ extern Sys *sys;
 
 // ------------------------------------
 #endif
-

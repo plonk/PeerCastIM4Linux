@@ -173,7 +173,7 @@ int PCPStream::readPacket(Stream &in,BroadcastState &bcs)
 			id = patom.read(numc,numd);
 
 			error = PCPStream::procAtom(patom,id,numc,numd,bcs);
-			
+
 			if (error)
 			{
 				throw StreamException("PCP exception");
@@ -301,7 +301,7 @@ void PCPStream::readRootAtoms(AtomStream &atom, int numc,BroadcastState &bcs)
 
 			chanMgr->broadcastTrackerUpdate(remoteID,true);
 
-		}else if ((id == PCP_MESG_ASCII) || (id == PCP_MESG))			// PCP_MESG_ASCII to be depreciated 
+		}else if ((id == PCP_MESG_ASCII) || (id == PCP_MESG))			// PCP_MESG_ASCII to be depreciated
 		{
 			String newMsg;
 
@@ -395,7 +395,7 @@ void PCPStream::readPktAtoms(Channel *ch,AtomStream &atom,int numc,BroadcastStat
 
 			/*
 			// check for stream restart
-			if (pack.pos == 0)		
+			if (pack.pos == 0)
 			{
 				LOG_CHANNEL("PCP resetting stream");
 				ch->streamIndex++;
@@ -629,7 +629,7 @@ void PCPStream::readChanAtoms(AtomStream &atom,int numc,BroadcastState &bcs)
 	if (chl)
 	{
 		chl->info.update(newInfo);
-	
+
 		if (!servMgr->chanLog.isEmpty())
 		{
 			//if (chl->numListeners())
@@ -643,8 +643,8 @@ void PCPStream::readChanAtoms(AtomStream &atom,int numc,BroadcastState &bcs)
        					XML::Node *n = chl->info.createChannelXML();
         				n->add(chl->createXML(false));
         				n->add(chl->info.createTrackXML());
-					rn->add(n);	
-	
+					rn->add(n);
+
 					rn->write(file,0);
 					delete rn;
 					file.close();
@@ -666,7 +666,7 @@ void PCPStream::readChanAtoms(AtomStream &atom,int numc,BroadcastState &bcs)
 int PCPStream::readBroadcastAtoms(AtomStream &atom,int numc,BroadcastState &bcs)
 {
 	ChanPacket pack;
-	//int ttl=0;		
+	//int ttl=0;
 	int ver=0;
 	int ver_vp=0;
 	GnuID fromID,destID;
@@ -688,7 +688,7 @@ int PCPStream::readBroadcastAtoms(AtomStream &atom,int numc,BroadcastState &bcs)
 	{
 		int c,d;
 		ID4 id = atom.read(c,d);
-		
+
 		if (id == PCP_BCST_TTL)
 		{
 			bcs.ttl = atom.readChar()-1;
@@ -833,11 +833,11 @@ int PCPStream::readBroadcastAtoms(AtomStream &atom,int numc,BroadcastState &bcs)
 	if (fromID.isSet())
 		if (fromID.isSame(servMgr->sessionID))
 		{
-			LOG_ERROR("BCST loopback"); 
+			LOG_ERROR("BCST loopback");
 			return PCP_ERROR_BCST+PCP_ERROR_LOOPBACK;
 		}
 
-		// broadcast back out if ttl > 0 
+		// broadcast back out if ttl > 0
 		if ((bcs.ttl>0) && (!bcs.forMe))
 		{
 			pack.len = pmem.pos;
@@ -887,7 +887,7 @@ int PCPStream::procAtom(AtomStream &atom,ID4 id,int numc, int dlen,BroadcastStat
 	}else if (id == PCP_ROOT)
 	{
 		if (servMgr->isRoot)
-			throw StreamException("Unauthorized root message");				
+			throw StreamException("Unauthorized root message");
 		else
 			readRootAtoms(atom,numc,bcs);
 
@@ -969,5 +969,3 @@ int PCPStream::readAtom(AtomStream &atom,BroadcastState &bcs)
 
 	return	procAtom(atom,id,numc,dlen,bcs);
 }
-
-

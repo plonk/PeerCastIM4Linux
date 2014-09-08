@@ -2,7 +2,7 @@
 // File : servent.h
 // Date: 4-apr-2002
 // Author: giles
-// Desc: 
+// Desc:
 //
 // (c) 2002 peercast.org
 // ------------------------------------------------
@@ -46,7 +46,7 @@ class Servent
 {
 public:
 
-	enum 
+	enum
 	{
 		MAX_HASH = 500,			// max. amount of packet hashes Servents can store
 		MAX_OUTPACKETS = 32		// max. output packets per queue (normal/priority)
@@ -58,16 +58,16 @@ public:
 		MAX_OUTWARD_SIZE = 1024 * 10
 	};
 
-    enum TYPE					
+    enum TYPE
     {
 		T_NONE,					// Not allocated
         T_INCOMING,				// Unknown incoming
-        T_SERVER,				// The main server 
+        T_SERVER,				// The main server
 		T_RELAY,				// Outgoing relay
 		T_DIRECT,				// Outgoing direct connection
 		T_COUT,					// PCP out connection
 		T_CIN,					// PCP in connection
-		T_PGNU					// old protocol connection		
+		T_PGNU					// old protocol connection
     };
 
     enum STATUS
@@ -199,7 +199,7 @@ public:
 	bool	writeVariable(Stream &, const String &);
 
 
-	// the "mainloop" of servents 
+	// the "mainloop" of servents
 	void	processGnutella();
 	void	processRoot();
 	void	processServent();
@@ -309,4 +309,3 @@ extern char *nextCGIarg(char *cp, char *cmd, char *arg);
 
 
 #endif
-

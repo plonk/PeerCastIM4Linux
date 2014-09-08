@@ -32,7 +32,7 @@
 // ------------------------------------------------
 void URLSource::stream(Channel *ch)
 {
-	
+
 	String url,tmpUrl;
 	while (ch->thread.active && !peercastInst->isQuitting)
 	{
@@ -79,27 +79,27 @@ int URLSource::getSourceRate()
 	{
 
 		// get the source protocol
-		if (strnicmp(fileName,"http://",7)==0) 	
+		if (strnicmp(fileName,"http://",7)==0)
 		{
 			ch->info.srcProtocol = ChanInfo::SP_HTTP;
 			fileName += 7;
 		}
-		else if (strnicmp(fileName,"mms://",6)==0) 	
+		else if (strnicmp(fileName,"mms://",6)==0)
 		{
 			ch->info.srcProtocol = ChanInfo::SP_MMS;
 			fileName += 6;
 		}
-		else if (strnicmp(fileName,"pcp://",6)==0) 	
+		else if (strnicmp(fileName,"pcp://",6)==0)
 		{
 			ch->info.srcProtocol = ChanInfo::SP_PCP;
 			fileName += 6;
 		}
-		else if (strnicmp(fileName,"file://",7)==0) 	
+		else if (strnicmp(fileName,"file://",7)==0)
 		{
 			ch->info.srcProtocol = ChanInfo::SP_FILE;
 			fileName += 7;
 		}
-		else 
+		else
 		{
 			ch->info.srcProtocol = ChanInfo::SP_FILE;
 		}
@@ -117,7 +117,7 @@ int URLSource::getSourceRate()
 			if ((ch->info.contentType == ChanInfo::T_WMA) || (ch->info.contentType == ChanInfo::T_WMV))
 				ch->info.srcProtocol = ChanInfo::SP_MMS;
 
-			
+
 			LOG_CHANNEL("Channel source is HTTP");
 
 			ClientSocket *inputSocket = sys->createSocket();
@@ -162,9 +162,9 @@ int URLSource::getSourceRate()
 				http.writeLine("Pragma: stream-switch-entry=ffff:1:0 ffff:2:0");
 			}else
 			{
-				http.writeLineF("%s %s",HTTP_HS_AGENT,PCX_AGENT);  
-				http.writeLineF("%s %d",PCX_HS_PCP,1);  
-				http.writeLine("Icy-MetaData:1");				// fix by ravon 
+				http.writeLineF("%s %s",HTTP_HS_AGENT,PCX_AGENT);
+				http.writeLineF("%s %d",PCX_HS_PCP,1);
+				http.writeLine("Icy-MetaData:1");				// fix by ravon
 			}
 
 			http.writeLine("");
@@ -175,7 +175,7 @@ int URLSource::getSourceRate()
 			String name = ch->info.name;
 
 			while (http.nextHeader())
-			{				
+			{
 
 				LOG_CHANNEL("Fetch HTTP: %s",http.cmdLine);
 
@@ -263,9 +263,9 @@ int URLSource::getSourceRate()
 				ch->readDelay = true;
 
 
-			if (fileType == ChanInfo::T_PLS) 
+			if (fileType == ChanInfo::T_PLS)
 				pls = new PlayList(PlayList::T_PLS, 1000);
-			else if (fileType == ChanInfo::T_ASX) 
+			else if (fileType == ChanInfo::T_ASX)
 				pls = new PlayList(PlayList::T_ASX, 1000);
 			else
 				ch->info.contentType = fileType;
@@ -275,7 +275,7 @@ int URLSource::getSourceRate()
 			throw StreamException("Unsupported URL");
 		}
 
-		
+
 		if (pls)
 		{
 
@@ -306,7 +306,7 @@ int URLSource::getSourceRate()
 			}
 
 			delete pls;
-			
+
 		}else
 		{
 

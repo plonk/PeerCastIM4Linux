@@ -2,13 +2,13 @@
 // File : gnutella.cpp
 // Date: 4-apr-2002
 // Author: giles
-// Desc: 
+// Desc:
 //		GnuPacket is a Gnutella protocol packet.
 //		GnuStream is a Stream that reads/writes GnuPackets
 //
 //
 // (c) 2002 peercast.org
-// 
+//
 // ------------------------------------------------
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -69,7 +69,7 @@ const char *GnuStream::getRouteStr(R_TYPE r)
 void GnuPacket::makeChecksumID()
 {
 	for(unsigned int i=0; i<len; i++)
-		id.id[i%16] += data[i];	
+		id.id[i%16] += data[i];
 }
 
 // ---------------------------
@@ -154,7 +154,7 @@ bool GnuPacket::initHit(Host &h, Channel *ch, GnuPacket *query, bool push, bool 
 	else
 		mem.writeLong(1);			// broadcast
 
-	
+
 	//mem.writeLong(ch->index);				// index
 	mem.writeLong(0);				// index
 	mem.writeShort(ch->getBitrate());	// bitrate
@@ -168,23 +168,23 @@ bool GnuPacket::initHit(Host &h, Channel *ch, GnuPacket *query, bool push, bool 
 	xml.setRoot(cn);
 	xml.writeCompact(mem);
 
-	mem.writeChar(0);							// extra null 
+	mem.writeChar(0);							// extra null
 
 
 	// QHD
-	mem.writeLong('PCST');				// vendor ID		
-	mem.writeChar(2);					// public sector length 
+	mem.writeLong('PCST');				// vendor ID
+	mem.writeChar(2);					// public sector length
 
 	int f1 = 0, f2 = 0;
 
-	f1 = 1 | 4 | 8 | 32 | 64;	// use push | busy | stable | broadcast | tracker 
+	f1 = 1 | 4 | 8 | 32 | 64;	// use push | busy | stable | broadcast | tracker
 
-	if (push) f2 |= 1;			
+	if (push) f2 |= 1;
 	if (busy) f2 |= 4;
 	if (stable) f2 |= 8;
 	if (!query) f2 |= 32;
 	if (tracker) f2 |= 64;
-	
+
 	mem.writeChar(f1);
 	mem.writeChar(f2);
 
@@ -208,9 +208,9 @@ bool GnuPacket::initHit(Host &h, Channel *ch, GnuPacket *query, bool push, bool 
 
 	// queryID/not used
 	if (query)
-		mem.write(query->id.id,16);					
+		mem.write(query->id.id,16);
 	else
-		mem.write(id.id,16);					
+		mem.write(id.id,16);
 
 	len = mem.pos;
 
@@ -244,7 +244,7 @@ void GnuPacket::initFind(const char *str, XML *xml, int maxTTL)
 	}else
 		mem.writeChar(0);		// null string
 
-	
+
 	if (xml)
 		xml->writeCompact(mem);
 
@@ -264,7 +264,7 @@ void GnuStream::ping(int ttl)
 // ---------------------------
 void GnuStream::sendPacket(GnuPacket &p)
 {
-	try 
+	try
 	{
 		lock.on();
 		packetsOut++;
@@ -294,7 +294,7 @@ void GnuStream::sendPacket(GnuPacket &p)
 
 		lock.off();
 	}catch(StreamException &e)
-	{		
+	{
 		lock.off();
 		throw e;
 	}
@@ -302,7 +302,7 @@ void GnuStream::sendPacket(GnuPacket &p)
 // ---------------------------
 bool GnuStream::readPacket(GnuPacket &p)
 {
-	try 
+	try
 	{
 		lock.on();
 		packetsIn++;
@@ -346,7 +346,7 @@ bool GnuStream::readPacket(GnuPacket &p)
 		lock.off();
 		return true;
 	}catch(StreamException &e)
-	{		
+	{
 		lock.off();
 		throw e;
 	}
@@ -387,7 +387,7 @@ GnuStream::R_TYPE GnuStream::processPacket(GnuPacket &in, Servent *serv, GnuID &
 						if (serv->outputPacket(pong,true))
 							LOG_NETWORK("pong out");
 					}
-					ret = R_BROADCAST;			
+					ret = R_BROADCAST;
 				}
 			}
 			break;
@@ -410,7 +410,7 @@ GnuStream::R_TYPE GnuStream::processPacket(GnuPacket &in, Servent *serv, GnuID &
 					char sIP[64],rIP[64];
 					h.toStr(sIP);
 					remoteHost.toStr(rIP);
-					
+
 					LOG_NETWORK("pong: %s via %s : %02x%02x%02x%02x",sIP,ip,rIP,in.id.id[0],in.id.id[1],in.id.id[2],in.id.id[3]);
 
 
@@ -475,7 +475,7 @@ GnuStream::R_TYPE GnuStream::processPacket(GnuPacket &in, Servent *serv, GnuID &
 					LOG_NETWORK("query STR: %s : found %d",words,numHits);
 				}
 
-			
+
 
 				for(int i=0; i<numHits; i++)
 				{
@@ -495,7 +495,7 @@ GnuStream::R_TYPE GnuStream::processPacket(GnuPacket &in, Servent *serv, GnuID &
 
 				GnuID pid;
 				data.read(pid.id,16);
-				
+
 				//LOG("push serv= %02x%02x%02x%02x",servMgr->id[0],servMgr->id[1],servMgr->id[2],servMgr->id[3]);
 				//LOG("pack = %02x%02x%02x%02x",id[0],id[1],id[2],id[3]);
 
@@ -504,7 +504,7 @@ GnuStream::R_TYPE GnuStream::processPacket(GnuPacket &in, Servent *serv, GnuID &
 				int ip = data.readLong();
 				int port = data.readShort();
 
-			
+
 				ip = SWAP4(ip);
 
 				Host h(ip,port);
@@ -539,7 +539,7 @@ GnuStream::R_TYPE GnuStream::processPacket(GnuPacket &in, Servent *serv, GnuID &
 					routeID = pid;
 					ret = R_ROUTE;
 				}
-#endif		
+#endif
 			}
 			break;
 		case GNU_FUNC_HIT: // hit
@@ -554,7 +554,7 @@ GnuStream::R_TYPE GnuStream::processPacket(GnuPacket &in, Servent *serv, GnuID &
 					flstr[0]=0;
 					if (hit.firewalled) strcat(flstr,"Push,");
 					if (hit.tracker) strcat(flstr,"Tracker,");
-					
+
 #if 0
 					if ((spd == 0) && (!isBroadcastHit))
 					{
@@ -585,7 +585,7 @@ GnuStream::R_TYPE GnuStream::processPacket(GnuPacket &in, Servent *serv, GnuID &
 			break;
 	}
 
-	
+
 	if ((in.ttl > 10) || (in.hops > 10) || (in.ttl==0))
 		if ((ret == R_BROADCAST) || (ret == R_ROUTE))
 			ret = R_DEAD;
@@ -675,7 +675,7 @@ bool GnuStream::readHit(Stream &data, ChanHit &ch,int hops,GnuID &id)
 
 			ch.recv = true;
 			ch.chanID = info.id;
-			ChanHit *chp = chanMgr->addHit(ch);		
+			ChanHit *chp = chanMgr->addHit(ch);
 
 			if ((chp) && (numHits<100))
 				hits[numHits++] = chp;
@@ -701,7 +701,7 @@ bool GnuStream::readHit(Stream &data, ChanHit &ch,int hops,GnuID &id)
 	int maxPreviewTime=0;
 
 	// read private sector with peercast servant specific info
-	int privLen = data.readChar();	
+	int privLen = data.readChar();
 
 	if (privLen)
 	{
@@ -748,4 +748,3 @@ bool GnuStream::readHit(Stream &data, ChanHit &ch,int hops,GnuID &id)
 
 	return dataValid;
 }
-

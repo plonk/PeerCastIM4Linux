@@ -2,7 +2,7 @@
 // File : html.h
 // Date: 4-apr-2002
 // Author: giles
-// Desc: 
+// Desc:
 //
 // (c) 2002 peercast.org
 // ------------------------------------------------
@@ -28,10 +28,10 @@ class FileStream;
 class WriteBufferStream;
 
 // ---------------------------------------
-class HTML 
+class HTML
 {
 public:
-	enum 
+	enum
 	{
 		MAX_TAGLEVEL = 64,
 		MAX_TAGLEN = 64

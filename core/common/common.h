@@ -44,7 +44,7 @@ UnknownEndian
 class GeneralException
 {
 public:
-    GeneralException(const char *m, int e = 0) 
+    GeneralException(const char *m, int e = 0)
 	{
 		strcpy(msg,m);
 		err=e;
@@ -132,7 +132,7 @@ public:
 	unsigned int storeTime;
 };
 // --------------------------------
-class GnuIDList 
+class GnuIDList
 {
 public:
 	GnuIDList(int);
@@ -234,7 +234,7 @@ public:
 	bool	isSameType(Host &h)
 	{
 			return ( (globalIP() && h.globalIP()) ||
-			         (!globalIP() && !h.globalIP()) ); 
+			         (!globalIP() && !h.globalIP()) );
 	}
 
 	void	IPtoStr(char *str)
@@ -302,4 +302,3 @@ extern void LOG_CHANNEL(const char *fmt,...);
 
 
 #endif
-

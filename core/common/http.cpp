@@ -2,7 +2,7 @@
 // File : http.cpp
 // Date: 4-apr-2002
 // Author: giles
-// Desc: 
+// Desc:
 //		HTTP protocol handling
 //
 // (c) 2002 peercast.org
@@ -38,7 +38,7 @@ bool HTTP::checkResponse(int r)
 		throw StreamException("Unexpected HTTP response");
 		return false;
 	}
-	
+
 	return true;
 }
 //-----------------------------------------
@@ -63,7 +63,7 @@ int HTTP::readResponse()
 
 	return atoi(scp);
 }
-	
+
 //-----------------------------------------
 bool	HTTP::nextHeader()
 {
@@ -101,9 +101,9 @@ char *HTTP::getArgStr()
 //-----------------------------------------
 int	HTTP::getArgInt()
 {
-	if (arg) 
+	if (arg)
 		return atoi(arg);
-	else 
+	else
 		return 0;
 }
 //-----------------------------------------
@@ -134,7 +134,7 @@ void HTTP::getAuthUserPass(char *user, char *pass, size_t szUser, size_t szPass)
 					strncpy(pass, s+1, szPass);
 					pass[szPass-1] = '\0';
 				}
-			}			
+			}
 		}
 	}
 }
@@ -174,7 +174,7 @@ bool	CookieList::add(Cookie &c)
 	if (contains(c))
 		return false;
 
-	unsigned int oldestTime=(unsigned int)-1; 
+	unsigned int oldestTime=(unsigned int)-1;
 	int oldestIndex=0;
 
 	for(int i=0; i<MAX_COOKIES; i++)

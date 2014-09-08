@@ -31,7 +31,7 @@ class Stream;
 class ChanPacket
 {
 public:
-	enum 
+	enum
 	{
 		MAX_DATALEN = 16384
 	};
@@ -46,7 +46,7 @@ public:
 		T_ALL		= 0xff
 	};
 
-	ChanPacket() 
+	ChanPacket()
 	{
 		init();
 	}
@@ -82,7 +82,7 @@ class ChanPacketv
 {
 public:
 	enum {BSIZE = 0x100};
-	ChanPacketv() 
+	ChanPacketv()
 	{
 		init();
 	}
@@ -156,12 +156,12 @@ public:
 	int priority;
 };
 // ----------------------------------
-class ChanPacketBuffer 
+class ChanPacketBuffer
 {
 public:
 	enum {
 		MAX_PACKETS = 64,
-		NUM_SAFEPACKETS = 60 
+		NUM_SAFEPACKETS = 60
 	};
 
 	void	init()
@@ -213,7 +213,7 @@ class ChannelStream
 public:
 	ChannelStream()
 	:numListeners(0)
-	,numRelays(0) 
+	,numRelays(0)
 	,isPlaying(false)
 	,fwState(0)
 	,lastUpdate(0)
@@ -247,5 +247,4 @@ public:
 	Channel *parent;
 };
 
-#endif 
-
+#endif

@@ -2,7 +2,7 @@
 // File : wsys.cpp
 // Date: 4-apr-2002
 // Author: giles
-// Desc: 
+// Desc:
 //		WSys derives from Sys to provide basic win32 functions such as starting threads.
 //
 // (c) 2002 peercast.org
@@ -40,9 +40,9 @@
 WSys::WSys(HWND w)
 {
 	stats.clear();
-	
+
 	rndGen.setSeed(getTime());
-	
+
 	mainWindow = w;
 	WSAClientSocket::init();
 
@@ -73,7 +73,7 @@ ClientSocket *WSys::createSocket()
 // ---------------------------------
 void WSys::endThread(ThreadInfo *info)
 {
-}             
+}
 // ---------------------------------
 void WSys::waitThread(ThreadInfo *info, int timeout)
 {
@@ -84,7 +84,7 @@ void WSys::waitThread(ThreadInfo *info, int timeout)
           break;
 	}
 }
-  
+
 
 // ---------------------------------
 bool	WSys::startThread(ThreadInfo *info)
@@ -96,13 +96,13 @@ bool	WSys::startThread(ThreadInfo *info)
 	unsigned int threadID;
 	info->handle = (unsigned int)_beginthreadex( NULL, 0, (start_address)info->func, info, 0, &threadID );
 
-    if(info->handle == 0) 
+    if(info->handle == 0)
 		return false;*/
 
 	typedef void (__cdecl *start_address)( void * );
 	info->handle = _beginthread((start_address)info->func, 0,info);
 
-    if(info->handle == -1) 
+    if(info->handle == -1)
 		return false;
 
   return true;
@@ -146,5 +146,5 @@ void WSys::exit()
 // --------------------------------------------------
 void WSys::executeFile(const char *file)
 {
-    ShellExecute(NULL,"open",file,NULL,NULL,SW_SHOWNORMAL);  
+    ShellExecute(NULL,"open",file,NULL,NULL,SW_SHOWNORMAL);
 }

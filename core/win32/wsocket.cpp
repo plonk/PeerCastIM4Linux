@@ -2,10 +2,10 @@
 // File : wsocket.cpp
 // Date: 4-apr-2002
 // Author: giles
-// Desc: 
+// Desc:
 //		Windows version of ClientSocket. Handles the nitty gritty of actually
 //		reading and writing TCP
-//		
+//
 // (c) 2002 peercast.org
 // ------------------------------------------------
 // This program is free software; you can redistribute it and/or modify
@@ -41,7 +41,7 @@ void WSAClientSocket::init()
 	WORD wVersionRequested;
 	WSADATA wsaData;
 	int err;
-    
+
 	wVersionRequested = MAKEWORD( 2, 0 );
 	err = WSAStartup( wVersionRequested, &wsaData );
 	if ( err != 0 )
@@ -133,7 +133,7 @@ void WSAClientSocket::setLinger(int sec)
 	linger.l_onoff = (sec>0)?1:0;
     linger.l_linger = sec;
 
-	if (setsockopt(sockNum, SOL_SOCKET, SO_LINGER, (const char *)&linger, sizeof (linger)) == -1) 
+	if (setsockopt(sockNum, SOL_SOCKET, SO_LINGER, (const char *)&linger, sizeof (linger)) == -1)
 		throw SockException("Unable to set LINGER");
 }
 
@@ -148,7 +148,7 @@ void WSAClientSocket::setBlocking(bool yes)
 void WSAClientSocket::setNagle(bool on)
 {
     int nodelay = (on==false);
-	if (setsockopt(sockNum, SOL_SOCKET, TCP_NODELAY, (char *)&nodelay, sizeof nodelay) == -1) 
+	if (setsockopt(sockNum, SOL_SOCKET, TCP_NODELAY, (char *)&nodelay, sizeof nodelay) == -1)
 		throw SockException("Unable to set NODELAY");
 
 }
@@ -157,7 +157,7 @@ void WSAClientSocket::setNagle(bool on)
 void WSAClientSocket::setReuse(bool yes)
 {
 	unsigned long op = yes ? 1 : 0;
-	if (setsockopt(sockNum,SOL_SOCKET,SO_REUSEADDR,(char *)&op,sizeof(unsigned long)) == -1) 
+	if (setsockopt(sockNum,SOL_SOCKET,SO_REUSEADDR,(char *)&op,sizeof(unsigned long)) == -1)
 		throw SockException("Unable to set REUSE");
 }
 
@@ -170,7 +170,7 @@ void WSAClientSocket::setBufSize(int size)
 	if (getsockopt(sockNum,SOL_SOCKET,SO_RCVBUF,(char *)&oldop,&len) == -1) {
 		LOG_DEBUG("Unable to get RCVBUF");
 	} else if (oldop < size) {
-		if (setsockopt(sockNum,SOL_SOCKET,SO_RCVBUF,(char *)&op,len) == -1) 
+		if (setsockopt(sockNum,SOL_SOCKET,SO_RCVBUF,(char *)&op,len) == -1)
 			LOG_DEBUG("Unable to set RCVBUF");
 		//else
 		//	LOG_DEBUG("*** recvbufsize:%d -> %d", oldop, op);
@@ -179,7 +179,7 @@ void WSAClientSocket::setBufSize(int size)
 	if (getsockopt(sockNum,SOL_SOCKET,SO_SNDBUF,(char *)&oldop,&len) == -1) {
 		LOG_DEBUG("Unable to get SNDBUF");
 	} else if (oldop < size) {
-		if (setsockopt(sockNum,SOL_SOCKET,SO_SNDBUF,(char *)&op,len) == -1) 
+		if (setsockopt(sockNum,SOL_SOCKET,SO_SNDBUF,(char *)&op,len) == -1)
 			LOG_DEBUG("Unable to set SNDBUF");
 		//else
 		//	LOG_DEBUG("*** sendbufsize: %d -> %d", oldop, op);
@@ -196,12 +196,12 @@ HOSTENT *WSAClientSocket::resolveHost(const char *hostName)
 		// if failed, try using gethostbyaddr instead
 
 		unsigned long ip = inet_addr(hostName);
-		
+
 		if (ip == INADDR_NONE)
 			return NULL;
 
 		if ((he = gethostbyaddr((char *)&ip,sizeof(ip),AF_INET)) == NULL)
-			return NULL;	
+			return NULL;
 	}
 	return he;
 }
@@ -426,7 +426,7 @@ void WSAClientSocket::write(const void *p, int l)
 		int r = send(sockNum, (char *)p, l, 0);
 		if (r == SOCKET_ERROR)
 		{
-			checkTimeout(false,true);	
+			checkTimeout(false,true);
 		}
 		else if (r == 0)
 		{
@@ -614,7 +614,7 @@ ClientSocket *WSAClientSocket::accept()
 	if (conSock ==  INVALID_SOCKET)
 		return NULL;
 
-	
+
     WSAClientSocket *cs = new WSAClientSocket();
 	cs->sockNum = conSock;
 
@@ -677,4 +677,3 @@ bool	WSAClientSocket::readReady()
 
 	return select (sockNum+1, &read_fds, NULL, NULL, &timeout) == 1;
 }
-

@@ -21,7 +21,7 @@
 
 // ------------------------------------------------
 #ifdef PRIVATE_BROADCASTER
-static const char PCP_BROADCAST_FLAGS	= 0x01;	
+static const char PCP_BROADCAST_FLAGS	= 0x01;
 static bool	PCP_FORCE_YP				= true;
 #else
 static const char PCP_BROADCAST_FLAGS	= 0x00;

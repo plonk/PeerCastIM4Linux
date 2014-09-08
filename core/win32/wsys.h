@@ -2,7 +2,7 @@
 // File : wsys.h
 // Date: 4-apr-2002
 // Author: giles
-// Desc: 
+// Desc:
 //		WSys derives from Sys to provide basic win32 functions such as starting threads.
 //
 // (c) 2002 peercast.org
@@ -38,7 +38,7 @@ public:
 	virtual void			sleep(int );
 	virtual void			appMsg(long,long);
 	virtual unsigned int	getTime();
-	virtual double			getDTime();		
+	virtual double			getDTime();
 	virtual unsigned int	rnd() {return rndGen.next();}
 	virtual void			getURL(const char *);
 	virtual void			exit();
@@ -51,11 +51,8 @@ public:
 
 	HWND	mainWindow;
 	peercast::Random rndGen;
-};                               
+};
 
 
 // ------------------------------------
 #endif
-
-
- 

@@ -190,5 +190,3 @@ ASFInfo parseASFHeader(Stream &in)
 
 	return asf;
 }
-
-

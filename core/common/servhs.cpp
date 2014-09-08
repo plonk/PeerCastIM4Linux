@@ -2,7 +2,7 @@
 // File : servhs.cpp
 // Date: 4-apr-2002
 // Author: giles
-// Desc: 
+// Desc:
 //		Servent handshaking, TODO: should be in its own class
 //
 // (c) 2002 peercast.org
@@ -122,10 +122,10 @@ void Servent::handshakeHTTP(HTTP &http, bool isHTTP)
 			String dirName = fn+6;
 
 			if (!isAllowed(ALLOW_HTML))
-				throw HTTPException(HTTP_SC_UNAVAILABLE,503);			
+				throw HTTPException(HTTP_SC_UNAVAILABLE,503);
 
 			if (!handshakeAuth(http,fn,false))
-				throw HTTPException(HTTP_SC_UNAUTHORIZED,401);			
+				throw HTTPException(HTTP_SC_UNAUTHORIZED,401);
 
 
 			handshakeRemoteFile(dirName);
@@ -203,7 +203,7 @@ void Servent::handshakeHTTP(HTTP &http, bool isHTTP)
 				if (!isAllowed(ALLOW_DIRECT) || !isFiltered(ServFilter::F_DIRECT))
 					throw HTTPException(HTTP_SC_UNAVAILABLE,503);
 
-			
+
 			ChanInfo info;
 			if (servMgr->getChannel(fn+5,info,isPrivate()))
 				handshakePLS(info,false);
@@ -219,7 +219,7 @@ void Servent::handshakeHTTP(HTTP &http, bool isHTTP)
 
 			triggerChannel(fn+8,ChanInfo::SP_HTTP,isPrivate());
 
-			
+
 		}else if (strncmp(fn,"/channel/",9)==0)
 		{
 
@@ -229,7 +229,7 @@ void Servent::handshakeHTTP(HTTP &http, bool isHTTP)
 
 			triggerChannel(fn+9,ChanInfo::SP_PCP,false);
 
-		}else 
+		}else
 		{
 			while (http.nextHeader());
 			http.writeLine(HTTP_SC_FOUND);
@@ -252,7 +252,7 @@ void Servent::handshakeHTTP(HTTP &http, bool isHTTP)
 				if (!isAllowed(ALLOW_DIRECT) || !isFiltered(ServFilter::F_DIRECT))
 					throw HTTPException(HTTP_SC_UNAVAILABLE,503);
 
-			
+
 			ChanInfo info;
 			if (servMgr->getChannel(fn+5,info,isPrivate()))
 				handshakePLS(info,false);
@@ -283,7 +283,7 @@ void Servent::handshakeHTTP(HTTP &http, bool isHTTP)
 				handshakeCMD(buf);
 			}
 
-		}else 
+		}else
 		{
 			while (http.nextHeader());
 			http.writeLine(HTTP_SC_FOUND);
@@ -293,7 +293,7 @@ void Servent::handshakeHTTP(HTTP &http, bool isHTTP)
 	}else if (http.isRequest("GIV"))
 	{
 		HTTP http(*sock);
-	
+
 		while (http.nextHeader()) ;
 
 		if (!isAllowed(ALLOW_NETWORK))
@@ -320,18 +320,18 @@ void Servent::handshakeHTTP(HTTP &http, bool isHTTP)
 			if (!ch->acceptGIV(sock))
 				throw HTTPException(HTTP_SC_UNAVAILABLE,503);
 
-		
+
 			LOG_DEBUG("Accepted GIV channel %s from: %s",idstr,ipstr);
 
-			sock=NULL;					// release this servent but dont close socket.	
-		}else 
+			sock=NULL;					// release this servent but dont close socket.
+		}else
 		{
 
 			if (!servMgr->acceptGIV(sock))
 				throw HTTPException(HTTP_SC_UNAVAILABLE,503);
 
 			LOG_DEBUG("Accepted GIV PCP from: %s",ipstr);
-			sock=NULL;					// release this servent but dont close socket.	
+			sock=NULL;					// release this servent but dont close socket.
 		}
 
 	}else if (http.isRequest(PCX_PCP_CONNECT))
@@ -339,7 +339,7 @@ void Servent::handshakeHTTP(HTTP &http, bool isHTTP)
 
 		if (!isAllowed(ALLOW_NETWORK) || !isFiltered(ServFilter::F_NETWORK))
 			throw HTTPException(HTTP_SC_UNAVAILABLE,503);
-		
+
 		processIncomingPCP(true);
 
 	}else if (http.isRequest("PEERCAST CONNECT"))
@@ -372,7 +372,7 @@ void Servent::handshakeHTTP(HTTP &http, bool isHTTP)
 					break;
 				}
 			loginPassword.set(in+7);
-			
+
 			LOG_DEBUG("ICY client: %s %s",loginPassword.cstr(),mount?mount:"unknown");
 		}
 
@@ -560,7 +560,7 @@ void Servent::handshakeIncoming()
 
 }
 // -----------------------------------
-void Servent::triggerChannel(char *str, ChanInfo::PROTOCOL proto,bool relay)	
+void Servent::triggerChannel(char *str, ChanInfo::PROTOCOL proto,bool relay)
 {
 
 	ChanInfo info;
@@ -683,7 +683,7 @@ bool Servent::getLocalURL(char *str)
 	char ipStr[64];
 
 	Host h;
-	
+
 	if (sock->host.localIP())
 		h = sock->getLocalHost();
 	else
@@ -693,7 +693,7 @@ bool Servent::getLocalURL(char *str)
 
 	h.toStr(ipStr);
 
-	sprintf(str,"http://%s",ipStr);			
+	sprintf(str,"http://%s",ipStr);
 	return true;
 }
 
@@ -707,7 +707,7 @@ bool Servent::getLocalTypeURL(char *str, ChanInfo::TYPE type)
 	char ipStr[64];
 
 	Host h;
-	
+
 	if (sock->host.localIP())
 		h = sock->getLocalHost();
 	else
@@ -719,10 +719,10 @@ bool Servent::getLocalTypeURL(char *str, ChanInfo::TYPE type)
 	switch(type) {
 		case ChanInfo::T_WMA:
 		case ChanInfo::T_WMV:
-			sprintf(str,"mms://%s",ipStr);	
+			sprintf(str,"mms://%s",ipStr);
 			break;
 		default:
-			sprintf(str,"http://%s",ipStr);	
+			sprintf(str,"http://%s",ipStr);
 	}
 	return true;
 }
@@ -809,7 +809,7 @@ bool Servent::handshakeAuth(HTTP &http,const char *args,bool local)
 	switch (servMgr->authType)
 	{
 		case ServMgr::AUTH_HTTPBASIC:
-				
+
 			if ((strcmp(pass,servMgr->password)==0) && strlen(servMgr->password))
 				return true;
 			break;
@@ -834,7 +834,7 @@ bool Servent::handshakeAuth(HTTP &http,const char *args,bool local)
 		else
 			handshakeRemoteFile(file);
 	}
-	
+
 
 	return false;
 }
@@ -892,7 +892,7 @@ void Servent::handshakeCMD(char *cmd)
 			}else if (cmpCGIarg(cmd,"cmd=","clearlog"))
 			{
 				sys->logBuf->clear();
-				sprintf(jumpStr,"/%s/viewlog.html",servMgr->htmlPath);					
+				sprintf(jumpStr,"/%s/viewlog.html",servMgr->htmlPath);
 				jumpArg = jumpStr;
 
 			}else if (cmpCGIarg(cmd,"cmd=","save"))
@@ -900,13 +900,13 @@ void Servent::handshakeCMD(char *cmd)
 
 				peercastInst->saveSettings();
 
-				sprintf(jumpStr,"/%s/settings.html",servMgr->htmlPath);					
+				sprintf(jumpStr,"/%s/settings.html",servMgr->htmlPath);
 				jumpArg = jumpStr;
 			}else if (cmpCGIarg(cmd,"cmd=","reg"))
 			{
 				char idstr[128];
 				chanMgr->broadcastID.toStr(idstr);
-				sprintf(jumpStr,"http://www.peercast.org/register/?id=%s",idstr);					
+				sprintf(jumpStr,"http://www.peercast.org/register/?id=%s",idstr);
 				jumpArg = jumpStr;
 			}else if (cmpCGIarg(cmd,"cmd=","edit_bcid"))
 			{
@@ -927,7 +927,7 @@ void Servent::handshakeCMD(char *cmd)
 					}
 				}
 				peercastInst->saveSettings();
-				sprintf(jumpStr,"/%s/bcid.html",servMgr->htmlPath);					
+				sprintf(jumpStr,"/%s/bcid.html",servMgr->htmlPath);
 				jumpArg = jumpStr;
 
 			}else if (cmpCGIarg(cmd,"cmd=","add_bcid"))
@@ -952,8 +952,8 @@ void Servent::handshakeCMD(char *cmd)
 						result = true;
 
 				}
-	
-				LOG_DEBUG("Adding BCID : %s",bcid->name.cstr());			
+
+				LOG_DEBUG("Adding BCID : %s",bcid->name.cstr());
 				servMgr->addValidBCID(bcid);
 				peercastInst->saveSettings();
 				if (result)
@@ -963,13 +963,13 @@ void Servent::handshakeCMD(char *cmd)
 					http.writeString("OK");
 				}else
 				{
-					sprintf(jumpStr,"/%s/bcid.html",servMgr->htmlPath);					
+					sprintf(jumpStr,"/%s/bcid.html",servMgr->htmlPath);
 					jumpArg = jumpStr;
 				}
 
 
 			}else if (cmpCGIarg(cmd,"cmd=","apply"))
-			{	
+			{
 				//servMgr->numFilters = 0;
 				ServFilter *currFilter=servMgr->filters;
 				bool beginfilt = false;
@@ -1034,7 +1034,7 @@ void Servent::handshakeCMD(char *cmd)
 						servMgr->minGnuIncoming = atoi(arg);
 					else if (strcmp(curr,"maxpgnu")==0)
 						servMgr->maxGnuIncoming = atoi(arg);
-					
+
 
 
 					// connections
@@ -1060,7 +1060,7 @@ void Servent::handshakeCMD(char *cmd)
 							if (strncmp(fs,"ip",2)==0)		// ip must be first
 							{
 								currFilter = &servMgr->filters[servMgr->numFilters];
-								currFilter->init();	
+								currFilter->init();
 								currFilter->host.fromStrIP(arg,DEFAULT_PORT);
 								if ((currFilter->host.ip) && (servMgr->numFilters < (ServMgr::MAX_FILTERS-1)))
 								{
@@ -1190,7 +1190,7 @@ void Servent::handshakeCMD(char *cmd)
 					Host lh(ClientSocket::getIP(NULL),newPort);
 					char ipstr[64];
 					lh.toStr(ipstr);
-					sprintf(jumpStr,"http://%s/%s/settings.html",ipstr,servMgr->htmlPath);					
+					sprintf(jumpStr,"http://%s/%s/settings.html",ipstr,servMgr->htmlPath);
 
 					servMgr->serverHost.port = newPort;
 					servMgr->restartServer=true;
@@ -1203,16 +1203,16 @@ void Servent::handshakeCMD(char *cmd)
 					//	html.end();
 					//html.end();
 
-					
+
 
 					//char ipstr[64];
 					//servMgr->serverHost.toStr(ipstr);
-					//sprintf(jumpStr,"/%s/settings.html",ipstr,servMgr->htmlPath);					
+					//sprintf(jumpStr,"/%s/settings.html",ipstr,servMgr->htmlPath);
 					jumpArg = jumpStr;
 
 				}else
 				{
-					sprintf(jumpStr,"/%s/settings.html",servMgr->htmlPath);					
+					sprintf(jumpStr,"/%s/settings.html",servMgr->htmlPath);
 					jumpArg = jumpStr;
 				}
 
@@ -1225,7 +1225,7 @@ void Servent::handshakeCMD(char *cmd)
 
 
 
-				
+
 
 			}else if (cmpCGIarg(cmd,"cmd=","fetch"))
 			{
@@ -1268,7 +1268,7 @@ void Servent::handshakeCMD(char *cmd)
 					}
 
 				}
-				
+
 				info.bcID = chanMgr->broadcastID;
 
 				Channel *c = chanMgr->createChannel(info,NULL);
@@ -1276,7 +1276,7 @@ void Servent::handshakeCMD(char *cmd)
 					c->startURL(curl.cstr());
 
 
-				sprintf(jumpStr,"/%s/relays.html",servMgr->htmlPath);					
+				sprintf(jumpStr,"/%s/relays.html",servMgr->htmlPath);
 				jumpArg = jumpStr;
 
 			}else if (cmpCGIarg(cmd,"cmd=","stopserv"))
@@ -1292,17 +1292,17 @@ void Servent::handshakeCMD(char *cmd)
 							s->abort();
 					}
 				}
-				sprintf(jumpStr,"/%s/connections.html",servMgr->htmlPath);					
+				sprintf(jumpStr,"/%s/connections.html",servMgr->htmlPath);
 				jumpArg = jumpStr;
 
 
 			}else if (cmpCGIarg(cmd,"cmd=","hitlist"))
-			{			
-					
+			{
+
 				bool stayConnected=hasCGIarg(cmd,"relay");
 
 				int index = 0;
-				ChanHitList *chl = chanMgr->hitlist;				
+				ChanHitList *chl = chanMgr->hitlist;
 				while (chl)
 				{
 					if (chl->isUsed())
@@ -1331,7 +1331,7 @@ void Servent::handshakeCMD(char *cmd)
 				if (hasCGIarg(cmd,"relay"))
 				{
 					sys->sleep(500);
-					sprintf(jumpStr,"/%s/relays.html",servMgr->htmlPath);					
+					sprintf(jumpStr,"/%s/relays.html",servMgr->htmlPath);
 					jumpArg = jumpStr;
 				}
 			}else if (cmpCGIarg(cmd,"cmd=","clear"))
@@ -1350,7 +1350,7 @@ void Servent::handshakeCMD(char *cmd)
 					}
 				}
 
-				sprintf(jumpStr,"/%s/index.html",servMgr->htmlPath);					
+				sprintf(jumpStr,"/%s/index.html",servMgr->htmlPath);
 				jumpArg = jumpStr;
 
 			}else if (cmpCGIarg(cmd,"cmd=","upgrade"))
@@ -1365,8 +1365,8 @@ void Servent::handshakeCMD(char *cmd)
 
 
 			}else if (cmpCGIarg(cmd,"cmd=","connect"))
-			{			
-					
+			{
+
 
 				Servent *s = servMgr->servents;
 				{
@@ -1379,7 +1379,7 @@ void Servent::handshakeCMD(char *cmd)
 					}
 					s=s->next;
 				}
-				sprintf(jumpStr,"/%s/connections.html",servMgr->htmlPath);					
+				sprintf(jumpStr,"/%s/connections.html",servMgr->htmlPath);
 				jumpArg = jumpStr;
 
 			}else if (cmpCGIarg(cmd,"cmd=","shutdown"))
@@ -1403,7 +1403,7 @@ void Servent::handshakeCMD(char *cmd)
 				}
 
 				sys->sleep(500);
-				sprintf(jumpStr,"/%s/relays.html",servMgr->htmlPath);					
+				sprintf(jumpStr,"/%s/relays.html",servMgr->htmlPath);
 				jumpArg = jumpStr;
 
 			}else if (cmpCGIarg(cmd,"cmd=","bump"))
@@ -1420,7 +1420,7 @@ void Servent::handshakeCMD(char *cmd)
 				if (c)
 					c->bump = true;
 
-				sprintf(jumpStr,"/%s/relays.html",servMgr->htmlPath);					
+				sprintf(jumpStr,"/%s/relays.html",servMgr->htmlPath);
 				jumpArg = jumpStr;
 
 			}else if (cmpCGIarg(cmd,"cmd=","keep"))
@@ -1446,7 +1446,7 @@ void Servent::handshakeCMD(char *cmd)
 						c->stayConnected = false;
 				} //JP-Patch
 
-				sprintf(jumpStr,"/%s/relays.html",servMgr->htmlPath);					
+				sprintf(jumpStr,"/%s/relays.html",servMgr->htmlPath);
 				jumpArg = jumpStr;
 
 			}else if (cmpCGIarg(cmd,"cmd=","relay"))
@@ -1476,13 +1476,13 @@ void Servent::handshakeCMD(char *cmd)
 					c->startGet();
 				}
 
-				sprintf(jumpStr,"/%s/relays.html",servMgr->htmlPath);					
+				sprintf(jumpStr,"/%s/relays.html",servMgr->htmlPath);
 				jumpArg = jumpStr;
 
 
 			}else if (cmpCGIarg(cmd,"net=","add"))
 			{
-				
+
 				GnuID id;
 				id.clear();
 				while (cmd=nextCGIarg(cmd,curr,arg))
@@ -1514,7 +1514,7 @@ void Servent::handshakeCMD(char *cmd)
 				id.toStr(idstr);
 
 				cookie.set(idstr,sock->host.ip);
-				servMgr->cookieList.add(cookie);	
+				servMgr->cookieList.add(cookie);
 
 				http.writeLine(HTTP_SC_FOUND);
 				if (servMgr->cookieList.neverExpire)
@@ -1537,8 +1537,8 @@ void Servent::handshakeCMD(char *cmd)
 						for(int i=0; i<ChanMgr::MAX_CHANNELS; i++)
 						{
 							Channel *c = &chanMgr->channels[i];
-							if ((c->isActive()) && (c->status == Channel::S_BROADCASTING) && (strcmp(c->info.name.cstr(),chname.cstr())==0)) 
-							{	
+							if ((c->isActive()) && (c->status == Channel::S_BROADCASTING) && (strcmp(c->info.name.cstr(),chname.cstr())==0))
+							{
 								ChanInfo newInfo = c->info;
 
 								while (cmd=nextCGIarg(cmd,curr,arg))
@@ -1619,10 +1619,10 @@ void Servent::handshakeCMD(char *cmd)
 				{
 					jumpArg = "/";
 				}
-                
+
 			}else{
 
-				sprintf(jumpStr,"/%s/index.html",servMgr->htmlPath);					
+				sprintf(jumpStr,"/%s/index.html",servMgr->htmlPath);
 				jumpArg = jumpStr;
 			}
 		}
@@ -1668,7 +1668,7 @@ static XML::Node *createChannelXML(ChanHitList *chl)
 void Servent::handshakeXML()
 {
 	int i;
-				
+
 
 
 	XML xml;
@@ -1873,7 +1873,7 @@ void Servent::handshakeICY(Channel::SRC_TYPE type, bool isHTTP)
 	}
 
 
-		
+
 	// check password before anything else, if needed
 	if (!loginPassword.isSame(servMgr->password))
 	{
@@ -1881,13 +1881,13 @@ void Servent::handshakeICY(Channel::SRC_TYPE type, bool isHTTP)
 			throw HTTPException(HTTP_SC_UNAUTHORIZED,401);
 	}
 
-		
+
 	// we need a valid IP address before we start
 	servMgr->checkFirewall();
 
 
-	// attach channel ID to name, channel ID is also encoded with IP address 
-	// to help prevent channel hijacking. 
+	// attach channel ID to name, channel ID is also encoded with IP address
+	// to help prevent channel hijacking.
 
 
 	info.id = chanMgr->broadcastID;
@@ -1925,14 +1925,14 @@ void Servent::handshakeLocalFile(const char *fn)
 {
 	HTTP http(*sock);
 	String fileName;
-	
+
 	if (servMgr->getModulePath) //JP-EX
 	{
 		peercastApp->getDirectory();
 		fileName = servMgr->modulePath;
 	}else
 		fileName = peercastApp->getPath();
-	
+
 	fileName.append(fn);
 
 	LOG_DEBUG("Writing HTML file: %s",fileName.cstr());
@@ -1997,7 +1997,7 @@ void Servent::handshakeRemoteFile(const char *dirName)
 	while (rhttp.nextHeader())
 	{
 		char *arg = rhttp.getArgStr();
-		if (arg) 
+		if (arg)
 		{
 			if (rhttp.isHeader("content-type"))
 				contentType = arg;

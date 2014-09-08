@@ -6,12 +6,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -42,9 +42,9 @@ static unsigned char *make_utf8_string(const wchar_t *unicode)
 
 	/* first calculate the size of the target string */
 	c = unicode[index++];
-	while (c) 
+	while (c)
 	{
-		if (c < 0x0080) 
+		if (c < 0x0080)
 		{
 			size += 1;
 		}
@@ -153,7 +153,7 @@ int utf8_encode(const char *from, char **to)
 	}
 
 	unicode = (wchar_t *)calloc(wchars + 1, sizeof(unsigned short));
-	if(unicode == NULL) 
+	if(unicode == NULL)
 	{
 //		fprintf(stderr, "Out of memory processing string to UTF8\n");
 		return -1;
@@ -167,7 +167,7 @@ int utf8_encode(const char *from, char **to)
 		return -1;
 	}
 
-	/* On NT-based windows systems, we could use WideCharToMultiByte(), but 
+	/* On NT-based windows systems, we could use WideCharToMultiByte(), but
 	 * MS doesn't actually have a consistent API across win32.
 	 */
 	*to = (char *)make_utf8_string(unicode);
@@ -195,11 +195,11 @@ int utf8_decode(const char *from, char **to)
 	identify_encoding_close(cdt);
 
 
-	/* On NT-based windows systems, we could use MultiByteToWideChar(CP_UTF8), but 
+	/* On NT-based windows systems, we could use MultiByteToWideChar(CP_UTF8), but
 	 * MS doesn't actually have a consistent API across win32.
 	 */
 	unicode = (wchar_t *)make_unicode_string((const unsigned char *)from);
-	if (unicode == NULL) 
+	if (unicode == NULL)
 	{
 //		fprintf(stderr, "Out of memory processing string from UTF8 to UNICODE16\n");
 		return -1;
@@ -215,7 +215,7 @@ int utf8_decode(const char *from, char **to)
 	}
 
 	*to = (char *)calloc(chars + 1, sizeof(unsigned char));
-	if (*to == NULL) 
+	if (*to == NULL)
 	{
 //		fprintf(stderr, "Out of memory processing string to local charset\n");
 		free(unicode);

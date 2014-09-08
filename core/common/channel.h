@@ -354,7 +354,7 @@ public:
 class Channel
 {
 public:
-	
+
 	enum STATUS
 	{
 		S_NONE,
@@ -465,7 +465,7 @@ public:
 	void	updateInfo(ChanInfo &);
 
 	int		readStream(Stream &,ChannelStream *);
-	
+
 	void	checkReadDelay(unsigned int);
 
 	void	processMp3Metadata(char *);
@@ -493,7 +493,7 @@ public:
 
 	ChannelStream *sourceStream;
 	unsigned int streamIndex;
-	
+
 
 	ChanInfo	info;
 	ChanHit		sourceHost;
@@ -554,7 +554,7 @@ public:
 	enum {
 		MAX_IDLE_CHANNELS = 8,		// max. number of channels that can be left idle
 		MAX_METAINT = 8192			// must be at least smaller than ChanPacket data len (ie. about half)
-		
+
 	};
 
 
@@ -582,7 +582,7 @@ public:
 
 	int		findChannels(ChanInfo &,Channel **,int);
 	int		findChannelsByStatus(Channel **,int,Channel::STATUS);
-	
+
 	int		numIdleChannels();
 	int		numChannels();
 

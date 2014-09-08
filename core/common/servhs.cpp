@@ -1194,22 +1194,10 @@ void Servent::handshakeCMD(char *cmd)
 
 					servMgr->serverHost.port = newPort;
 					servMgr->restartServer=true;
-					//html.setRefresh(3);
-					//html.setRefreshURL(jumpStr);
-					//html.startHTML();
-					//html.addHead();
-					//	html.startBody();
-					//		html.startTagEnd("h1","Please wait...");
-					//	html.end();
-					//html.end();
 
+                    sys->sleep(250); // wait for servers to restart
 
-
-					//char ipstr[64];
-					//servMgr->serverHost.toStr(ipstr);
-					//sprintf(jumpStr,"/%s/settings.html",ipstr,servMgr->htmlPath);
 					jumpArg = jumpStr;
-
 				}else
 				{
 					sprintf(jumpStr,"/%s/settings.html",servMgr->htmlPath);

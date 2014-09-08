@@ -794,17 +794,11 @@ bool ServMgr::seenPacket(GnuPacket &p)
 	}
 	return false;
 }
-
 // -----------------------------------
-void ServMgr::quit()
+void ServMgr::shutdownServents()
 {
-	LOG_DEBUG("ServMgr is quitting..");
+    Servent *s = servents;
 
-	serverThread.shutdown();
-
-	idleThread.shutdown();
-
-	Servent *s = servents;
 	while (s)
 	{
 		try
@@ -820,7 +814,16 @@ void ServMgr::quit()
 		s=s->next;
 	}
 }
+// -----------------------------------
+void ServMgr::quit()
+{
+	LOG_DEBUG("ServMgr is quitting..");
 
+	serverThread.shutdown();
+	idleThread.shutdown();
+
+	shutdownServents();
+}
 // -----------------------------------
 int ServMgr::broadcast(GnuPacket &pack,Servent *src)
 {
@@ -2294,24 +2297,22 @@ int ServMgr::idleProc(ThreadInfo *thread)
 // --------------------------------------------------
 int ServMgr::serverProc(ThreadInfo *thread)
 {
-
-//	thread->lock();
-
 	Servent *serv = servMgr->allocServent();
 	Servent *serv2 = servMgr->allocServent();
 
 	unsigned int lastLookupTime=0;
-
 
 	while (thread->active)
 	{
 
 		if (servMgr->restartServer)
 		{
-			serv->abort();		// force close
-			serv2->abort();		// force close
-			servMgr->quit();
+            serv->kill();
+            serv2->kill();
+			servMgr->shutdownServents();
 
+            serv = servMgr->allocServent();
+            serv2 = servMgr->allocServent();
 			servMgr->restartServer = false;
 		}
 
@@ -2320,31 +2321,23 @@ int ServMgr::serverProc(ThreadInfo *thread)
 			serv->allow = servMgr->allowServer1;
 			serv2->allow = servMgr->allowServer2;
 
-
 			if ((!serv->sock) || (!serv2->sock))
 			{
 				LOG_DEBUG("Starting servers");
-//				servMgr->forceLookup = true;
 
-				//if (servMgr->serverHost.ip != 0)
-				{
+                if (servMgr->forceNormal)
+                    servMgr->setFirewall(ServMgr::FW_OFF);
+                else
+                    servMgr->setFirewall(ServMgr::FW_UNKNOWN);
 
-					if (servMgr->forceNormal)
-						servMgr->setFirewall(ServMgr::FW_OFF);
-					else
-						servMgr->setFirewall(ServMgr::FW_UNKNOWN);
+                Host h = servMgr->serverHost;
 
-					Host h = servMgr->serverHost;
+                if (!serv->sock)
+                    serv->initServer(h);
 
-					if (!serv->sock)
-						serv->initServer(h);
-
-					h.port++;
-					if (!serv2->sock)
-						serv2->initServer(h);
-
-
-				}
+                h.port++;
+                if (!serv2->sock)
+                    serv2->initServer(h);
 			}
 		}else{
 			// stop server
@@ -2366,9 +2359,8 @@ int ServMgr::serverProc(ThreadInfo *thread)
 		sys->sleepIdle();
 
 	}
-
 	sys->endThread(thread);
-//	thread->unlock();
+
 	return 0;
 }
 

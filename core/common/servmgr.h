@@ -210,6 +210,8 @@ public:
 	void		quit();
 	void		closeConnections(Servent::TYPE);
 
+    void		shutdownServents();
+
 	void		checkFirewall();
 
 	// host cache

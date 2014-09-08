@@ -109,7 +109,7 @@ public:
 };
 
 // ----------------------------------
-// ServMgr keeps track of Servents
+//! ServMgr keeps track of Servents
 class ServMgr
 {
 
@@ -132,13 +132,13 @@ public:
 	};
 	enum {
 
-		MAX_HOSTCACHE = 100,		// max. amount of hosts in cache
-		MIN_HOSTS	= 3,			// min. amount of hosts that should be kept in cache
+		MAX_HOSTCACHE = 100,		///< max. amount of hosts in cache
+		MIN_HOSTS	= 3,			///< min. amount of hosts that should be kept in cache
 
-		MAX_OUTGOING = 3,			// max. number of outgoing servents to use
-		MAX_INCOMING = 6,		    // max. number of public incoming servents to use
-		MAX_TRYOUT   = 10,			// max. number of outgoing servents to try connect
-		MIN_CONNECTED = 3,			// min. amount of connected hosts that should be kept
+		MAX_OUTGOING = 3,			///< max. number of outgoing servents to use
+		MAX_INCOMING = 6,		    ///< max. number of public incoming servents to use
+		MAX_TRYOUT   = 10,			///< max. number of outgoing servents to try connect
+		MIN_CONNECTED = 3,			///< min. amount of connected hosts that should be kept
 
 		MIN_RELAYS = 1,
 
@@ -146,8 +146,8 @@ public:
 
 		MAX_VERSIONS = 16,
 
-		MAX_PREVIEWTIME	= 300,		// max. seconds preview per channel available (direct connections)
-		MAX_PREVIEWWAIT = 300,		// max. seconds wait between previews
+		MAX_PREVIEWTIME	= 300,		///< max. seconds preview per channel available (direct connections)
+		MAX_PREVIEWWAIT = 300,		///< max. seconds wait between previews
 
 	};
 
@@ -420,19 +420,19 @@ public:
 	bool	saveGuiPos;
 	bool	keepDownstreams;
 
-	bool topmostGui; // 最前面
-	bool startWithGui; // 起動時にGUI
-	bool preventSS; // スクリーンセーバーを抑止
-	bool noVersionCheck; // bcstAtomによるバージョンチェックを行わない
+	bool topmostGui; ///< 最前面
+	bool startWithGui; ///< 起動時にGUI
+	bool preventSS; ///< スクリーンセーバーを抑止
+	bool noVersionCheck; ///< bcstAtomによるバージョンチェックを行わない
 
-	int versionDNS; // DNSから取得した最新バージョンの番号
+	int versionDNS; ///< DNSから取得した最新バージョンの番号
 
-	ITSVector<addrCont> *IP_graylist; // gray/black-lists for DoS atk
+	ITSVector<addrCont> *IP_graylist; ///< gray/black-lists for DoS atk
 	ITSVector<addrCont> *IP_blacklist;
 	unsigned dosThreashold;
 	unsigned dosInterval;
 
-	int maxRelaysIndexTxt;	// for PCRaw (relay)
+	int maxRelaysIndexTxt;	///< for PCRaw (relay)
 
 #ifdef WIN32 //JP-MOD
 	bool	guiSimpleChannelList;
@@ -460,7 +460,7 @@ public:
 		bcstClap		= 0x00000001
 	};
 
-	// PCP broadcast flood
+	/// PCP broadcast flood
 	GnuID lastPCPFromID;
 	time_t lastPCPBcstTime;
 

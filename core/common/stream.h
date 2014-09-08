@@ -541,7 +541,7 @@ public:
 	Stream *out;
 };
 
-// writeされたものを捨ててバイト数だけカウントするストリーム
+//! writeされたものを捨ててバイト数だけカウントするストリーム
 class DummyStream : public Stream
 {
 private:

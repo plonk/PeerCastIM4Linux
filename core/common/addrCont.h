@@ -9,6 +9,7 @@
 
 #include <limits.h>
 
+//! Container type for IP-addr blacklist
 class addrCont
 {
 public:

@@ -23,6 +23,7 @@
 #include "common/http.h"
 
 // ---------------------------------------------
+//! Handles RTSP protocol.
 class RTSP : public HTTP
 {
 public:

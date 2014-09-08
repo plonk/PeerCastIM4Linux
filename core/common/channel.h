@@ -544,7 +544,7 @@ public:
 	unsigned int lastSkipTime;
 	unsigned int lastStopTime;
 
-	int maxRelays; // チャンネル固有のリレー最大数(コンストラクタで初期化)
+	int maxRelays; //!< チャンネル固有のリレー最大数(コンストラクタで初期化)
 };
 
 // ----------------------------------

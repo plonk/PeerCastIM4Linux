@@ -8,7 +8,7 @@
 #define _CORELIB_COMMON_TS_VECTOR_H_
 
 
-// Interface
+//! Interface for thread safe vector classes.
 template <class T> class ITSVector
 {
 protected:

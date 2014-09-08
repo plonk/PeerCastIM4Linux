@@ -31,6 +31,7 @@ extern char *trimstr(char *s);
 
 #define MAX_CGI_LEN 1024
 // ------------------------------------
+//! String class that gets allocated on the stack.
 class String
 {
 public:

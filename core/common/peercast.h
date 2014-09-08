@@ -17,7 +17,7 @@ class Sys;
 
 
 // ------------------------------------------------------------
-// This is the interface from the application to the core.
+//! This is the interface from the application to the core.
 class PeercastInstance
 {
 public:
@@ -59,7 +59,7 @@ public:
 
 };
 // ------------------------------------------------------------
-// This is the interface from the core to the application.
+//! This is the interface from the core to the application.
 class PeercastApplication
 {
 public:

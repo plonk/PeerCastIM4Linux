@@ -94,6 +94,7 @@ static const char *MIME_PNG			= "image/png";
 
 
 // --------------------------------------------
+//! HTTP cookie.
 class Cookie
 {
 public:
@@ -153,6 +154,7 @@ public:
 };
 
 // --------------------------------------------
+//! Handles HTTP protocol.
 class HTTP : public IndirectStream
 {
 public:

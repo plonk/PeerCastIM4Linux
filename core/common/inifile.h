@@ -23,6 +23,7 @@
 #include "common/stream.h"
 
 // -----------------------------------------
+//! For reading and writing .INI files.
 class IniFile
 {
 public:

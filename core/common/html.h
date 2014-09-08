@@ -28,6 +28,7 @@ class FileStream;
 class WriteBufferStream;
 
 // ---------------------------------------
+//! Template engine and HTML builder.
 class HTML
 {
 public:

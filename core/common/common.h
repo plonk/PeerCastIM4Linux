@@ -149,8 +149,10 @@ public:
 
 
 // ----------------------------------
+//! Represents IP address and port number. Also used for access control.
 class Host
 {
+    //! First octet
     inline unsigned int ip3()
     {
         return (ip>>24);
@@ -163,6 +165,7 @@ class Host
     {
         return (ip>>8)&0xff;
     }
+    //! Last octet
     inline unsigned int ip0()
     {
         return ip&0xff;
@@ -185,6 +188,7 @@ public:
 	}
 
 
+    //! Interpret the argument as pattern where 255 is the wildcard and try to match it.
 	bool	isMemberOf(Host &);
 
 	bool	isSame(Host &h)
@@ -194,6 +198,7 @@ public:
 
 	bool classType() {return globalIP();}
 
+    //! Is global IP.
 	bool	globalIP()
 	{
 		// local host
@@ -231,27 +236,31 @@ public:
 	}
 
 
+    //! True if both are global or both are local.
 	bool	isSameType(Host &h)
 	{
 			return ( (globalIP() && h.globalIP()) ||
 			         (!globalIP() && !h.globalIP()) );
 	}
 
+    //! Convert to string in dot-decimal notation.
 	void	IPtoStr(char *str)
 	{
 		sprintf(str,"%d.%d.%d.%d",(ip>>24)&0xff,(ip>>16)&0xff,(ip>>8)&0xff,(ip)&0xff);
 	}
 
+    //! Convert to string in dot-decimal notation plus port number.
 	void	toStr(char *str)
 	{
 		sprintf(str,"%d.%d.%d.%d:%d",(ip>>24)&0xff,(ip>>16)&0xff,(ip>>8)&0xff,(ip)&0xff,port);
 	}
 
+    //! Set from string in dot-decimal notation.
 	void	fromStrIP(const char *,int);
+    //! Set from hostname.
 	void	fromStrName(const char *,int);
 
 	bool	isLocalhost();
-
 
 	union
 	{
@@ -259,7 +268,7 @@ public:
 //		unsigned char ipByte[4];
 	};
 
-    unsigned short port;
+    unsigned short port;     //!< Port number
 	unsigned int value;
 };
 // ----------------------------------

@@ -21,6 +21,7 @@
 #define _STATS_H
 
 // ------------------------------------------------------
+//! Keeps trach of statistics.
 class Stats
 {
 public:

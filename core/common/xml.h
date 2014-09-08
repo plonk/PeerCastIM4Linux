@@ -28,6 +28,7 @@
 class Stream;
 
 //-----------------------
+//! Represents XML document structure.
 class XML
 {
 public:

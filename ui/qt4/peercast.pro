@@ -8,13 +8,13 @@ INCLUDEPATH += . ../../core ../../core/common
 unix {
  LIBS += 
  DEFINES += _UNIX
- SOURCES += ../../core/unix/compat.cpp ../../core/unix/usys.cpp ../../core/unix/usocket.cpp
+ SOURCES += ../../core/unix/compat.cpp ../../core/unix/usys.cpp ../../core/unix/usocket.cpp ../../core/unix/utf8.cpp
 }
 
 win32 {
  LIBS += -lwsock32
  DEFINES += WIN32 QT
- SOURCES += ../../core/win32/wsys.cpp ../../core/win32/wsocket.cpp
+ SOURCES += ../../core/win32/wsys.cpp ../../core/win32/wsocket.cpp ../../core/win32/utf8.c
 }
 
 macx {

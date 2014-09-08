@@ -25,9 +25,7 @@
 #include "common/socket.h"
 #include "common/gnutella.h"
 #include "common/servmgr.h" //JP-EX
-#if defined(WIN32) && !defined(QT)	// qt
 #include "common/utf8.h" //JP-Patch
-#endif
 #include <stdlib.h>
 #include <time.h>
 #include "common/jis.h"
@@ -663,7 +661,6 @@ void String::ASCII2META(const char *in, bool safe)
 	}
 	*op=0;
 }
-#if defined(WIN32) && !defined(QT)	// qt
 // -----------------------------------
 void String::ASCII2SJIS(const char *in) //JP-EX
 {
@@ -677,7 +674,6 @@ void String::ASCII2SJIS(const char *in) //JP-EX
 	strcpy(op,p);
 	free(p);
 }
-#endif
 // -----------------------------------
 void String::convertTo(TYPE t)
 {
@@ -734,11 +730,9 @@ void String::convertTo(TYPE t)
 			case T_METASAFE:
 				ASCII2META(tmp.data,true);
 				break;
-#if defined(WIN32) && !defined(QT)	// qt
 			case T_SJIS: //JP-EX
 				ASCII2SJIS(tmp.data);
 				break;
-#endif
 		}
 
 		type = t;

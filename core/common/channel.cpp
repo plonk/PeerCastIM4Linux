@@ -4654,10 +4654,8 @@ static void WriteASXInfo(Stream &out, String &title, String &contacturl, String:
 		String titleEncode;
 		titleEncode = title;
 		titleEncode.convertTo(tEncoding);
-#ifdef _WIN32
         if(tEncoding == String::T_SJIS)
             SJIStoSJISSAFE(titleEncode.cstr(), String::MAX_LEN);
-#endif
 		out.writeLineF("<TITLE>%s</TITLE>", titleEncode.cstr());
 	}
 
@@ -4666,10 +4664,8 @@ static void WriteASXInfo(Stream &out, String &title, String &contacturl, String:
 		String contacturlEncode;
 		contacturlEncode = contacturl;
 		contacturlEncode.convertTo(tEncoding);
-#ifdef _WIN32
         if(tEncoding == String::T_SJIS)
             SJIStoSJISSAFE(contacturlEncode.cstr(), String::MAX_LEN);
-#endif
 		out.writeLineF("<MOREINFO HREF = \"%s\" />", contacturlEncode.cstr());
 	}
 }
@@ -4679,11 +4675,7 @@ void PlayList::writeASX(Stream &out)
 {
 	out.writeLine("<ASX Version=\"3.0\">");
 
-#ifdef _WIN32
     String::TYPE tEncoding = String::T_SJIS;
-#else
-    String::TYPE tEncoding = String::T_UNICODESAFE;
-#endif
 	if(servMgr->asxDetailedMode == 2)
 	{
 		out.writeLine("<PARAM NAME = \"Encoding\" VALUE = \"utf-8\" />"); //JP-MOD Memo: UTF-8 cannot be used in some recording software.

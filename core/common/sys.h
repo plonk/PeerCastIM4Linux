@@ -50,9 +50,7 @@ public:
 		T_BASE64,
 		T_UNICODE,
 		T_UNICODESAFE,
-#ifdef WIN32
 		T_SJIS, //JP-EX
-#endif
 	};
 
 	String() {clear();}
@@ -121,9 +119,7 @@ public:
 	void HTML2UNICODE(const char *);
 	void BASE642ASCII(const char *);
 	void UNKNOWN2UNICODE(const char *,bool);
-#ifdef WIN32
 	void ASCII2SJIS(const char *); //JP-EX
-#endif
 
 	static	int	base64WordToChars(char *,const char *);
 

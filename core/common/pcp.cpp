@@ -159,12 +159,12 @@ int PCPStream::readPacket(Stream &in,BroadcastState &bcs)
 			pack.type = ChanPacket::T_PCP;
 
 			//inData.writePacket(pack);
-		//}
-		error = PCP_ERROR_GENERAL;
+            //}
+            error = PCP_ERROR_GENERAL;
 
-		// process downward packets
-		//if (inData.numPending())
-		//{
+            // process downward packets
+            //if (inData.numPending())
+            //{
 			//inData.readPacket(pack);
 
 			mem.rewind();
@@ -397,9 +397,9 @@ void PCPStream::readPktAtoms(Channel *ch,AtomStream &atom,int numc,BroadcastStat
 			// check for stream restart
 			if (pack.pos == 0)
 			{
-				LOG_CHANNEL("PCP resetting stream");
-				ch->streamIndex++;
-				ch->rawData.init();
+            LOG_CHANNEL("PCP resetting stream");
+            ch->streamIndex++;
+            ch->rawData.init();
 			}
 			*/
 			if (renewhead || ch->lastStopTime + 30 < sys->getTime()) {
@@ -567,9 +567,9 @@ void PCPStream::readChanAtoms(AtomStream &atom,int numc,BroadcastState &bcs)
 	chl = chanMgr->findHitListByID(bcs.chanID);
 
 	if (ch)
-		newInfo = ch->info;
+    newInfo = ch->info;
 	else if (chl)
-		newInfo = chl->info;*/
+    newInfo = chl->info;*/
 
 	Channel *ch=NULL;
 	ChanHitList *chl=NULL;
@@ -639,10 +639,10 @@ void PCPStream::readChanAtoms(AtomStream &atom,int numc,BroadcastState &bcs)
 					FileStream file;
 					file.openWriteAppend(servMgr->chanLog.cstr());
 
-        				XML::Node *rn = new XML::Node("update time=\"%d\"",sys->getTime());
-       					XML::Node *n = chl->info.createChannelXML();
-        				n->add(chl->createXML(false));
-        				n->add(chl->info.createTrackXML());
+                    XML::Node *rn = new XML::Node("update time=\"%d\"",sys->getTime());
+                    XML::Node *n = chl->info.createChannelXML();
+                    n->add(chl->createXML(false));
+                    n->add(chl->info.createTrackXML());
 					rn->add(n);
 
 					rn->write(file,0);
@@ -762,9 +762,9 @@ int PCPStream::readBroadcastAtoms(AtomStream &atom,int numc,BroadcastState &bcs)
 			}
 			if (sv &&
 				((hit.numHops == 1 && (hit.rhost[0].ip == sv->getHost().ip
-				&& hit.uphost.ip == servMgr->serverHost.ip && hit.uphost.port == servMgr->serverHost.port)
-				|| (hit.rhost[1].localIP() && hit.rhost[1].ip == sv->getHost().ip))
-				|| (hit.numHops != 1 && chanMgr->findParentHit(hit))))
+                                       && hit.uphost.ip == servMgr->serverHost.ip && hit.uphost.port == servMgr->serverHost.port)
+                  || (hit.rhost[1].localIP() && hit.rhost[1].ip == sv->getHost().ip))
+                 || (hit.numHops != 1 && chanMgr->findParentHit(hit))))
 			{
 				int oldPos = pmem.getPosition();
 				hit.writeAtoms(patom, hit.chanID);
@@ -780,9 +780,9 @@ int PCPStream::readBroadcastAtoms(AtomStream &atom,int numc,BroadcastState &bcs)
 				if (sv)
 					sv->getHost().toStr(tmp3);
 				LOG_DEBUG("### Invalid bcst: hops=%d, l/r = %d/%d, ver=%d(VP%04d), ttl=%d",
-					bcs.numHops,hit.numListeners, hit.numRelays, ver,ver_vp,bcs.ttl);
+                          bcs.numHops,hit.numListeners, hit.numRelays, ver,ver_vp,bcs.ttl);
 				LOG_DEBUG("### %s <- %s <- sv(%s)",
-					tmp2, tmp, tmp3);
+                          tmp2, tmp, tmp3);
 				bcs.ttl = 0;
 			}
 		} else {
@@ -812,7 +812,7 @@ int PCPStream::readBroadcastAtoms(AtomStream &atom,int numc,BroadcastState &bcs)
 		memcpy(servMgr->lastPCPFromID.id, fromID.id, 16);
 		servMgr->lastPCPBcstTime = time(NULL);
 		LOG_DEBUG("PCP bcst reject: group=%d, hops=%d, ver=%d(%c%c%04d), from=%s, dest=%s ttl=%d",
-			bcs.group,bcs.numHops,ver,ver_ex_prefix[0],ver_ex_prefix[1],ver_ex_number,fromStr,destStr,bcs.ttl);
+                  bcs.group,bcs.numHops,ver,ver_ex_prefix[0],ver_ex_prefix[1],ver_ex_number,fromStr,destStr,bcs.ttl);
 
 		return r;
 	}
@@ -823,7 +823,7 @@ int PCPStream::readBroadcastAtoms(AtomStream &atom,int numc,BroadcastState &bcs)
 
 	if (ver_ex_number){
 		LOG_DEBUG("PCP bcst: group=%d, hops=%d, ver=%d(%c%c%04d), from=%s, dest=%s ttl=%d",
-			bcs.group,bcs.numHops,ver,ver_ex_prefix[0],ver_ex_prefix[1],ver_ex_number,fromStr,destStr,bcs.ttl);
+                  bcs.group,bcs.numHops,ver,ver_ex_prefix[0],ver_ex_prefix[1],ver_ex_number,fromStr,destStr,bcs.ttl);
 	} else if (ver_vp){
 		LOG_DEBUG("PCP bcst: group=%d, hops=%d, ver=%d(VP%04d), from=%s, dest=%s ttl=%d",bcs.group,bcs.numHops,ver,ver_vp,fromStr,destStr,bcs.ttl);
 	} else {
@@ -837,39 +837,39 @@ int PCPStream::readBroadcastAtoms(AtomStream &atom,int numc,BroadcastState &bcs)
 			return PCP_ERROR_BCST+PCP_ERROR_LOOPBACK;
 		}
 
-		// broadcast back out if ttl > 0
-		if ((bcs.ttl>0) && (!bcs.forMe))
-		{
-			pack.len = pmem.getPosition();
-			pack.type = ChanPacket::T_PCP;
+    // broadcast back out if ttl > 0
+    if ((bcs.ttl>0) && (!bcs.forMe))
+    {
+        pack.len = pmem.getPosition();
+        pack.type = ChanPacket::T_PCP;
 
-			if (bcs.group & (/*PCP_BCST_GROUP_ROOT|*/PCP_BCST_GROUP_TRACKERS|PCP_BCST_GROUP_RELAYS))
-			{
-				pack.priority = 11 - bcs.numHops;
-				chanMgr->broadcastPacketUp(pack,bcs.chanID,remoteID,destID);
-			}
+        if (bcs.group & (/*PCP_BCST_GROUP_ROOT|*/PCP_BCST_GROUP_TRACKERS|PCP_BCST_GROUP_RELAYS))
+        {
+            pack.priority = 11 - bcs.numHops;
+            chanMgr->broadcastPacketUp(pack,bcs.chanID,remoteID,destID);
+        }
 
-			if (bcs.group & (/*PCP_BCST_GROUP_ROOT|*/PCP_BCST_GROUP_TRACKERS|PCP_BCST_GROUP_RELAYS))
-			{
-				servMgr->broadcastPacket(pack,bcs.chanID,remoteID,destID,Servent::T_COUT);
-			}
+        if (bcs.group & (/*PCP_BCST_GROUP_ROOT|*/PCP_BCST_GROUP_TRACKERS|PCP_BCST_GROUP_RELAYS))
+        {
+            servMgr->broadcastPacket(pack,bcs.chanID,remoteID,destID,Servent::T_COUT);
+        }
 
-			if (bcs.group & (PCP_BCST_GROUP_RELAYS|PCP_BCST_GROUP_TRACKERS))
-			{
-				servMgr->broadcastPacket(pack,bcs.chanID,remoteID,destID,Servent::T_CIN);
-			}
+        if (bcs.group & (PCP_BCST_GROUP_RELAYS|PCP_BCST_GROUP_TRACKERS))
+        {
+            servMgr->broadcastPacket(pack,bcs.chanID,remoteID,destID,Servent::T_CIN);
+        }
 
-			if (bcs.group & (PCP_BCST_GROUP_RELAYS))
-			{
-				servMgr->broadcastPacket(pack,bcs.chanID,remoteID,destID,Servent::T_RELAY);
-			}
+        if (bcs.group & (PCP_BCST_GROUP_RELAYS))
+        {
+            servMgr->broadcastPacket(pack,bcs.chanID,remoteID,destID,Servent::T_RELAY);
+        }
 
 
-			//		LOG_DEBUG("ttl=%d",ttl);
+        //		LOG_DEBUG("ttl=%d",ttl);
 
-		} else {
-			//		LOG_DEBUG("ttl=%d",ttl);
-		}
+    } else {
+        //		LOG_DEBUG("ttl=%d",ttl);
+    }
 	return r;
 }
 
@@ -922,7 +922,7 @@ int PCPStream::procAtom(AtomStream &atom,ID4 id,int numc, int dlen,BroadcastStat
 	{
 		atom.skip(numc,dlen);
 		atom.writeParent(PCP_OLEH,1);
-			atom.writeBytes(PCP_HELO_SESSIONID,servMgr->sessionID.id,16);
+        atom.writeBytes(PCP_HELO_SESSIONID,servMgr->sessionID.id,16);
 	}else if (id == PCP_PUSH)
 	{
 

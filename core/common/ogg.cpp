@@ -332,7 +332,7 @@ void OggVorbisSubStream::readComment(Stream &in, ChanInfo &info)
 	for(int i=0; i<cLen; i++)
 	{
 		int l = in.readLong();
-		if (l > sizeof(argBuf))
+		if (l > (int) sizeof(argBuf))
 			throw StreamException("Comment string too long");
 		in.read(argBuf,l);
 		argBuf[l] = 0;

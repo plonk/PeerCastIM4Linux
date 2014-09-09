@@ -36,7 +36,7 @@ public:
 	bool	isName(const char *);
 	char *	getName();
 	int		getIntValue();
-	char *	getStrValue();
+	const char *	getStrValue();
 	bool	getBoolValue();
 
 	void	writeSection(const char *);

@@ -125,6 +125,7 @@ public:
 		int v=0;
         read(&v,3);
 		CHECK_ENDIAN3(v);
+        return v;
 	}
 
 
@@ -181,7 +182,7 @@ public:
 		writeLong(SWAP4(v));
 	}
 
-	void	writeTag(char id[4])
+	void	writeTag(const char id[4])
 	{
 		write(id,4);
 	}

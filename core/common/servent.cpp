@@ -44,7 +44,7 @@
 const int DIRECT_WRITE_TIMEOUT = 60;
 
 // -----------------------------------
-char *Servent::statusMsgs[]=
+const char *Servent::statusMsgs[]=
 {
         "NONE",
 		"CONNECTING",
@@ -62,7 +62,7 @@ char *Servent::statusMsgs[]=
 };
 
 // -----------------------------------
-char *Servent::typeMsgs[]=
+const char *Servent::typeMsgs[]=
 {
 		"NONE",
         "INCOMING",
@@ -1526,7 +1526,7 @@ void Servent::processGnutella()
 			outPacketsNorm.next();
 		}
 
-		int lpt =  sys->getTime()-lastPacket;
+		unsigned int lpt =  sys->getTime()-lastPacket;
 
 		if (!doneBigPing)
 		{
@@ -2652,7 +2652,7 @@ void Servent::sendRawMetaChannel(int interval)
 		char buf[16384];
 		int bufPos=0;
 
-		if ((interval > sizeof(buf)) || (interval < 1))
+		if ((interval > (int) sizeof(buf)) || (interval < 1))
 			throw StreamException("Bad ICY Meta Interval value");
 
 		unsigned int connectTime = sys->getTime();

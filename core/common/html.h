@@ -47,7 +47,7 @@ public:
 		TMPL_END
 	};
 
-	HTML(const char *,Stream &);
+	HTML(Stream &);
 	~HTML();
 
 	void	startNode(const char *, const char * = NULL);

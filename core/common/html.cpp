@@ -37,13 +37,12 @@
 
 
 // --------------------------------------
-HTML::HTML(const char *t, Stream &o)
+HTML::HTML(Stream &o)
 {
 	o.writeCRLF = false;
 	out = new WriteBufferStream(8192, &o);
 	out->writeCRLF = false;
 
-	title.set(t);
 	tagLevel = 0;
 	refresh = 0;
 }

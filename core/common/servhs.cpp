@@ -852,7 +852,7 @@ void Servent::handshakeCMD(char *cmd)
 	strcpy(result,"OK");
 
 	HTTP http(*sock);
-	HTML html("",*sock);
+	HTML html(*sock);
 
 
 	if (!handshakeAuth(http,cmd,true))
@@ -1925,7 +1925,7 @@ void Servent::handshakeLocalFile(const char *fn)
 
 	LOG_DEBUG("Writing HTML file: %s",fileName.cstr());
 
-	HTML html("",*sock);
+	HTML html(*sock);
 
 	char *args = strstr(fileName.cstr(),"?");
 	if (args)
@@ -2024,7 +2024,7 @@ void Servent::handshakeRemoteFile(const char *dirName)
 
 	if (isTemplate)
 	{
-		HTML html("",*sock);
+		HTML html(*sock);
 		html.readTemplate(mem,sock,0);
 	}else
 		sock->write(mem.buf,fileLen);

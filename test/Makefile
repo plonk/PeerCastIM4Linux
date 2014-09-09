@@ -20,7 +20,7 @@ GTEST_DIR = /usr/src/gtest
 USER_DIR = ../core/common
 
 # Flags passed to the preprocessor.
-CPPFLAGS += -D_UNIX -I$(GTEST_DIR)/include -I../core/common
+CPPFLAGS += -D_UNIX -I$(GTEST_DIR)/include -I../core
 
 # Flags passed to the C++ compiler.
 CXXFLAGS += -std=c++0x -g -Wall -Wextra
@@ -78,5 +78,8 @@ utf8_unittest.o : utf8_unittest.cc $(USER_DIR)/utf8.h $(GTEST_HEADERS)
 host_unittest.o : host_unittest.cc $(USER_DIR)/common.h $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $<
 
-test_all : host_unittest.o string_unittest.o utf8_unittest.o gtest_main.a ../ui/linux/libpeercast.a
+memorystream_unittest.o : memorystream_unittest.cc $(USER_DIR)/stream.h $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $<
+
+test_all : host_unittest.o string_unittest.o utf8_unittest.o memorystream_unittest.o gtest_main.a ../ui/linux/libpeercast.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -lpthread -o $@

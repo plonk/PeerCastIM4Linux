@@ -197,10 +197,10 @@ bool GnuPacket::initHit(Host &h, Channel *ch, GnuPacket *query, bool push, bool 
 		xml.setRoot(pn);
 		xml.writeCompact(pmem);
 		pmem.writeChar(0);			// add null terminator
-		if (pmem.pos <= 255)
+		if (pmem.getPosition() <= 255)
 		{
-			mem.writeChar(pmem.pos);
-			mem.write(pmem.buf,pmem.pos);
+			mem.writeChar(pmem.getPosition());
+			mem.write(pmem.buf,pmem.getPosition());
 		}else
 			mem.writeChar(0);
 	}
@@ -212,7 +212,7 @@ bool GnuPacket::initHit(Host &h, Channel *ch, GnuPacket *query, bool push, bool 
 	else
 		mem.write(id.id,16);
 
-	len = mem.pos;
+	len = mem.getPosition();
 
 	LOG_NETWORK("Created Hit packet: %d bytes",len);
 
@@ -248,7 +248,7 @@ void GnuPacket::initFind(const char *str, XML *xml, int maxTTL)
 	if (xml)
 		xml->writeCompact(mem);
 
-	len = mem.pos;
+	len = mem.getPosition();
 }
 
 // ---------------------------
@@ -446,7 +446,7 @@ GnuStream::R_TYPE GnuStream::processPacket(GnuPacket &in, Servent *serv, GnuID &
 				data.readString(words,sizeof(words));
 				words[sizeof(words)-1] = 0;
 
-				MemoryStream xm(&data.buf[data.pos],data.len-data.pos);
+				MemoryStream xm(&data.buf[data.getPosition()],data.len-data.getPosition());
 				xm.buf[xm.len] = 0;
 
 				Channel *hits[16];

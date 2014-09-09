@@ -766,9 +766,9 @@ int PCPStream::readBroadcastAtoms(AtomStream &atom,int numc,BroadcastState &bcs)
 				|| (hit.rhost[1].localIP() && hit.rhost[1].ip == sv->getHost().ip))
 				|| (hit.numHops != 1 && chanMgr->findParentHit(hit))))
 			{
-				int oldPos = pmem.pos;
+				int oldPos = pmem.getPosition();
 				hit.writeAtoms(patom, hit.chanID);
-				pmem.pos = oldPos;
+				pmem.seekTo(oldPos);
 				r = readAtom(patom,bcs);
 			} else {
 				char tmp[80], tmp2[80], tmp3[80];
@@ -787,9 +787,9 @@ int PCPStream::readBroadcastAtoms(AtomStream &atom,int numc,BroadcastState &bcs)
 			}
 		} else {
 			// copy and process atoms
-			int oldPos = pmem.pos;
+			int oldPos = pmem.getPosition();
 			patom.writeAtoms(id,atom.io,c,d);
-			pmem.pos = oldPos;
+			pmem.seekTo(oldPos);
 			r = readAtom(patom,bcs);
 		}
 	}
@@ -840,7 +840,7 @@ int PCPStream::readBroadcastAtoms(AtomStream &atom,int numc,BroadcastState &bcs)
 		// broadcast back out if ttl > 0
 		if ((bcs.ttl>0) && (!bcs.forMe))
 		{
-			pack.len = pmem.pos;
+			pack.len = pmem.getPosition();
 			pack.type = ChanPacket::T_PCP;
 
 			if (bcs.group & (/*PCP_BCST_GROUP_ROOT|*/PCP_BCST_GROUP_TRACKERS|PCP_BCST_GROUP_RELAYS))

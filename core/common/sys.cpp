@@ -484,7 +484,7 @@ void String::UNKNOWN2UNICODE(const char *in,bool safe)
 			utf8.writeUTF8(c);
 		}
 
-		if (utf8.pos >= (MAX_LEN-10))
+		if (utf8.getPosition() >= (MAX_LEN-10))
 			break;
 
 
@@ -600,7 +600,7 @@ void String::HTML2UNICODE(const char *in)
 		}else
 			utf8.writeUTF8(c);
 
-		if (utf8.pos >= (MAX_LEN-10))
+		if (utf8.getPosition() >= (MAX_LEN-10))
 			break;
 	}
 

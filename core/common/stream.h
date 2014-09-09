@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
+#include <algorithm>
 #include "common/common.h"
 #include "common/sys.h"
 #include "common/id.h"
@@ -305,12 +306,39 @@ public:
 		}
     }
 
-	virtual void write(const void *p,int l)
+    virtual int readUpto(void *data, int length)
     {
-		if ((pos+l) > len)
-			throw StreamException("Stream - premature end of write()");
-		memcpy(&buf[pos],p,l);
-		pos += l;
+        if (len - pos > 0)
+        {
+            int readlen = std::min(length, len - pos);
+            memcpy(data, buf + pos, readlen);
+            return readlen;
+        }else
+        {
+            return 0;
+        }
+    }
+
+	virtual void write(const void *data,int dlen)
+    {
+		if (pos + dlen > len)
+        {
+            if (own)
+            {
+                // grow buffer to accomodate data
+                size_t newlen = std::max(len * 2, pos + dlen) ;
+                char *newbuf = new char[newlen];
+                memcpy(newbuf, buf, len);
+                delete buf;
+                buf = newbuf;
+                len = newlen;
+            }else
+            {
+                throw StreamException("Not enough buffer.");
+            }
+        }
+		memcpy(&buf[pos],data,dlen);
+		pos += dlen;
     }
 
     virtual bool eof()
@@ -338,7 +366,9 @@ public:
 
 	char *buf;
 	bool own;
-	int len,pos;
+	int len;
+private:
+    int pos;
 };
 // --------------------------------------------------
 class IndirectStream : public Stream
@@ -396,7 +426,7 @@ public:
 
 	virtual void write(const void *p, int len)
 		{
-			if ( mem.pos+len > mem.len )
+			if ( mem.getPosition()+len > mem.len )
 				flush();
 
 			mem.write(p, len);
@@ -404,8 +434,8 @@ public:
 
 	void flush()
 		{
-			if ( mem.pos > 0 ) {
-				sock.write(mem.buf, mem.pos);
+			if ( mem.getPosition() > 0 ) {
+				sock.write(mem.buf, mem.getPosition());
 				clearWriteBuffer();
 			}
 		}

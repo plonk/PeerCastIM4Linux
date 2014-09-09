@@ -2095,31 +2095,29 @@ int ServMgr::broadcastPushRequest(ChanHit &hit, Host &to, GnuID &chanID, Servent
 	AtomStream atom(pmem);
 
 #ifndef VERSION_EX
-		atom.writeParent(PCP_BCST,8);
+    atom.writeParent(PCP_BCST,8);
 #else
-		atom.writeParent(PCP_BCST,10);
+    atom.writeParent(PCP_BCST,10);
 #endif
-		atom.writeChar(PCP_BCST_GROUP,PCP_BCST_GROUP_ALL);
-		atom.writeChar(PCP_BCST_HOPS,0);
-		atom.writeChar(PCP_BCST_TTL,7);
-		atom.writeBytes(PCP_BCST_DEST,hit.sessionID.id,16);
-		atom.writeBytes(PCP_BCST_FROM,servMgr->sessionID.id,16);
-		atom.writeInt(PCP_BCST_VERSION,PCP_CLIENT_VERSION);
-		atom.writeInt(PCP_BCST_VERSION_VP,PCP_CLIENT_VERSION_VP);
-		if (version_ex)
-		{
-			atom.writeBytes(PCP_BCST_VERSION_EX_PREFIX,PCP_CLIENT_VERSION_EX_PREFIX,2);
-			atom.writeShort(PCP_BCST_VERSION_EX_NUMBER,PCP_CLIENT_VERSION_EX_NUMBER);
-		}
-		atom.writeParent(PCP_PUSH,3);
-			atom.writeInt(PCP_PUSH_IP,to.ip);
-			atom.writeShort(PCP_PUSH_PORT,to.port);
-			atom.writeBytes(PCP_PUSH_CHANID,chanID.id,16);
+    atom.writeChar(PCP_BCST_GROUP,PCP_BCST_GROUP_ALL);
+    atom.writeChar(PCP_BCST_HOPS,0);
+    atom.writeChar(PCP_BCST_TTL,7);
+    atom.writeBytes(PCP_BCST_DEST,hit.sessionID.id,16);
+    atom.writeBytes(PCP_BCST_FROM,servMgr->sessionID.id,16);
+    atom.writeInt(PCP_BCST_VERSION,PCP_CLIENT_VERSION);
+    atom.writeInt(PCP_BCST_VERSION_VP,PCP_CLIENT_VERSION_VP);
+    if (version_ex)
+    {
+        atom.writeBytes(PCP_BCST_VERSION_EX_PREFIX,PCP_CLIENT_VERSION_EX_PREFIX,2);
+        atom.writeShort(PCP_BCST_VERSION_EX_NUMBER,PCP_CLIENT_VERSION_EX_NUMBER);
+    }
+    atom.writeParent(PCP_PUSH,3);
+    atom.writeInt(PCP_PUSH_IP,to.ip);
+    atom.writeShort(PCP_PUSH_PORT,to.port);
+    atom.writeBytes(PCP_PUSH_CHANID,chanID.id,16);
 
-
-	pack.len = pmem.pos;
+    pack.len = pmem.getPosition();
 	pack.type = ChanPacket::T_PCP;
-
 
 	GnuID noID;
 	noID.clear();
@@ -2169,7 +2167,7 @@ void ServMgr::broadcastRootSettings(bool getUpdate)
 		}
 		writeRootAtoms(atom,getUpdate);
 
-		mem.len = mem.pos;
+		mem.len = mem.getPosition();
 		mem.rewind();
 		pack.len = mem.len;
 
@@ -2840,7 +2838,7 @@ int ServMgr::kickUnrelayableHost(GnuID &chid, ChanHit &sendhit)
 			MemoryStream mem(pack.data,sizeof(pack.data));
 			AtomStream atom(mem);
 			sendhit.writeAtoms(atom, chid);
-			pack.len = mem.pos;
+			pack.len = mem.getPosition();
 			pack.type = ChanPacket::T_PCP;
 			GnuID noID;
 			noID.clear();

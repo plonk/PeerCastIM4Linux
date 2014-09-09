@@ -733,7 +733,7 @@ void PeercastSource::stream(Channel *ch)
 				MemoryStream mem(pack.data,sizeof(pack.data));
 				AtomStream atom(mem);
 				atom.writeInt(PCP_QUIT,PCP_ERROR_QUIT+PCP_ERROR_OFFAIR);
-				pack.len = mem.pos;
+				pack.len = mem.getPosition();
 				pack.type = ChanPacket::T_PCP;
 				GnuID noID;
 				noID.clear();
@@ -913,7 +913,7 @@ yp0:
 				MemoryStream mem(pack.data,sizeof(pack.data));
 				AtomStream atom(mem);
 				ch->sourceHost.writeAtoms(atom, ch->info.id);
-				pack.len = mem.pos;
+				pack.len = mem.getPosition();
 				pack.type = ChanPacket::T_PCP;
 				GnuID noID;
 				noID.clear();
@@ -927,7 +927,7 @@ yp0:
 				MemoryStream mem(pack.data,sizeof(pack.data));
 				AtomStream atom(mem);
 				atom.writeInt(PCP_QUIT,PCP_ERROR_QUIT+PCP_ERROR_OFFAIR);
-				pack.len = mem.pos;
+				pack.len = mem.getPosition();
 				pack.type = ChanPacket::T_PCP;
 				GnuID noID;
 				noID.clear();
@@ -1150,7 +1150,7 @@ void ChanMeta::fromXML(XML &xml)
 	MemoryStream tout(data,MAX_DATALEN);
 	xml.write(tout);
 
-	len = tout.pos;
+	len = tout.getPosition();
 }
 // -----------------------------------
 void ChanMeta::fromMem(void *p, int l)
@@ -1222,7 +1222,7 @@ void Channel::broadcastTrackerUpdate(GnuID &svID, bool force)
 		hit.writeAtoms(atom,info.id);
 
 
-		pack.len = mem.pos;
+		pack.len = mem.getPosition();
 		pack.type = ChanPacket::T_PCP;
 
 		GnuID noID;
@@ -1292,7 +1292,7 @@ void Channel::updateInfo(ChanInfo &newInfo)
 				info.writeInfoAtoms(atom);
 				info.writeTrackAtoms(atom);
 
-				pack.len = mem.pos;
+				pack.len = mem.getPosition();
 				pack.type = ChanPacket::T_PCP;
 				GnuID noID;
 				noID.clear();
@@ -1508,7 +1508,7 @@ bool ChannelStream::getStatus(Channel *ch,ChanPacket &pack)
 		atom.writeBytes(PCP_BCST_CHANID,ch->info.id.id,16);
 		hit.writeAtoms(atom,noID);
 
-		pack.len = pmem.pos;
+		pack.len = pmem.getPosition();
 		pack.type = ChanPacket::T_PCP;
 		return true;
 	}else
@@ -2680,7 +2680,7 @@ void ChanMgr::setUpdateInterval(unsigned int v)
 					atom.writeParent(PCP_MESG,1);
 						atom.writeString(PCP_MESG_DATA,msg.cstr());
 
-				mem.len = mem.pos;
+				mem.len = mem.getPosition();
 				mem.rewind();
 				pack.len = mem.len;
 

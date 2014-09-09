@@ -73,7 +73,7 @@ int MMSStream::readPacket(Stream &in,Channel *ch)
 				ch->info.bitrate = asf.bitrate/1000;
 
 				ch->headPack.type = ChanPacket::T_HEAD;
-				ch->headPack.len = mem.pos;
+				ch->headPack.len = mem.getPosition();
 				ch->headPack.pos = ch->streamPos;
 				ch->newPacket(ch->headPack);
 
@@ -91,7 +91,7 @@ int MMSStream::readPacket(Stream &in,Channel *ch)
 				chunk.write(mem);
 
 				pack.type = ChanPacket::T_DATA;
-				pack.len = mem.pos;
+				pack.len = mem.getPosition();
 				pack.pos = ch->streamPos;
 
 				ch->newPacket(pack);

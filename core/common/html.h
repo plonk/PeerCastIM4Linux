@@ -21,6 +21,9 @@
 #define _HTML_H
 
 // ---------------------------------------
+#include <string>
+#include "common/stream.h"
+
 #include "common/xml.h"
 #include "common/sys.h"
 
@@ -28,16 +31,10 @@ class FileStream;
 class WriteBufferStream;
 
 // ---------------------------------------
-//! Template engine and HTML builder.
+//! Template engine.
 class HTML
 {
 public:
-	enum
-	{
-		MAX_TAGLEVEL = 64,
-		MAX_TAGLEN = 64
-	};
-
 	enum
 	{
 		TMPL_UNKNOWN,
@@ -49,6 +46,40 @@ public:
 
 	HTML(Stream &);
 	~HTML();
+
+	void	locateTo(const char *);
+	void	addContent(const char *);
+
+	void	writeOK(const char *);
+	void	writeTemplate(const char *, const char *);
+	void	writeRawFile(const char *);
+	void	writeVariable(Stream &,const String &,int);
+	int		getIntVariable(const String &,int);
+	bool	getBoolVariable(const String &,int);
+
+	void	readIf(Stream &,Stream *,int);
+	void	readLoop(Stream &,Stream *,int);
+	void	readVariable(Stream &,Stream *,int);
+	bool	readTemplate(Stream &,Stream *,int);
+	int		readCmd(Stream &,Stream *,int);
+
+	const char *tmplArgs;
+	WriteBufferStream *out;
+};
+
+// ---------------------------------------
+//! HTML builder.
+class HTMLBuilder
+{
+	enum
+	{
+		MAX_TAGLEVEL = 64,
+		MAX_TAGLEN = 64
+	};
+
+public:
+	HTMLBuilder();
+	~HTMLBuilder();
 
 	void	startNode(const char *, const char * = NULL);
 	void	addLink(const char *, const char *, bool = false);
@@ -62,31 +93,13 @@ public:
 	void	addHead();
 	void	startHTML();
 	void	startBody();
+    std::string str();
 
-	void	locateTo(const char *);
-	void	addContent(const char *);
-
-	void	writeOK(const char *);
-	void	writeTemplate(const char *, const char *);
-	void	writeRawFile(const char *);
-	void	writeVariable(Stream &,const String &,int);
-	int		getIntVariable(const String &,int);
-	bool	getBoolVariable(const String &,int);
-
-
-	void	readIf(Stream &,Stream *,int);
-	void	readLoop(Stream &,Stream *,int);
-	void	readVariable(Stream &,Stream *,int);
-	bool	readTemplate(Stream &,Stream *,int);
-	int		readCmd(Stream &,Stream *,int);
-
-
-	const char *tmplArgs;
+private:
 	String	title,refreshURL;
 	char	currTag[MAX_TAGLEVEL][MAX_TAGLEN];
 	int		tagLevel;
 	int		refresh;
-	WriteBufferStream *out;
+    MemoryStream	out;
 };
-
 #endif

@@ -1,4 +1,4 @@
-CPPFLAGS = -g -Wall -Wno-reorder -Wno-parentheses -Wno-switch -Wno-unused-variable -Wno-unused-value -Wno-multichar -DENABLE_BINRELOC -pthread -D_UNIX -D_REENTRANT $(INCLUDES)
+CPPFLAGS = -g -w -Wno-reorder -Wno-parentheses -Wno-switch -Wno-unused-variable -Wno-unused-value -Wno-multichar -DENABLE_BINRELOC -pthread -D_UNIX -D_REENTRANT $(INCLUDES)
 LDFLAGS = -pthread
 LDSOFLAGS = -shared -Wl,-soname
 

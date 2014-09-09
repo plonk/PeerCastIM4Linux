@@ -42,7 +42,10 @@ HTML::HTML(Stream &o)
 	o.writeCRLF = false;
 	out = new WriteBufferStream(8192, &o);
 	out->writeCRLF = false;
+}
 
+HTMLBuilder::HTMLBuilder() : out(1)
+{
 	tagLevel = 0;
 	refresh = 0;
 }
@@ -53,6 +56,11 @@ HTML::~HTML()
 		out->flush();
 	} catch (StreamException &) {}
 	delete out;
+}
+
+HTMLBuilder::~HTMLBuilder()
+{
+    // tag level check
 }
 
 // --------------------------------------
@@ -424,17 +432,17 @@ void HTML::locateTo(const char *url)
 	out->writeLine("");
 }
 // --------------------------------------
-void HTML::startHTML()
+void HTMLBuilder::startHTML()
 {
 	startNode("html");
 }
 // --------------------------------------
-void HTML::startBody()
+void HTMLBuilder::startBody()
 {
 	startNode("body");
 }
 // --------------------------------------
-void HTML::addHead()
+void HTMLBuilder::addHead()
 {
 	char buf[512];
 		startNode("head");
@@ -460,7 +468,7 @@ void HTML::addContent(const char *s)
 	out->writeString(s);
 }
 // --------------------------------------
-void HTML::startNode(const char *tag, const char *data)
+void HTMLBuilder::startNode(const char *tag, const char *data)
 {
 	const char *p = tag;
 	char *o = &currTag[tagLevel][0];
@@ -476,29 +484,29 @@ void HTML::startNode(const char *tag, const char *data)
 	}
 	*o = 0;
 
-	out->writeString("<");
-	out->writeString(tag);
-	out->writeString(">");
+	out.writeString("<");
+	out.writeString(tag);
+	out.writeString(">");
 	if (data)
-		out->writeString(data);
+		out.writeString(data);
 
 	tagLevel++;
 	if (tagLevel >= MAX_TAGLEVEL)
 		throw StreamException("HTML too deep!");
 }
 // --------------------------------------
-void HTML::end()
+void HTMLBuilder::end()
 {
 	tagLevel--;
 	if (tagLevel < 0)
 		throw StreamException("HTML premature end!");
 
-	out->writeString("</");
-	out->writeString(&currTag[tagLevel][0]);
-	out->writeString(">");
+	out.writeString("</");
+	out.writeString(&currTag[tagLevel][0]);
+	out.writeString(">");
 }
 // --------------------------------------
-void HTML::addLink(const char *url, const char *text, bool toblank)
+void HTMLBuilder::addLink(const char *url, const char *text, bool toblank)
 {
 	char buf[1024];
 
@@ -507,7 +515,7 @@ void HTML::addLink(const char *url, const char *text, bool toblank)
 	end();
 }
 // --------------------------------------
-void HTML::startTag(const char *tag, const char *fmt,...)
+void HTMLBuilder::startTag(const char *tag, const char *fmt,...)
 {
 	if (fmt)
 	{
@@ -525,7 +533,7 @@ void HTML::startTag(const char *tag, const char *fmt,...)
 	}
 }
 // --------------------------------------
-void HTML::startTagEnd(const char *tag, const char *fmt,...)
+void HTMLBuilder::startTagEnd(const char *tag, const char *fmt,...)
 {
 	if (fmt)
 	{
@@ -544,7 +552,7 @@ void HTML::startTagEnd(const char *tag, const char *fmt,...)
 	end();
 }
 // --------------------------------------
-void HTML::startSingleTagEnd(const char *fmt,...)
+void HTMLBuilder::startSingleTagEnd(const char *fmt,...)
 {
 	va_list ap;
 	va_start(ap, fmt);
@@ -558,10 +566,16 @@ void HTML::startSingleTagEnd(const char *fmt,...)
 }
 
 // --------------------------------------
-void HTML::startTableRow(int i)
+void HTMLBuilder::startTableRow(int i)
 {
 	if (i & 1)
 		startTag("tr bgcolor=\"#dddddd\" align=\"left\"");
 	else
 		startTag("tr bgcolor=\"#eeeeee\" align=\"left\"");
+}
+
+// --------------------------------------
+std::string HTMLBuilder::str()
+{
+    return std::string(out.buf, out.len);
 }

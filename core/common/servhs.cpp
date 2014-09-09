@@ -873,14 +873,17 @@ void Servent::handshakeCMD(char *cmd)
 				if (!url.contains("http://"))
 					url.prepend("http://");
 
-				html.setRefreshURL(url.cstr());
-				html.startHTML();
-					html.addHead();
-					html.startBody();
-						html.startTagEnd("h3","Please wait...");
-					html.end();
-				html.end();
+                HTMLBuilder hb;
 
+				hb.setRefreshURL(url.cstr());
+				hb.startHTML();
+                hb.addHead();
+                hb.startBody();
+                hb.startTagEnd("h3","Please wait...");
+                hb.end();
+				hb.end();
+
+                html.addContent(hb.str().c_str());
 			}
 		}else{
 
@@ -1617,7 +1620,10 @@ void Servent::handshakeCMD(char *cmd)
 
 	}catch(StreamException &e)
 	{
-		html.startTagEnd("h1","ERROR - %s",e.msg);
+		HTMLBuilder hb;
+
+        hb.startTagEnd("h1","ERROR - %s",e.msg);
+        html.addContent(hb.str().c_str());
 		LOG_ERROR("html: %s",e.msg);
 	}
 

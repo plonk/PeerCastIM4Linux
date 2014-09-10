@@ -185,6 +185,10 @@ public:
 	void	handshakeRTSP(RTSP &);
 	void	handshakeHTTP(HTTP &,bool);
 
+    void	handleGetMethod(HTTP &http, char *in);
+    void	handlePostMethod(HTTP &http, char *in);
+    void	handleHeadMethod(HTTP &http, char *in, bool isHTTP);
+
 	void	handshakeRemoteFile(const char *);
 	void	handshakeLocalFile(const char *);
 

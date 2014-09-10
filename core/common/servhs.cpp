@@ -27,11 +27,15 @@
 #include "common/peercast.h"
 #include "common/pcp.h"
 #include "common/version2.h"
+#include "common/util.h"
 #ifdef _DEBUG
 #include "chkMemoryLeak.h"
 #define DEBUG_NEW new(__FILE__, __LINE__)
 #define new DEBUG_NEW
 #endif
+
+using namespace std;
+using namespace util;
 
 // -----------------------------------
 static void termArgs(char *str)
@@ -873,8 +877,9 @@ void Servent::handshakeCMD(char *cmd)
 				if (!url.contains("http://"))
 					url.prepend("http://");
 
-                HTMLBuilder hb;
+                HTMLBuilder hb(*sock);
 
+                hb.doctype();
 				hb.setRefreshURL(url.cstr());
 				hb.startHTML();
                 hb.addHead();
@@ -882,8 +887,6 @@ void Servent::handshakeCMD(char *cmd)
                 hb.startTagEnd("h3","Please wait...");
                 hb.end();
 				hb.end();
-
-                html.addContent(hb.str().c_str());
 			}
 		}else{
 
@@ -1620,10 +1623,9 @@ void Servent::handshakeCMD(char *cmd)
 
 	}catch(StreamException &e)
 	{
-		HTMLBuilder hb;
+		HTMLBuilder hb(*sock);
 
         hb.startTagEnd("h1","ERROR - %s",e.msg);
-        html.addContent(hb.str().c_str());
 		LOG_ERROR("html: %s",e.msg);
 	}
 
@@ -1913,52 +1915,135 @@ void Servent::handshakeICY(Channel::SRC_TYPE type, bool isHTTP)
 	c->startICY(sock,type);
 }
 
+// -----------------------------------
+static void errorPage(Stream& os, string title, string heading, string msg)
+{
+    char ip[80];
+    Host(ClientSocket::getIP(NULL), 0).IPtoStr(ip);
+
+    HTMLBuilder hb(os);
+    hb.doctype();
+    hb.startHTML();
+    hb.startTag("head");
+    hb.startTagEnd("title", title.c_str());
+    hb.end();
+    hb.startBody();
+    hb.startTagEnd("h1", heading.c_str());
+    hb.startTagEnd("p", msg.c_str());
+    hb.startSingleTagEnd("hr");
+    hb.startTagEnd("address", "%s at %s Port unknown", PCX_AGENTEX, ip);
+    hb.end();
+    hb.end();
+}
 
 // -----------------------------------
-void Servent::handshakeLocalFile(const char *fn)
+static void page404(Stream& os, string msg)
 {
-	HTTP http(*sock);
-	String fileName;
+    errorPage(os, "404 Not Found", "Not Found", msg);
+}
 
+// -----------------------------------
+static void page403(Stream& os, string msg)
+{
+    errorPage(os, "403 Forbidden", "Forbidden", msg);
+}
+
+// -----------------------------------
+static HTTPResponse serveLocalFile(const char *fileName)
+{
+    string ext = extension(fileName);
+
+    string type = (MIMETypes.find(ext)==MIMETypes.end()) ? "application/octet-stream" : MIMETypes[ext];
+
+    try {
+        FileStream *file = new FileStream();
+        file->openReadOnly(fileName);
+        return HTTPResponse(200,
+                            {
+                                { "Content-Type", type },
+                            },
+                            [=](Stream& os) {
+                                while (!file->eof())
+                                    os.writeChar(file->readChar());
+                                delete file;
+                            });
+    }catch (StreamException &e)
+    {
+        string msg = string(e.msg) + ": " + fileName;
+        return HTTPResponse(404,
+                            {
+                                {"Content-Type", "text/html"},
+                            }, [=](Stream& os) { page404(os, msg); });
+    }
+}
+
+// -----------------------------------
+#include <boost/filesystem.hpp> 
+
+static HTTPResponse handleLocalFileRequest(const char *path, const char *args)
+{
+    using namespace boost::filesystem;
+
+    if (!exists(path))
+        return HTTPResponse(404, { {"Content-Type", "text/html"}, },
+                            [=](Stream& os)
+                            {
+                                page404(os, "The requested URL " + string(path) + " was not found on this server.");
+                            });
+
+    if (is_directory(path))
+        return HTTPResponse(403, { {"Content-Type", "text/html"}, },
+                            [=](Stream& os)
+                            {
+                                page403(os, "You don't have permission to access " + string(path) + " on this server.");
+                            });
+
+    string ext = util::extension(path);
+	if (ext==".html" || ext==".htm")
+	{
+        try {
+            Template *templ = new Template(path, args);
+            return HTTPResponse(200, { { "Content-Type", "text/html" }, },
+                                [=](Stream& os)
+                                {
+                                    templ->writeToStream(os);
+                                    delete templ;
+                                });
+        } catch (StreamException &e)
+        {
+            return HTTPResponse(404, { { "Content-Type", "text/html" }, },
+                                [=](Stream& os)
+                                {
+                                    page404(os, string(e.msg) + ": " + path);
+                                });
+        }
+	}else {
+        return serveLocalFile(path);
+    }
+}
+
+// -----------------------------------
+static string getApplicationDirectory()
+{
 	if (servMgr->getModulePath) //JP-EX
 	{
 		peercastApp->getDirectory();
-		fileName = servMgr->modulePath;
+		return servMgr->modulePath;
 	}else
-		fileName = peercastApp->getPath();
+    {
+		return peercastApp->getPath();
+    }
+}
 
-	fileName.append(fn);
+void Servent::handshakeLocalFile(const char *absPath)
+{
+    vector<string> vs = split(absPath, "?");
+    string fsPath = getApplicationDirectory() + vs[0];
+    const char *args = (vs.size() < 2) ? NULL : vs[1].c_str();
 
-	LOG_DEBUG("Writing HTML file: %s",fileName.cstr());
+	LOG_DEBUG("Writing local file: %s", fsPath.c_str());
 
-	HTML html(*sock);
-
-	char *args = strstr(fileName.cstr(),"?");
-	if (args)
-		*args++=0;
-
-	if (fileName.contains(".htm"))
-	{
-		html.writeOK(MIME_HTML);
-		html.writeTemplate(fileName.cstr(),args);
-
-	}else if (fileName.contains(".css"))
-	{
-		html.writeOK(MIME_CSS);
-		html.writeRawFile(fileName.cstr());
-	}else if (fileName.contains(".jpg"))
-	{
-		html.writeOK(MIME_JPEG);
-		html.writeRawFile(fileName.cstr());
-	}else if (fileName.contains(".gif"))
-	{
-		html.writeOK(MIME_GIF);
-		html.writeRawFile(fileName.cstr());
-	}else if (fileName.contains(".png"))
-	{
-		html.writeOK(MIME_PNG);
-		html.writeRawFile(fileName.cstr());
-	}
+    handleLocalFileRequest(fsPath.c_str(), args).writeToStream(*sock);
 }
 
 // -----------------------------------
@@ -2030,8 +2115,7 @@ void Servent::handshakeRemoteFile(const char *dirName)
 
 	if (isTemplate)
 	{
-		HTML html(*sock);
-		html.readTemplate(mem,sock,0);
+        Template(std::string(mem.buf, fileLen).c_str()).writeToStream(*sock);
 	}else
 		sock->write(mem.buf,fileLen);
 

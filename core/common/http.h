@@ -184,4 +184,43 @@ public:
 
 };
 
+#include "util.h"
+#include <functional>
+class HTTPResponse
+{
+    typedef std::map<std::string,std::string> HTTPHeaders;
+    typedef std::function<void(Stream&)> BodyGenerator;
+    static std::map<int,std::string> messages;
+public:
+    HTTPResponse(int sc, HTTPHeaders hdrs, BodyGenerator bd)
+        : status(sc), headers(hdrs), body(bd)
+        {
+        }
+
+    static HTTPResponse redirect(std::string url) { return HTTPResponse(303, { {"Location", url } }, [](Stream &os) {}); }
+
+    void writeToStream(Stream &os) {
+        const char *SP = " ", *CRLF = "\r\n";
+
+        os.writeString((std::string("HTTP/1.0") + SP + std::to_string(status) + SP + messages[status] + CRLF).c_str());
+        for (std::pair<std::string,std::string> header : headers)
+        {
+            os.writeString(header.first.c_str());
+            os.writeString(":");
+            os.writeString(SP);
+            os.writeString(header.second.c_str());
+            os.writeString(CRLF);
+        }
+        os.writeString("Connection: close");
+        os.writeString(CRLF);
+        os.writeString(CRLF);
+        body(os);
+    }
+
+private:
+    int status;
+    HTTPHeaders headers;
+    BodyGenerator body;
+};
+
 #endif

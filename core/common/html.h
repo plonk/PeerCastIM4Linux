@@ -31,8 +31,24 @@ class FileStream;
 class WriteBufferStream;
 
 // ---------------------------------------
-//! Template engine.
 class HTML
+{
+public:
+	HTML(Stream &);
+	~HTML();
+
+	void	locateTo(const char *);
+	void	addContent(const char *);
+
+	void	writeOK(const char *);
+    void    writeRawFile(const char *fileName);
+
+	WriteBufferStream *out;
+};
+
+// ---------------------------------------
+//! Template engine.
+class Template
 {
 public:
 	enum
@@ -44,15 +60,9 @@ public:
 		TMPL_END
 	};
 
-	HTML(Stream &);
-	~HTML();
+	Template(const char *fileName, const char *args = NULL);
+	~Template();
 
-	void	locateTo(const char *);
-	void	addContent(const char *);
-
-	void	writeOK(const char *);
-	void	writeTemplate(const char *, const char *);
-	void	writeRawFile(const char *);
 	void	writeVariable(Stream &,const String &,int);
 	int		getIntVariable(const String &,int);
 	bool	getBoolVariable(const String &,int);
@@ -62,9 +72,11 @@ public:
 	void	readVariable(Stream &,Stream *,int);
 	bool	readTemplate(Stream &,Stream *,int);
 	int		readCmd(Stream &,Stream *,int);
+    void	writeToStream(Stream &os);
 
 	const char *tmplArgs;
-	WriteBufferStream *out;
+    FileStream file;
+	Stream *out;
 };
 
 // ---------------------------------------
@@ -78,9 +90,10 @@ class HTMLBuilder
 	};
 
 public:
-	HTMLBuilder();
+	HTMLBuilder(Stream &os) : out(os), refresh(0), tagLevel(0) {}
 	~HTMLBuilder();
 
+    void    doctype();
 	void	startNode(const char *, const char * = NULL);
 	void	addLink(const char *, const char *, bool = false);
 	void	startTag(const char *, const char * = NULL,...);
@@ -88,18 +101,19 @@ public:
 	void	startSingleTagEnd(const char *,...);
 	void	startTableRow(int);
 	void	end();
-	void	setRefresh(int sec) {refresh = sec;}
-	void	setRefreshURL(const char *u){refreshURL.set(u);}
+	void	setRefresh(int sec) { refresh = sec; }
+	void	setRefreshURL(const char *u) { refreshURL.set(u); }
 	void	addHead();
 	void	startHTML();
 	void	startBody();
-    std::string str();
 
 private:
+    void indent();
+
 	String	title,refreshURL;
 	char	currTag[MAX_TAGLEVEL][MAX_TAGLEN];
 	int		tagLevel;
 	int		refresh;
-    MemoryStream	out;
+    Stream&	out;
 };
 #endif

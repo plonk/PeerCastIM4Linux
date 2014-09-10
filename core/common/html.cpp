@@ -21,6 +21,7 @@
 
 #include <stdarg.h>
 #include <stdlib.h>
+#include <string>
 #include "common/html.h"
 #include "common/http.h"
 #include "common/stream.h"
@@ -35,6 +36,7 @@
 #define new DEBUG_NEW
 #endif
 
+using namespace std;
 
 // --------------------------------------
 HTML::HTML(Stream &o)
@@ -42,12 +44,6 @@ HTML::HTML(Stream &o)
 	o.writeCRLF = false;
 	out = new WriteBufferStream(8192, &o);
 	out->writeCRLF = false;
-}
-
-HTMLBuilder::HTMLBuilder() : out(1)
-{
-	tagLevel = 0;
-	refresh = 0;
 }
 
 HTML::~HTML()
@@ -68,13 +64,197 @@ void HTML::writeOK(const char *content)
 {
 	out->writeLine(HTTP_SC_OK);
 	out->writeLineF("%s %s",HTTP_HS_SERVER,PCX_AGENT);
-	//out->writeLine("%s %s",HTTP_HS_CACHE,"no-cache");
 	out->writeLineF("%s %s",HTTP_HS_CONNECTION,"close");
     out->writeLineF("%s %s",HTTP_HS_CONTENT,content);
 	out->writeLine("");
 }
 // --------------------------------------
-void HTML::writeVariable(Stream &s,const String &varName, int loop)
+void HTML::locateTo(const char *url)
+{
+	out->writeLine(HTTP_SC_FOUND);
+	out->writeLineF("Location: %s",url);
+	out->writeLine("");
+}
+// --------------------------------------
+void HTML::addContent(const char *s)
+{
+	out->writeString(s);
+}
+// --------------------------------------
+void HTMLBuilder::doctype()
+{
+    out.writeLine("<!DOCTYPE html>");
+}
+// --------------------------------------
+void HTMLBuilder::startHTML()
+{
+	startNode("html");
+}
+// --------------------------------------
+void HTMLBuilder::startBody()
+{
+	startNode("body");
+}
+// --------------------------------------
+void HTMLBuilder::addHead()
+{
+	char buf[512];
+		startNode("head");
+			startTagEnd("title",title.cstr());
+			startTagEnd("meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\"");
+
+			if (!refreshURL.isEmpty())
+			{
+				sprintf(buf,"meta http-equiv=\"refresh\" content=\"%d;URL=%s\"",refresh,refreshURL.cstr());
+				startTagEnd(buf);
+			}else if (refresh)
+			{
+				sprintf(buf,"meta http-equiv=\"refresh\" content=\"%d\"",refresh);
+				startTagEnd(buf);
+			}
+
+
+		end();
+}
+// --------------------------------------
+void HTMLBuilder::startNode(const char *tag, const char *data)
+{
+	const char *p = tag;
+	char *o = &currTag[tagLevel][0];
+
+	int i;
+	for(i=0; i<MAX_TAGLEN-1; i++)
+	{
+		char c = *p++;
+		if ((c==0) || (c==' '))
+			break;
+		else
+			*o++ = c;
+	}
+	*o = 0;
+
+    indent();
+	out.writeString("<");
+	out.writeString(tag);
+	out.writeString(">");
+    out.writeString("\n");
+
+	tagLevel++;
+	if (tagLevel >= MAX_TAGLEVEL)
+		throw StreamException("HTML too deep!");
+
+	if (data)
+    {
+        indent();
+		out.writeString(data);
+        out.writeString("\n");
+    }
+}
+// --------------------------------------
+void HTMLBuilder::end()
+{
+	tagLevel--;
+	if (tagLevel < 0)
+		throw StreamException("HTML premature end!");
+
+    indent();
+	out.writeString("</");
+	out.writeString(&currTag[tagLevel][0]);
+	out.writeString(">");
+    out.writeString("\n");
+}
+// --------------------------------------
+void HTMLBuilder::addLink(const char *url, const char *text, bool toblank)
+{
+	char buf[1024];
+
+	sprintf(buf,"a href=\"%s\" %s",url,toblank?"target=\"_blank\"":"");
+	startNode(buf,text);
+	end();
+}
+// --------------------------------------
+void HTMLBuilder::startTag(const char *tag, const char *fmt,...)
+{
+	if (fmt)
+	{
+
+		va_list ap;
+        va_start(ap, fmt);
+
+		char tmp[512];
+		vsprintf(tmp,fmt,ap);
+		startNode(tag,tmp);
+
+        va_end(ap);
+	}else{
+		startNode(tag,NULL);
+	}
+}
+// --------------------------------------
+void HTMLBuilder::startTagEnd(const char *tag, const char *fmt,...)
+{
+	if (fmt)
+	{
+
+		va_list ap;
+        va_start(ap, fmt);
+
+		char tmp[512];
+		vsprintf(tmp,fmt,ap);
+		startNode(tag,tmp);
+
+        va_end(ap);
+	}else{
+		startNode(tag,NULL);
+	}
+	end();
+}
+// --------------------------------------
+void HTMLBuilder::startSingleTagEnd(const char *fmt,...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+
+    indent();
+	char tmp[512];
+	vsprintf(tmp,fmt,ap);
+	out.writeString("<");
+	out.writeString(tmp);
+	out.writeString(">");
+    out.writeString("\n");
+
+	va_end(ap);
+}
+
+// --------------------------------------
+void HTMLBuilder::startTableRow(int i)
+{
+	if (i & 1)
+		startTag("tr bgcolor=\"#dddddd\" align=\"left\"");
+	else
+		startTag("tr bgcolor=\"#eeeeee\" align=\"left\"");
+}
+
+// --------------------------------------
+Template::Template(const char *fileName, const char *args)
+    : out(NULL), tmplArgs(args)
+{
+    file.openReadOnly(fileName);
+}
+// --------------------------------------
+Template::~Template()
+{
+	file.close();
+}
+
+void Template::writeToStream(Stream &output)
+{
+    out = &output;
+    readTemplate(file,out,0);
+}
+
+// --------------------------------------
+void Template::writeVariable(Stream &s,const String &varName, int loop)
 {
 	bool r=false;
 	if (varName.startsWith("servMgr."))
@@ -185,7 +365,7 @@ void HTML::writeVariable(Stream &s,const String &varName, int loop)
 		s.writeString(varName);
 }
 // --------------------------------------
-int HTML::getIntVariable(const String &varName,int loop)
+int Template::getIntVariable(const String &varName,int loop)
 {
 	String val;
 	LOG_DEBUG("AAA %d %d %d %d", val[0], val[1], val[2], val[3]);
@@ -197,7 +377,7 @@ int HTML::getIntVariable(const String &varName,int loop)
 	return atoi(val.cstr());
 }
 // --------------------------------------
-bool HTML::getBoolVariable(const String &varName,int loop)
+bool Template::getBoolVariable(const String &varName,int loop)
 {
 	String val;
 	MemoryStream mem(val.cstr(),String::MAX_LEN);
@@ -220,7 +400,7 @@ bool HTML::getBoolVariable(const String &varName,int loop)
 }
 
 // --------------------------------------
-void	HTML::readIf(Stream &in,Stream *outp,int loop)
+void	Template::readIf(Stream &in,Stream *outp,int loop)
 {
 	String var;
 	bool varCond=true;
@@ -254,7 +434,7 @@ void	HTML::readIf(Stream &in,Stream *outp,int loop)
 }
 
 // --------------------------------------
-void	HTML::readLoop(Stream &in,Stream *outp,int loop)
+void	Template::readLoop(Stream &in,Stream *outp,int loop)
 {
 	String var;
 	while (!in.eof())
@@ -290,7 +470,7 @@ void	HTML::readLoop(Stream &in,Stream *outp,int loop)
 }
 
 // --------------------------------------
-int HTML::readCmd(Stream &in,Stream *outp,int loop)
+int Template::readCmd(Stream &in,Stream *outp,int loop)
 {
 	String cmd;
 
@@ -328,7 +508,7 @@ int HTML::readCmd(Stream &in,Stream *outp,int loop)
 }
 
 // --------------------------------------
-void	HTML::readVariable(Stream &in,Stream *outp,int loop)
+void Template::readVariable(Stream &in,Stream *outp,int loop)
 {
 	String var;
 	while (!in.eof())
@@ -347,7 +527,7 @@ void	HTML::readVariable(Stream &in,Stream *outp,int loop)
 
 }
 // --------------------------------------
-bool HTML::readTemplate(Stream &in,Stream *outp,int loop)
+bool Template::readTemplate(Stream &in,Stream *outp,int loop)
 {
 	while (!in.eof())
 	{
@@ -385,197 +565,23 @@ bool HTML::readTemplate(Stream &in,Stream *outp,int loop)
 }
 
 // --------------------------------------
-void HTML::writeTemplate(const char *fileName, const char *args)
-{
-	FileStream file;
-	MemoryStream mm;
-	try
-	{
-		file.openReadOnly(fileName);
-		mm.readFromFile(file);
-
-		tmplArgs = args;
-		readTemplate(mm,out,0);
-
-	}catch(StreamException &e)
-	{
-		out->writeString(e.msg);
-		out->writeString(" : ");
-		out->writeString(fileName);
-	}
-
-	mm.free2();
-	file.close();
-}
-// --------------------------------------
 void HTML::writeRawFile(const char *fileName)
 {
-	FileStream file;
-	try
-	{
-		file.openReadOnly(fileName);
+    FileStream file;
+    try
+    {
+        file.openReadOnly(fileName);
 
-		file.writeTo(*out,file.length());
+        file.writeTo(*out,file.length());
 
-	}catch(StreamException &)
-	{
-	}
+    }catch(StreamException &)
+    {
+    }
 
-	file.close();
-}
-
-// --------------------------------------
-void HTML::locateTo(const char *url)
-{
-	out->writeLine(HTTP_SC_FOUND);
-	out->writeLineF("Location: %s",url);
-	out->writeLine("");
+    file.close();
 }
 // --------------------------------------
-void HTMLBuilder::startHTML()
+void HTMLBuilder::indent()
 {
-	startNode("html");
-}
-// --------------------------------------
-void HTMLBuilder::startBody()
-{
-	startNode("body");
-}
-// --------------------------------------
-void HTMLBuilder::addHead()
-{
-	char buf[512];
-		startNode("head");
-			startTagEnd("title",title.cstr());
-			startTagEnd("meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\"");
-
-			if (!refreshURL.isEmpty())
-			{
-				sprintf(buf,"meta http-equiv=\"refresh\" content=\"%d;URL=%s\"",refresh,refreshURL.cstr());
-				startTagEnd(buf);
-			}else if (refresh)
-			{
-				sprintf(buf,"meta http-equiv=\"refresh\" content=\"%d\"",refresh);
-				startTagEnd(buf);
-			}
-
-
-		end();
-}
-// --------------------------------------
-void HTML::addContent(const char *s)
-{
-	out->writeString(s);
-}
-// --------------------------------------
-void HTMLBuilder::startNode(const char *tag, const char *data)
-{
-	const char *p = tag;
-	char *o = &currTag[tagLevel][0];
-
-	int i;
-	for(i=0; i<MAX_TAGLEN-1; i++)
-	{
-		char c = *p++;
-		if ((c==0) || (c==' '))
-			break;
-		else
-			*o++ = c;
-	}
-	*o = 0;
-
-	out.writeString("<");
-	out.writeString(tag);
-	out.writeString(">");
-	if (data)
-		out.writeString(data);
-
-	tagLevel++;
-	if (tagLevel >= MAX_TAGLEVEL)
-		throw StreamException("HTML too deep!");
-}
-// --------------------------------------
-void HTMLBuilder::end()
-{
-	tagLevel--;
-	if (tagLevel < 0)
-		throw StreamException("HTML premature end!");
-
-	out.writeString("</");
-	out.writeString(&currTag[tagLevel][0]);
-	out.writeString(">");
-}
-// --------------------------------------
-void HTMLBuilder::addLink(const char *url, const char *text, bool toblank)
-{
-	char buf[1024];
-
-	sprintf(buf,"a href=\"%s\" %s",url,toblank?"target=\"_blank\"":"");
-	startNode(buf,text);
-	end();
-}
-// --------------------------------------
-void HTMLBuilder::startTag(const char *tag, const char *fmt,...)
-{
-	if (fmt)
-	{
-
-		va_list ap;
-  		va_start(ap, fmt);
-
-		char tmp[512];
-		vsprintf(tmp,fmt,ap);
-		startNode(tag,tmp);
-
-	   	va_end(ap);
-	}else{
-		startNode(tag,NULL);
-	}
-}
-// --------------------------------------
-void HTMLBuilder::startTagEnd(const char *tag, const char *fmt,...)
-{
-	if (fmt)
-	{
-
-		va_list ap;
-  		va_start(ap, fmt);
-
-		char tmp[512];
-		vsprintf(tmp,fmt,ap);
-		startNode(tag,tmp);
-
-	   	va_end(ap);
-	}else{
-		startNode(tag,NULL);
-	}
-	end();
-}
-// --------------------------------------
-void HTMLBuilder::startSingleTagEnd(const char *fmt,...)
-{
-	va_list ap;
-	va_start(ap, fmt);
-
-	char tmp[512];
-	vsprintf(tmp,fmt,ap);
-	startNode(tmp);
-
-	va_end(ap);
-	end();
-}
-
-// --------------------------------------
-void HTMLBuilder::startTableRow(int i)
-{
-	if (i & 1)
-		startTag("tr bgcolor=\"#dddddd\" align=\"left\"");
-	else
-		startTag("tr bgcolor=\"#eeeeee\" align=\"left\"");
-}
-
-// --------------------------------------
-std::string HTMLBuilder::str()
-{
-    return std::string(out.buf, out.len);
+    out.writeString(string(tagLevel * 4, ' ').c_str());
 }

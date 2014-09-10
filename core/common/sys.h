@@ -21,6 +21,7 @@
 #define _SYS_H
 
 #include <string.h>
+#include <string>
 #include "common.h"
 
 #define RAND(a,b) (((a = 36969 * (a & 65535) + (a >> 16)) << 16) + \
@@ -182,6 +183,9 @@ public:
 
     //! const char * にキャストする。
 	operator const char *() const {return data;}
+    operator std::string () const { return std::string(data); }
+
+    // String& operator = (const std::string &rhs) { set(rhs.c_str()); return *this; }
 
     //! タイプを変更する。
 	void convertTo(TYPE t);

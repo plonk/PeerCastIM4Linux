@@ -181,7 +181,6 @@ public:
 
 	void	handshakeICY(Channel::SRC_TYPE,bool);
 	void	handshakeIncoming();
-	void	handshakePOST();
 	void	handshakeRTSP(RTSP &);
 	void	handshakeHTTP(HTTP &,bool);
 

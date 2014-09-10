@@ -595,7 +595,6 @@ void writePLSHeader(Stream &s, PlayList::TYPE type)
 
 	s.writeLine("");
 }
-
 // -----------------------------------
 void Servent::handshakePLS(ChanInfo &info, bool doneHandshake)
 {
@@ -680,7 +679,6 @@ bool Servent::getLocalURL(char *str)
 	sprintf(str,"http://%s",ipStr);
 	return true;
 }
-
 // -----------------------------------
 bool Servent::getLocalTypeURL(char *str, ChanInfo::TYPE type)
 {
@@ -713,17 +711,6 @@ bool Servent::getLocalTypeURL(char *str, ChanInfo::TYPE type)
 // -----------------------------------
 // Warning: testing RTSP/RTP stuff below.
 // .. moved over to seperate app now.
-// -----------------------------------
-void Servent::handshakePOST()
-{
-	char tmp[1024];
-    while (sock->readLine(tmp,sizeof(tmp)))
-		LOG_DEBUG("POST: %s",tmp);
-
-	throw HTTPException(HTTP_SC_BADREQUEST,400);
-}
-
-
 // -----------------------------------
 void Servent::handshakeRTSP(RTSP &rtsp)
 {

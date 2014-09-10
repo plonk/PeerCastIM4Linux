@@ -60,15 +60,6 @@ HTMLBuilder::~HTMLBuilder()
 }
 
 // --------------------------------------
-void HTML::writeOK(const char *content)
-{
-	out->writeLine(HTTP_SC_OK)
-        .writeLineF("%s %s",HTTP_HS_SERVER,PCX_AGENT)
-        .writeLineF("%s %s",HTTP_HS_CONNECTION,"close")
-        .writeLineF("%s %s",HTTP_HS_CONTENT,content)
-        .writeLine("");
-}
-// --------------------------------------
 void HTML::locateTo(const char *url)
 {
 	out->writeLine(HTTP_SC_FOUND)
@@ -564,22 +555,6 @@ bool Template::readTemplate(Stream &in,Stream *outp,int loop)
 	return false;
 }
 
-// --------------------------------------
-void HTML::writeRawFile(const char *fileName)
-{
-    FileStream file;
-    try
-    {
-        file.openReadOnly(fileName);
-
-        file.writeTo(*out,file.length());
-
-    }catch(StreamException &)
-    {
-    }
-
-    file.close();
-}
 // --------------------------------------
 void HTMLBuilder::indent()
 {

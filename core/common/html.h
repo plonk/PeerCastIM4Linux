@@ -40,9 +40,6 @@ public:
 	void	locateTo(const char *);
 	void	addContent(const char *);
 
-	void	writeOK(const char *);
-    void    writeRawFile(const char *fileName);
-
 	WriteBufferStream *out;
 };
 

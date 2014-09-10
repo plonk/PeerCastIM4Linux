@@ -1,6 +1,7 @@
-CPPFLAGS = -g -w -Wno-reorder -Wno-parentheses -Wno-switch -Wno-unused-variable -Wno-unused-value -Wno-multichar -DENABLE_BINRELOC -pthread -D_UNIX -D_REENTRANT $(INCLUDES)
+CPPFLAGS = -std=c++11 -g -Wall -Wno-unused-function -Wno-format-contains-nul -Wno-unused-but-set-variable -Wno-unknown-pragmas -Wno-reorder -Wno-parentheses -Wno-switch -Wno-unused-variable -Wno-unused-value -Wno-multichar -DENABLE_BINRELOC -pthread -D_UNIX -D_REENTRANT $(INCLUDES)
 LDFLAGS = -pthread
 LDSOFLAGS = -shared -Wl,-soname
+LIBS = -lboost_filesystem -lboost_system
 
 #CPPFLAGS = -static -pthread -D__cplusplus -D_UNIX -D_LINUX_STATIC -D_REENTRANT $(INCLUDES)
 #LDFLAGS = -static -pthread
@@ -25,6 +26,7 @@ CORESOURCE = $(CORE)/unix/compat.cpp \
 	 $(CORE)/unix/usys.cpp \
 	 $(CORE)/unix/usocket.cpp \
 	 $(CORE)/unix/utf8.cpp \
+	 $(CORE)/common/admin.cpp \
 	 $(CORE)/common/socket.cpp \
 	 $(CORE)/common/servent.cpp \
 	 $(CORE)/common/servhs.cpp \
@@ -44,8 +46,10 @@ CORESOURCE = $(CORE)/unix/compat.cpp \
 	 $(CORE)/common/nsv.cpp \
 	 $(CORE)/common/ogg.cpp \
 	 $(CORE)/common/url.cpp \
+	 $(CORE)/common/template.cpp \
 	 $(CORE)/common/icy.cpp \
 	 $(CORE)/common/pcp.cpp \
+	 $(CORE)/common/localfs.cpp \
 	 $(CORE)/common/jis.cpp
 
 

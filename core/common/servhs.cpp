@@ -206,9 +206,9 @@ void Servent::handleGetMethod(HTTP &http, char *in)
     }else
     {
         while (http.nextHeader());
-        http.writeLine(HTTP_SC_FOUND);
-        http.writeLineF("Location: /%s/index.html",servMgr->htmlPath);
-        http.writeLine("");
+        http.writeLine(HTTP_SC_FOUND)
+            .writeLineF("Location: /%s/index.html",servMgr->htmlPath)
+            .writeLine("");
     }
 }
 // -----------------------------------
@@ -261,9 +261,9 @@ void Servent::handlePostMethod(HTTP &http, char *in)
     }else
     {
         while (http.nextHeader());
-        http.writeLine(HTTP_SC_FOUND);
-        http.writeLineF("Location: /%s/index.html",servMgr->htmlPath);
-        http.writeLine("");
+        http.writeLine(HTTP_SC_FOUND)
+            .writeLineF("Location: /%s/index.html",servMgr->htmlPath)
+            .writeLine("");
     }
 }
 // -----------------------------------
@@ -307,9 +307,9 @@ void Servent::handleHeadMethod(HTTP &http, char *in, bool isHTTP)
 
         loginPassword.set(servMgr->password);	// pwd already checked
 
-        sock->writeLine("OK2");
-        sock->writeLine("icy-caps:11");
-        sock->writeLine("");
+        sock->writeLine("OK2")
+            .writeLine("icy-caps:11")
+            .writeLine("");
         LOG_DEBUG("ShoutCast client");
 
         handshakeICY(Channel::SRC_SHOUTCAST,isHTTP);
@@ -433,9 +433,9 @@ void Servent::handshakeHTTP(HTTP &http, bool isHTTP)
 
 		loginPassword.set(servMgr->password);	// pwd already checked
 
-		sock->writeLine("OK2");
-		sock->writeLine("icy-caps:11");
-		sock->writeLine("");
+		sock->writeLine("OK2")
+            .writeLine("icy-caps:11")
+            .writeLine("");
 		LOG_DEBUG("ShoutCast client");
 
 		handshakeICY(Channel::SRC_SHOUTCAST,isHTTP);
@@ -519,7 +519,6 @@ bool Servent::canStream(Channel *ch)
 // -----------------------------------
 void Servent::handshakeIncoming()
 {
-
 	setStatus(S_HANDSHAKE);
 
 	char buf[2048];
@@ -554,13 +553,8 @@ void Servent::triggerChannel(char *str, ChanInfo::PROTOCOL proto,bool relay)
 {
 
 	ChanInfo info;
-//	WLockBlock lb(&(chanMgr->channellock));
 
-//	LOG_DEBUG("----------triggerChannel LOCK ON");
-//	lb.on();
 	servMgr->getChannel(str,info,relay);
-//	LOG_DEBUG("==========triggerChannel LOCK OFF");
-//	lb.off();
 
 	if (proto == ChanInfo::SP_PCP)
 		type = T_RELAY;
@@ -575,8 +569,8 @@ void Servent::triggerChannel(char *str, ChanInfo::PROTOCOL proto,bool relay)
 // -----------------------------------
 void writePLSHeader(Stream &s, PlayList::TYPE type)
 {
-	s.writeLine(HTTP_SC_OK);
-	s.writeLineF("%s %s",HTTP_HS_SERVER,PCX_AGENT);
+    s.writeLine(HTTP_SC_OK)
+        .writeLineF("%s %s",HTTP_HS_SERVER,PCX_AGENT);
 
 	const char *content;
 	switch(type)
@@ -594,10 +588,10 @@ void writePLSHeader(Stream &s, PlayList::TYPE type)
 			content = MIME_TEXT;
 			break;
 	}
-	s.writeLineF("%s %s",HTTP_HS_CONTENT,content);
-    s.writeLine("Content-Disposition: inline");
-    s.writeLine("Cache-Control: private" );
-	s.writeLineF("%s %s",HTTP_HS_CONNECTION,"close");
+	s.writeLineF("%s %s",HTTP_HS_CONTENT,content)
+        .writeLine("Content-Disposition: inline")
+        .writeLine("Cache-Control: private" )
+        .writeLineF("%s %s",HTTP_HS_CONNECTION,"close");
 
 	s.writeLine("");
 }
@@ -1026,10 +1020,10 @@ void Servent::handshakeRemoteFile(const char *dirName)
 
 	HTTP rhttp(*rsock);
 
-	rhttp.writeLineF("GET /%s HTTP/1.0",dirName);
-	rhttp.writeLineF("%s %s",HTTP_HS_HOST,hostName);
-	rhttp.writeLineF("%s %s",HTTP_HS_CONNECTION,"close");
-	rhttp.writeLineF("%s %s",HTTP_HS_ACCEPT,"*/*");
+	rhttp.writeLineF("GET /%s HTTP/1.0",dirName)
+        .writeLineF("%s %s",HTTP_HS_HOST,hostName)
+        .writeLineF("%s %s",HTTP_HS_CONNECTION,"close")
+        .writeLineF("%s %s",HTTP_HS_ACCEPT,"*/*");
 	rhttp.writeLine("");
 
 	String contentType;
@@ -1066,11 +1060,11 @@ void Servent::handshakeRemoteFile(const char *dirName)
 	if (contentType.contains(MIME_HTML))
 		isTemplate = true;
 
-	sock->writeLine(HTTP_SC_OK);
-	sock->writeLineF("%s %s",HTTP_HS_SERVER,PCX_AGENT);
-	sock->writeLineF("%s %s",HTTP_HS_CACHE,"no-cache");
-	sock->writeLineF("%s %s",HTTP_HS_CONNECTION,"close");
-	sock->writeLineF("%s %s",HTTP_HS_CONTENT,contentType.cstr());
+	sock->writeLine(HTTP_SC_OK)
+        .writeLineF("%s %s",HTTP_HS_SERVER,PCX_AGENT)
+        .writeLineF("%s %s",HTTP_HS_CACHE,"no-cache")
+        .writeLineF("%s %s",HTTP_HS_CONNECTION,"close")
+        .writeLineF("%s %s",HTTP_HS_CONTENT,contentType.cstr());
 
 	sock->writeLine("");
 

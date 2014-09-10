@@ -190,23 +190,22 @@ public:
 	int	writeUTF8(unsigned int);
 
 	// text
-    int	readLine(char *in, int max);
+    int		readLine(char *in, int max);
 
     int		readWord(char *, int);
 	int		readBase64(char *, int);
 
-	void	write(const char *,va_list);
-	void	writeLine(const char *);
-	void	writeLineF(const char *,...);
-	void	writeString(const char *);
-	void	writeStringF(const char *,...);
+	Stream&	write(const char *,va_list);
+	Stream&	writeLine(const char *);
+	Stream&	writeLineF(const char *,...);
+	Stream&	writeString(const char *);
+	Stream&	writeStringF(const char *,...);
 
 	bool	writeCRLF;
 
 	int		readBits(int);
 
 	void	updateTotals(unsigned int,unsigned int);
-
 
 	unsigned char bitsBuffer;
 	unsigned int bitsPos;
@@ -215,7 +214,6 @@ public:
 	unsigned int lastBytesIn,lastBytesOut;
 	unsigned int bytesInPerSec,bytesOutPerSec;
 	unsigned int lastUpdate;
-
 };
 
 

@@ -252,27 +252,33 @@ int	Stream::readLine(char *in, int max)
 	return i;
 }
 // -------------------------------------
-void Stream::write(const char *fmt,va_list ap)
+Stream& Stream::write(const char *fmt,va_list ap)
 {
 	char tmp[4096];
 	vsprintf(tmp,fmt,ap);
     write(tmp,strlen(tmp));
+
+    return *this;
 }
 // -------------------------------------
-void Stream::writeStringF(const char *fmt,...)
+Stream& Stream::writeStringF(const char *fmt,...)
 {
 	va_list ap;
   	va_start(ap, fmt);
 	write(fmt,ap);
    	va_end(ap);
+
+    return *this;
 }
 // -------------------------------------
-void Stream::writeString(const char *str)
+Stream& Stream::writeString(const char *str)
 {
 	write(str,strlen(str));
+
+    return *this;
 }
 // -------------------------------------
-void Stream::writeLineF(const char *fmt,...)
+Stream& Stream::writeLineF(const char *fmt,...)
 {
 	va_list ap;
   	va_start(ap, fmt);
@@ -286,10 +292,12 @@ void Stream::writeLineF(const char *fmt,...)
 	    write("\r\n",2);
 	else
 		write("\n",1);
+
+    return *this;
 }
 
 // -------------------------------------
-void Stream::writeLine(const char *str)
+Stream& Stream::writeLine(const char *str)
 {
 	writeString(str);
 
@@ -297,6 +305,8 @@ void Stream::writeLine(const char *str)
 	    write("\r\n",2);
 	else
 		write("\n",1);
+
+    return *this;
 }
 
 // -------------------------------------

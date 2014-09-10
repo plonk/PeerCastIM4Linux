@@ -62,18 +62,18 @@ HTMLBuilder::~HTMLBuilder()
 // --------------------------------------
 void HTML::writeOK(const char *content)
 {
-	out->writeLine(HTTP_SC_OK);
-	out->writeLineF("%s %s",HTTP_HS_SERVER,PCX_AGENT);
-	out->writeLineF("%s %s",HTTP_HS_CONNECTION,"close");
-    out->writeLineF("%s %s",HTTP_HS_CONTENT,content);
-	out->writeLine("");
+	out->writeLine(HTTP_SC_OK)
+        .writeLineF("%s %s",HTTP_HS_SERVER,PCX_AGENT)
+        .writeLineF("%s %s",HTTP_HS_CONNECTION,"close")
+        .writeLineF("%s %s",HTTP_HS_CONTENT,content)
+        .writeLine("");
 }
 // --------------------------------------
 void HTML::locateTo(const char *url)
 {
-	out->writeLine(HTTP_SC_FOUND);
-	out->writeLineF("Location: %s",url);
-	out->writeLine("");
+	out->writeLine(HTTP_SC_FOUND)
+        .writeLineF("Location: %s",url)
+        .writeLine("");
 }
 // --------------------------------------
 void HTML::addContent(const char *s)
@@ -134,10 +134,10 @@ void HTMLBuilder::startNode(const char *tag, const char *data)
 	*o = 0;
 
     indent();
-	out.writeString("<");
-	out.writeString(tag);
-	out.writeString(">");
-    out.writeString("\n");
+	out.writeString("<")
+        .writeString(tag)
+        .writeString(">")
+        .writeString("\n");
 
 	tagLevel++;
 	if (tagLevel >= MAX_TAGLEVEL)
@@ -146,8 +146,8 @@ void HTMLBuilder::startNode(const char *tag, const char *data)
 	if (data)
     {
         indent();
-		out.writeString(data);
-        out.writeString("\n");
+		out.writeString(data)
+            .writeString("\n");
     }
 }
 // --------------------------------------
@@ -158,10 +158,10 @@ void HTMLBuilder::end()
 		throw StreamException("HTML premature end!");
 
     indent();
-	out.writeString("</");
-	out.writeString(&currTag[tagLevel][0]);
-	out.writeString(">");
-    out.writeString("\n");
+	out.writeString("</")
+        .writeString(&currTag[tagLevel][0])
+        .writeString(">")
+        .writeString("\n");
 }
 // --------------------------------------
 void HTMLBuilder::addLink(const char *url, const char *text, bool toblank)
@@ -218,10 +218,10 @@ void HTMLBuilder::startSingleTagEnd(const char *fmt,...)
     indent();
 	char tmp[512];
 	vsprintf(tmp,fmt,ap);
-	out.writeString("<");
-	out.writeString(tmp);
-	out.writeString(">");
-    out.writeString("\n");
+	out.writeString("<")
+        .writeString(tmp)
+        .writeString(">")
+        .writeString("\n");
 
 	va_end(ap);
 }

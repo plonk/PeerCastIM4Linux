@@ -39,38 +39,11 @@
 using namespace std;
 
 // --------------------------------------
-HTML::HTML(Stream &o)
-{
-	o.writeCRLF = false;
-	out = new WriteBufferStream(8192, &o);
-	out->writeCRLF = false;
-}
-
-HTML::~HTML()
-{
-	try {
-		out->flush();
-	} catch (StreamException &) {}
-	delete out;
-}
-
 HTMLBuilder::~HTMLBuilder()
 {
     // tag level check
 }
 
-// --------------------------------------
-void HTML::locateTo(const char *url)
-{
-	out->writeLine(HTTP_SC_FOUND)
-        .writeLineF("Location: %s",url)
-        .writeLine("");
-}
-// --------------------------------------
-void HTML::addContent(const char *s)
-{
-	out->writeString(s);
-}
 // --------------------------------------
 void HTMLBuilder::doctype()
 {

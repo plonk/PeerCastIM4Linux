@@ -31,19 +31,6 @@ class FileStream;
 class WriteBufferStream;
 
 // ---------------------------------------
-class HTML
-{
-public:
-	HTML(Stream &);
-	~HTML();
-
-	void	locateTo(const char *);
-	void	addContent(const char *);
-
-	WriteBufferStream *out;
-};
-
-// ---------------------------------------
 //! Template engine.
 class Template
 {

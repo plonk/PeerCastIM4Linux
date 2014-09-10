@@ -2,9 +2,10 @@
 #include "common/localfs.h"
 #include "common/html.h"
 #include "common/http.h"
-#include <boost/filesystem.hpp> 
+#include <boost/filesystem.hpp>
 #include "common/version2.h"
 #include "util.h"
+#include "common/template.h"
 
 using namespace std;
 using namespace boost::filesystem;

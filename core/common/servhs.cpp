@@ -30,6 +30,7 @@
 #include "common/util.h"
 #include "common/admin.h"
 #include "common/localfs.h"
+#include "common/template.h"
 #ifdef _DEBUG
 #include "chkMemoryLeak.h"
 #define DEBUG_NEW new(__FILE__, __LINE__)

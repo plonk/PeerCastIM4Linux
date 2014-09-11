@@ -4,10 +4,11 @@
 #include "common/version2.h"
 #include "common/stats.h"
 #include "common/sys.h"
+#include "common/util.h"
 #include <boost/format.hpp>
 
-using boost::format;
 using namespace std;
+using namespace util;
 
 extern char *nextCGIarg(char *cp, char *cmd, char *arg);
 extern bool getCGIargBOOL(char *a);
@@ -69,7 +70,6 @@ static XML::Node *createChannelXML(ChanHitList *chl)
 	XML::Node *n = chl->info.createChannelXML();
 	n->add(chl->createXML());
 	n->add(chl->info.createTrackXML());
-//	n->add(chl->info.createServentXML());
 	return n;
 }
 // -----------------------------------
@@ -78,7 +78,6 @@ static XML::Node *createChannelXML(Channel *c)
 	XML::Node *n = c->info.createChannelXML();
 	n->add(c->createRelayXML(true));
 	n->add(c->info.createTrackXML());
-//	n->add(c->info.createServentXML());
 	return n;
 }
 // -----------------------------------
@@ -123,26 +122,6 @@ static HTTPResponse handshakeXML()
 		}
 	}
 
-#if 0
-	if (servMgr->isRoot)
-	{
-		// add private channels
-		{
-			XML::Node *pn = new XML::Node("priv_channels");
-			rn->add(pn);
-
-			ChanHitList *chl = chanMgr->hitlist;
-			while (chl)
-			{
-				if (chl->isUsed())
-					if (chl->info.isPrivate())
-						pn->add(createChannelXML(chl));
-				chl = chl->next;
-			}
-		}
-	}
-#endif
-
 	XML::Node *hc = new XML::Node("host_cache");
 	for(i=0; i<ServMgr::MAX_HOSTCACHE; i++)
 	{
@@ -179,14 +158,14 @@ HTTPResponse AdminController::clearlog(char *cmd)
 {
     sys->logBuf->clear();
 
-    return HTTPResponse::redirect(str(format("/%s/viewlog.html") % servMgr->htmlPath));
+    return HTTPResponse::redirect(format("/%s/viewlog.html", servMgr->htmlPath));
 }
 
 HTTPResponse AdminController::save(char *cmd)
 {
     peercastInst->saveSettings();
 
-    return HTTPResponse::redirect(str(format("/%s/settings.html") % servMgr->htmlPath));
+    return HTTPResponse::redirect(format("/%s/settings.html", servMgr->htmlPath));
 }
 
 HTTPResponse AdminController::reg(char *cmd)
@@ -194,7 +173,7 @@ HTTPResponse AdminController::reg(char *cmd)
     char idstr[128];
     chanMgr->broadcastID.toStr(idstr);
 
-    return HTTPResponse::redirect(str(format("http://www.peercast.org/register/?id=%s") % idstr));
+    return HTTPResponse::redirect(format("http://www.peercast.org/register/?id=%s", idstr));
 }
 
 HTTPResponse AdminController::edit_bcid(char *cmd)
@@ -217,7 +196,7 @@ HTTPResponse AdminController::edit_bcid(char *cmd)
     }
     peercastInst->saveSettings();
 
-    return HTTPResponse::redirect(str(format("/%s/bcid.html") % servMgr->htmlPath));
+    return HTTPResponse::redirect(format("/%s/bcid.html", servMgr->htmlPath));
 }
 
 HTTPResponse AdminController::add_bcid(char *cmd)
@@ -240,7 +219,6 @@ HTTPResponse AdminController::add_bcid(char *cmd)
             bcid->valid = getCGIargBOOL(arg);
         else if (strcmp(curr,"result")==0)
             result = true;
-
     }
 
     LOG_DEBUG("Adding BCID : %s",bcid->name.cstr());
@@ -251,7 +229,7 @@ HTTPResponse AdminController::add_bcid(char *cmd)
         return HTTPResponse(200, {{ "Content-Type", "text/plain" }}, [](Stream& os) { os.writeString("OK"); });
     }else
     {
-        return HTTPResponse::redirect(str(format("/%s/bcid.html") % servMgr->htmlPath));
+        return HTTPResponse::redirect(format("/%s/bcid.html", servMgr->htmlPath));
     }
 }
 
@@ -474,13 +452,13 @@ HTTPResponse AdminController::apply(char *cmd)
         char ipstr[64];
         lh.toStr(ipstr);
 
-        response = HTTPResponse::redirect(str(format("http://%s/%s/settings.html") % ipstr % servMgr->htmlPath));
+        response = HTTPResponse::redirect(format("http://%s/%s/settings.html", ipstr, servMgr->htmlPath));
 
         servMgr->serverHost.port = newPort;
         servMgr->restartServer=true;
     }else
     {
-        response = HTTPResponse::redirect(str(format("/%s/settings.html") % servMgr->htmlPath));
+        response = HTTPResponse::redirect(format("/%s/settings.html", servMgr->htmlPath));
     }
 
     peercastInst->saveSettings();
@@ -539,7 +517,7 @@ HTTPResponse AdminController::fetch(char *cmd)
     if (c)
         c->startURL(curl.cstr());
 
-    return HTTPResponse::redirect(str(format("/%s/relays.html") % servMgr->htmlPath));
+    return HTTPResponse::redirect(format("/%s/relays.html", servMgr->htmlPath));
 }
 
 HTTPResponse AdminController::stopserv(char *cmd)
@@ -554,7 +532,7 @@ HTTPResponse AdminController::stopserv(char *cmd)
                 s->abort();
         }
     }
-    return HTTPResponse::redirect(str(format("/%s/connections.html") % servMgr->htmlPath));
+    return HTTPResponse::redirect(format("/%s/connections.html", servMgr->htmlPath));
 }
 
 HTTPResponse AdminController::hitlist(char *cmd)
@@ -568,9 +546,7 @@ HTTPResponse AdminController::hitlist(char *cmd)
     {
         if (chl->isUsed())
         {
-            char tmp[64];
-            sprintf(tmp,"c%d=",index);
-            if (cmpCGIarg(cmd,tmp,"1"))
+            if (cmpCGIarg(cmd,format("c%d=",index).c_str(),"1"))
             {
                 Channel *c;
                 if (!(c=chanMgr->findChannelByID(chl->info.id)))
@@ -587,13 +563,13 @@ HTTPResponse AdminController::hitlist(char *cmd)
         index++;
     }
 
-    char *findArg = getCGIarg(cmd,"keywords=");
+    char *findArg = getCGIarg(cmd,"keywords="); // 使われていない
 
     if (hasCGIarg(cmd,"relay"))
     {
         sys->sleep(500);
 
-        return HTTPResponse::redirect(str(format("/%s/relays.html") % servMgr->htmlPath));
+        return HTTPResponse::redirect(format("/%s/relays.html", servMgr->htmlPath));
     }
     return HTTPResponse::redirect("/"); // ここでいい？
 }
@@ -615,14 +591,14 @@ HTTPResponse AdminController::clear(char *cmd)
         }
     }
 
-    return HTTPResponse::redirect(str(format("/%s/index.html") % servMgr->htmlPath));
+    return HTTPResponse::redirect(format("/%s/index.html", servMgr->htmlPath));
 }
 
 HTTPResponse AdminController::upgrade(char *cmd)
 {
     if (servMgr->downloadURL[0])
     {
-        return HTTPResponse::redirect(str(format("/admin?cmd=redirect&url=%s") % servMgr->downloadURL));
+        return HTTPResponse::redirect(format("/admin?cmd=redirect&url=%s", servMgr->downloadURL));
     }else {
         return HTTPResponse::redirect("/"); // 何かページを表示するべき？;
     }
@@ -632,9 +608,7 @@ HTTPResponse AdminController::connect(char *cmd)
 {
     Servent *s = servMgr->servents;
     {
-        char tmp[64];
-        sprintf(tmp,"c%d=",s->serventIndex);
-        if (cmpCGIarg(cmd,tmp,"1"))
+        if (cmpCGIarg(cmd,util::format("c%d=",s->serventIndex).c_str(),"1"))
         {
             if (hasCGIarg(cmd,"stop"))
                 s->thread.active = false;
@@ -642,7 +616,7 @@ HTTPResponse AdminController::connect(char *cmd)
         s=s->next;
     }
 
-    return HTTPResponse::redirect(str(format("/%s/connections.html") % servMgr->htmlPath));
+    return HTTPResponse::redirect(format("/%s/connections.html", servMgr->htmlPath));
 }
 
 HTTPResponse AdminController::shutdown(char *cmd)
@@ -669,7 +643,7 @@ HTTPResponse AdminController::stop(char *cmd)
 
     sys->sleep(500);
 
-    return HTTPResponse::redirect(str(format("/%s/relays.html") % servMgr->htmlPath));
+    return HTTPResponse::redirect(format("/%s/relays.html", servMgr->htmlPath));
 }
 
 HTTPResponse AdminController::bump(char *cmd)
@@ -686,7 +660,7 @@ HTTPResponse AdminController::bump(char *cmd)
     if (c)
         c->bump = true;
 
-    return HTTPResponse::redirect(str(format("/%s/relays.html") % servMgr->htmlPath));
+    return HTTPResponse::redirect(format("/%s/relays.html", servMgr->htmlPath));
 }
 
 HTTPResponse AdminController::keep(char *cmd)
@@ -705,13 +679,14 @@ HTTPResponse AdminController::keep(char *cmd)
         c->stayConnected = !c->stayConnected;
     } //JP-Patch
 
-    return HTTPResponse::redirect(str(format("/%s/relays.html") % servMgr->htmlPath));
+    return HTTPResponse::redirect(format("/%s/relays.html", servMgr->htmlPath));
 }
 
 HTTPResponse AdminController::relay(char *cmd)
 {
     ChanInfo info;
     char *cp = cmd;
+
     while (cp=nextCGIarg(cp,curr,arg))
     {
         if (strcmp(curr,"id")==0)
@@ -734,7 +709,7 @@ HTTPResponse AdminController::relay(char *cmd)
         c->startGet();
     }
 
-    return HTTPResponse::redirect(str(format("/%s/relays.html") % servMgr->htmlPath));
+    return HTTPResponse::redirect(format("/%s/relays.html", servMgr->htmlPath));
 }
 
 HTTPResponse AdminController::net_add(char *cmd)
@@ -767,23 +742,19 @@ HTTPResponse AdminController::logout(char *cmd)
 
 HTTPResponse AdminController::login(char *cmd)
 {
-    string cookie;
-    GnuID id;
+    string idstr = GnuID().generate().str();
 
-    char idstr[64];
-    id.generate();
-    id.toStr(idstr);
-
-    servent.cookie.set(idstr,servent.sock->host.ip);
+    servent.cookie.set(idstr.c_str(), servent.sock->host.ip);
     servMgr->cookieList.add(servent.cookie);
 
+    string cookie;
     if (servMgr->cookieList.neverExpire)
-        cookie = str( format("%s id=%s; path=/; expires=\"Mon, 01-Jan-3000 00:00:00 GMT\";") % HTTP_HS_SETCOOKIE % idstr );
+        cookie = format("%s id=%s; path=/; expires=\"Mon, 01-Jan-3000 00:00:00 GMT\";", HTTP_HS_SETCOOKIE, idstr);
     else
-        cookie = str( format("%s id=%s; path=/;") % HTTP_HS_SETCOOKIE % idstr );
+        cookie = format("%s id=%s; path=/;", HTTP_HS_SETCOOKIE, idstr);
 
     return HTTPResponse(303,
-                        { { HTTP_HS_SETCOOKIE, cookie }, { "Location", str(format("/%s/index.html") % servMgr->htmlPath) } },
+                        { { HTTP_HS_SETCOOKIE, cookie }, { "Location", format("/%s/index.html", servMgr->htmlPath) } },
                         [](Stream&) {});
 }
 
@@ -831,10 +802,8 @@ HTTPResponse AdminController::setmeta(char *cmd)
                         newInfo.track.genre = chmeta.cstr();
                 }
                 c->updateInfo(newInfo);
-                char idstr[64];
-                newInfo.id.toStr(idstr);
 
-                location = str(format("/%s/relayinfo.html?id=%s") % servMgr->htmlPath % idstr);
+                location = format("/%s/relayinfo.html?id=%s", servMgr->htmlPath, newInfo.id.str());
             }
         }
     }
@@ -910,7 +879,5 @@ HTTPResponse AdminController::send(char *cmd)
 
 HTTPResponse AdminController::unknown(char *cmd)
 {
-    return HTTPResponse::redirect(string("/") +
-                                  servMgr->htmlPath +
-                                  "/index.html");
+    return HTTPResponse::redirect(format("/%s/index.html", servMgr->htmlPath));
 }

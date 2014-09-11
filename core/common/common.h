@@ -35,6 +35,7 @@ UnknownEndian
 
 #include <stdio.h>
 #include <string.h>
+#include <string>
 
 #ifndef NULL
 #define NULL 0
@@ -120,10 +121,11 @@ public:
 	}
 
 
-	void	generate(unsigned char = 0);
+	GnuID&	generate(unsigned char = 0);
 	void	encode(class Host *, const char *,const char *,unsigned char);
 
 	void	toStr(char *);
+    std::string str();
 	void	fromStr(const char *);
 
 	unsigned char 	getFlags();

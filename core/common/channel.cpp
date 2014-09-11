@@ -2407,9 +2407,9 @@ ChanMgr::ChanMgr()
 bool ChanMgr::writeVariable(Stream &out, const String &var, int index)
 {
 	char buf[1024];
+
 	if (var == "numHitLists")
 		sprintf(buf,"%d",numHitLists());
-
 	else if (var == "numChannels")
 		sprintf(buf,"%d",numChannels());
 	else if (var == "djMessage")
@@ -2428,8 +2428,6 @@ bool ChanMgr::writeVariable(Stream &out, const String &var, int index)
 		broadcastID.toStr(buf);
 	else
 		return false;
-
-
 
 	out.writeString(buf);
 	return true;

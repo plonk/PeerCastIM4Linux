@@ -21,6 +21,7 @@
 
 #include <stdarg.h>
 #include <stdio.h>
+#include "sys.h"
 #include "channel.h"
 #include "servent.h"
 #include "servmgr.h"

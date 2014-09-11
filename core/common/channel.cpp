@@ -86,9 +86,9 @@ bool isIndexTxt(ChanInfo *info)
 	if(	info &&
 		info->contentType == ChanInfo::T_RAW &&
 		info->bitrate <= 32 &&
-		(len = strlen(info->name.cstr())) >= 9 &&
-		!memcmp(info->name.cstr(), "index", 5) &&
-		!memcmp(info->name.cstr()+len-4, ".txt", 4))
+		(len = strlen(info->name.c_str())) >= 9 &&
+		!memcmp(info->name.c_str(), "index", 5) &&
+		!memcmp(info->name.c_str()+len-4, ".txt", 4))
 	{
 		return true;
 	}
@@ -763,7 +763,7 @@ void PeercastSource::stream(Channel *ch)
 				unsigned int ctime=sys->getTime();
 				if ((ctime-chanMgr->lastYPConnect) > MIN_YP_RETRY)
 				{
-					ch->sourceHost.host.fromStrName(servMgr->rootHost.cstr(),DEFAULT_PORT);
+					ch->sourceHost.host.fromStrName(servMgr->rootHost.c_str(),DEFAULT_PORT);
 					ch->sourceHost.yp = true;
 					chanMgr->lastYPConnect=ctime;
 					numYPTries++;
@@ -786,7 +786,7 @@ yp2:
 				unsigned int ctime=sys->getTime();
 				if ((ctime-chanMgr->lastYPConnect2) > MIN_YP_RETRY)
 				{
-					ch->sourceHost.host.fromStrName(servMgr->rootHost2.cstr(),DEFAULT_PORT);
+					ch->sourceHost.host.fromStrName(servMgr->rootHost2.c_str(),DEFAULT_PORT);
 					ch->sourceHost.yp = true;
 					chanMgr->lastYPConnect2=ctime;
 					numYPTries2++;
@@ -1231,7 +1231,7 @@ void Channel::broadcastTrackerUpdate(GnuID &svID, bool force)
 
 		if (cnt)
 		{
-			LOG_DEBUG("Sent tracker update for %s to %d client(s)",info.name.cstr(),cnt);
+			LOG_DEBUG("Sent tracker update for %s to %d client(s)",info.name.c_str(),cnt);
 			lastTrackerUpdate = ctime;
 		}
 	}
@@ -2296,7 +2296,7 @@ Channel *ChanMgr::findAndRelay(ChanInfo &info)
 {
 	char idStr[64];
 	info.id.toStr(idStr);
-	LOG_CHANNEL("Searching for: %s (%s)",idStr,info.name.cstr());
+	LOG_CHANNEL("Searching for: %s (%s)",idStr,info.name.c_str());
 
 	if(!isIndexTxt(&info))	// for PCRaw (popup)
 		peercastApp->notifyMessage(ServMgr::NT_PEERCAST,"Finding channel...");
@@ -2416,7 +2416,7 @@ bool ChanMgr::writeVariable(Stream &out, const String &var, int index)
 	{
 		String utf8 = broadcastMsg;
 		utf8.convertTo(String::T_UNICODESAFE);
-		strcpy(buf,utf8.cstr());
+		strcpy(buf,utf8.c_str());
 	}
 	else if (var == "icyMetaInterval")
 		sprintf(buf,"%d",icyMetaInterval);
@@ -2446,7 +2446,7 @@ bool Channel::writeVariable(Stream &out, const String &var, int index)
 	{
 		utf8 = info.name;
 		utf8.convertTo(String::T_UNICODESAFE);
-		strcpy(buf,utf8.cstr());
+		strcpy(buf,utf8.c_str());
 
 	}else if (var == "bitrate")
 	{
@@ -2465,17 +2465,17 @@ bool Channel::writeVariable(Stream &out, const String &var, int index)
 	{
 		utf8 = info.genre;
 		utf8.convertTo(String::T_UNICODESAFE);
-		strcpy(buf,utf8.cstr());
+		strcpy(buf,utf8.c_str());
 	}else if (var == "desc")
 	{
 		utf8 = info.desc;
 		utf8.convertTo(String::T_UNICODESAFE);
-		strcpy(buf,utf8.cstr());
+		strcpy(buf,utf8.c_str());
 	}else if (var == "comment")
 	{
 		utf8 = info.comment;
 		utf8.convertTo(String::T_UNICODESAFE);
-		strcpy(buf,utf8.cstr());
+		strcpy(buf,utf8.c_str());
 	}else if (var == "bcstClap") //JP-MOD
 	{
 		strcpy(buf,info.ppFlags & ServMgr::bcstClap ? "1":"0");
@@ -2486,7 +2486,7 @@ bool Channel::writeVariable(Stream &out, const String &var, int index)
 			uptime.setFromStopwatch(sys->getTime()-info.lastPlayStart);
 		else
 			uptime.set("-");
-		strcpy(buf,uptime.cstr());
+		strcpy(buf,uptime.c_str());
 	}
 	else if (var == "type")
 		sprintf(buf,"%s",ChanInfo::getTypeStr(info.contentType));
@@ -2534,10 +2534,10 @@ bool Channel::writeVariable(Stream &out, const String &var, int index)
 			utf8 = info.track.contact;
 
 		utf8.convertTo(String::T_UNICODESAFE);
-		strcpy(buf,utf8.cstr());
+		strcpy(buf,utf8.c_str());
 
 	}else if (var == "contactURL")
-		sprintf(buf,"%s",info.url.cstr());
+		sprintf(buf,"%s",info.url.c_str());
 	else if (var == "streamPos")
 		sprintf(buf,"%d",streamPos);
 	else if (var == "sourceType")
@@ -2549,7 +2549,7 @@ bool Channel::writeVariable(Stream &out, const String &var, int index)
 		if (sourceURL.isEmpty())
 			sourceHost.host.toStr(buf);
 		else
-			strcpy(buf,sourceURL.cstr());
+			strcpy(buf,sourceURL.c_str());
 	}
 	else if (var == "headPos")
 		sprintf(buf,"%d",headPack.pos);
@@ -2676,7 +2676,7 @@ void ChanMgr::setUpdateInterval(unsigned int v)
 					atom.writeChar(PCP_BCST_GROUP,PCP_BCST_GROUP_ALL);
 					atom.writeBytes(PCP_BCST_FROM,servMgr->sessionID.id,16);
 					atom.writeParent(PCP_MESG,1);
-						atom.writeString(PCP_MESG_DATA,msg.cstr());
+						atom.writeString(PCP_MESG_DATA,msg.c_str());
 
 				mem.len = mem.getPosition();
 				mem.rewind();
@@ -3411,7 +3411,7 @@ bool	ChanHit::writeVariable(Stream &out, const String &var)
 	{
 		String timeStr;
 		timeStr.setFromStopwatch(upTime);
-		strcpy(buf,timeStr.cstr());
+		strcpy(buf,timeStr.c_str());
 	}else if (var == "update")
 	{
 		String timeStr;
@@ -3419,7 +3419,7 @@ bool	ChanHit::writeVariable(Stream &out, const String &var)
 			timeStr.setFromStopwatch(sys->getTime()-time);
 		else
 			timeStr.set("-");
-		strcpy(buf,timeStr.cstr());
+		strcpy(buf,timeStr.c_str());
 	}else if (var == "isFirewalled"){
 		sprintf(buf,"%d",firewalled?1:0);
 	}else if (var == "version"){
@@ -4334,12 +4334,12 @@ void ChanInfo::readInfoAtoms(AtomStream &atom,int numc)
 void ChanInfo::writeInfoAtoms(AtomStream &atom)
 {
 	atom.writeParent(PCP_CHAN_INFO,7 + (ppFlags ? 1:0/*JP-MOD*/));
-		atom.writeString(PCP_CHAN_INFO_NAME,name.cstr());
+		atom.writeString(PCP_CHAN_INFO_NAME,name.c_str());
 		atom.writeInt(PCP_CHAN_INFO_BITRATE,bitrate);
-		atom.writeString(PCP_CHAN_INFO_GENRE,genre.cstr());
-		atom.writeString(PCP_CHAN_INFO_URL,url.cstr());
-		atom.writeString(PCP_CHAN_INFO_DESC,desc.cstr());
-		atom.writeString(PCP_CHAN_INFO_COMMENT,comment.cstr());
+		atom.writeString(PCP_CHAN_INFO_GENRE,genre.c_str());
+		atom.writeString(PCP_CHAN_INFO_URL,url.c_str());
+		atom.writeString(PCP_CHAN_INFO_DESC,desc.c_str());
+		atom.writeString(PCP_CHAN_INFO_COMMENT,comment.c_str());
 		atom.writeString(PCP_CHAN_INFO_TYPE,getTypeStr(contentType));
 		if(ppFlags)
 			atom.writeInt(PCP_CHAN_INFO_PPFLAGS,ppFlags); //JP-MOD
@@ -4349,10 +4349,10 @@ void ChanInfo::writeInfoAtoms(AtomStream &atom)
 void ChanInfo::writeTrackAtoms(AtomStream &atom)
 {
 	atom.writeParent(PCP_CHAN_TRACK,4);
-		atom.writeString(PCP_CHAN_TRACK_TITLE,track.title.cstr());
-		atom.writeString(PCP_CHAN_TRACK_CREATOR,track.artist.cstr());
-		atom.writeString(PCP_CHAN_TRACK_URL,track.contact.cstr());
-		atom.writeString(PCP_CHAN_TRACK_ALBUM,track.album.cstr());
+		atom.writeString(PCP_CHAN_TRACK_TITLE,track.title.c_str());
+		atom.writeString(PCP_CHAN_TRACK_CREATOR,track.artist.c_str());
+		atom.writeString(PCP_CHAN_TRACK_URL,track.contact.c_str());
+		atom.writeString(PCP_CHAN_TRACK_ALBUM,track.album.c_str());
 }
 
 
@@ -4382,15 +4382,15 @@ XML::Node *ChanInfo::createChannelXML()
 
 
 	return new XML::Node("channel name=\"%s\" id=\"%s\" bitrate=\"%d\" type=\"%s\" genre=\"%s\" desc=\"%s\" url=\"%s\" uptime=\"%d\" comment=\"%s\" skips=\"%d\" age=\"%d\" bcflags=\"%d\"",
-		nameUNI.cstr(),
+		nameUNI.c_str(),
 		idStr,
 		bitrate,
 		getTypeStr(contentType),
-		genreUNI.cstr(),
-		descUNI.cstr(),
-		urlUNI.cstr(),
+		genreUNI.c_str(),
+		descUNI.c_str(),
+		urlUNI.c_str(),
 		getUptime(),
-		commentUNI.cstr(),
+		commentUNI.c_str(),
 		numSkips,
 		getAge(),
 		bcID.getFlags()
@@ -4413,14 +4413,14 @@ XML::Node *ChanInfo::createQueryXML()
 	if (!nameHTML.isEmpty())
 	{
 		strcat(buf," name=\"");
-		strcat(buf,nameHTML.cstr());
+		strcat(buf,nameHTML.c_str());
 		strcat(buf,"\"");
 	}
 
 	if (!genreHTML.isEmpty())
 	{
 		strcat(buf," genre=\"");
-		strcat(buf,genreHTML.cstr());
+		strcat(buf,genreHTML.c_str());
 		strcat(buf,"\"");
 	}
 
@@ -4471,11 +4471,11 @@ XML::Node *ChanInfo::createTrackXML()
 
 
 	return new XML::Node("track title=\"%s\" artist=\"%s\" album=\"%s\" genre=\"%s\" contact=\"%s\"",
-		titleUNI.cstr(),
-		artistUNI.cstr(),
-		albumUNI.cstr(),
-		genreUNI.cstr(),
-		contactUNI.cstr()
+		titleUNI.c_str(),
+		artistUNI.c_str(),
+		albumUNI.c_str(),
+		genreUNI.c_str(),
+		contactUNI.c_str()
 		);
 }
 
@@ -4510,12 +4510,12 @@ void ChanInfo::updateFromXML(XML::Node *n)
 
 	readXMLString(typeStr,n,"type");
 	if (!typeStr.isEmpty())
-		contentType = getTypeFromStr(typeStr.cstr());
+		contentType = getTypeFromStr(typeStr.c_str());
 
 
 	readXMLString(idStr,n,"id");
 	if (!idStr.isEmpty())
-		id.fromStr(idStr.cstr());
+		id.fromStr(idStr.c_str());
 
 	readXMLString(comment,n,"comment");
 
@@ -4611,8 +4611,8 @@ void PlayList::writeSCPLS(Stream &out)
 
 	for(int i=0; i<numURLs; i++)
 	{
-		out.writeLineF("File%d=%s",i+1,urls[i].cstr());
-		out.writeLineF("Title%d=%s",i+1,titles[i].cstr());
+		out.writeLineF("File%d=%s",i+1,urls[i].c_str());
+		out.writeLineF("Title%d=%s",i+1,titles[i].c_str());
 		out.writeLineF("Length%d=-1",i+1);
 	}
 	out.writeLine("Version=2");
@@ -4621,13 +4621,13 @@ void PlayList::writeSCPLS(Stream &out)
 void PlayList::writePLS(Stream &out)
 {
 	for(int i=0; i<numURLs; i++)
-		out.writeLineF("%s",urls[i].cstr());
+		out.writeLineF("%s",urls[i].c_str());
 }
 // -----------------------------------
 void PlayList::writeRAM(Stream &out)
 {
 	for(int i=0; i<numURLs; i++)
-		out.writeLineF("%s",urls[i].cstr());
+		out.writeLineF("%s",urls[i].c_str());
 }
 
 // -----------------------------------
@@ -4654,7 +4654,7 @@ static void WriteASXInfo(Stream &out, String &title, String &contacturl, String:
 		titleEncode.convertTo(tEncoding);
         if(tEncoding == String::T_SJIS)
             SJIStoSJISSAFE(titleEncode.cstr(), String::MAX_LEN);
-		out.writeLineF("<TITLE>%s</TITLE>", titleEncode.cstr());
+		out.writeLineF("<TITLE>%s</TITLE>", titleEncode.c_str());
 	}
 
 	if(!contacturl.isEmpty())
@@ -4664,7 +4664,7 @@ static void WriteASXInfo(Stream &out, String &title, String &contacturl, String:
 		contacturlEncode.convertTo(tEncoding);
         if(tEncoding == String::T_SJIS)
             SJIStoSJISSAFE(contacturlEncode.cstr(), String::MAX_LEN);
-		out.writeLineF("<MOREINFO HREF = \"%s\" />", contacturlEncode.cstr());
+		out.writeLineF("<MOREINFO HREF = \"%s\" />", contacturlEncode.c_str());
 	}
 }
 
@@ -4688,7 +4688,7 @@ void PlayList::writeASX(Stream &out)
 		out.writeLine("<ENTRY>");
 		if(servMgr->asxDetailedMode)
 			WriteASXInfo(out, titles[i], contacturls[i], tEncoding); //JP-MOD
-		out.writeLineF("<REF href = \"%s\" />",urls[i].cstr());
+		out.writeLineF("<REF href = \"%s\" />",urls[i].c_str());
 		out.writeLine("</ENTRY>");
 	}
 	out.writeLine("</ASX>");
@@ -4701,12 +4701,12 @@ void PlayList::addChannel(const char *path, ChanInfo &info)
 	String url;
 
 	char idStr[64];
-
 	info.id.toStr(idStr);
-	char *nid = info.id.isSet()?idStr:info.name.cstr();
 
-	sprintf(url.cstr(),"%s/stream/%s%s",path,nid,ChanInfo::getTypeExt(info.contentType));
-	addURL(url.cstr(),info.name,info.url);
+	const char *nid = info.id.isSet() ? idStr : info.name.c_str();
+
+	sprintf(url.cstr(), "%s/stream/%s%s", path, nid, ChanInfo::getTypeExt(info.contentType));
+	addURL(url.c_str(), info.name, info.url);
 }
 
 // -----------------------------------

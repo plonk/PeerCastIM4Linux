@@ -8,7 +8,6 @@
 #include <string>
 #include <tuple>
 #include <vector>
-#include "common/http.h"
 #include <boost/format.hpp>
 
 namespace util
@@ -16,9 +15,6 @@ namespace util
     using namespace std;
 
     extern map<string,string> MIMETypes;
-
-    //! Returns file name extension, including the dot. "" if none.
-    string extension(const string& filename);
 
     vector<string> split(const string& str, const string& delimiter);
 

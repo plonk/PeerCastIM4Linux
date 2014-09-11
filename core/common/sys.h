@@ -28,7 +28,6 @@
 #define RAND(a,b) (((a = 36969 * (a & 65535) + (a >> 16)) << 16) + \
                     (b = 18000 * (b & 65535) + (b >> 16))  )
 
-#define MAX_CGI_LEN 1024
 // ------------------------------------
 namespace peercast {
 class Random {
@@ -196,11 +195,6 @@ public:
 typedef int (*THREAD_FUNC)(ThreadInfo *);
 #define THREAD_PROC int
 typedef pthread_t THREAD_HANDLE;
-
-// ------------------------------------
-#define stricmp strcasecmp
-#define strnicmp strncasecmp
-
 
 // ------------------------------------
 class WEvent

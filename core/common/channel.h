@@ -449,7 +449,7 @@ public:
 	void	setStatus(STATUS s);
 	const char  *getSrcTypeStr() {return srcTypes[srcType];}
 	const char	*getStatusStr() {return statusMsgs[status];}
-	const char	*getName() {return info.name.cstr();}
+	const char	*getName() {return info.name.c_str();}
 	GnuID	getID() {return info.id;}
 	int		getBitrate() {return info.bitrate; }
 	void	getIDStr(char *s) {info.id.toStr(s);}

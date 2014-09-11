@@ -231,51 +231,6 @@ void LogBuffer::write(const char *str, TYPE t)
 	lock.off();
 }
 
-// -----------------------------------
-char *getCGIarg(const char *str, const char *arg)
-{
-	if (!str)
-		return NULL;
-
-	const char *s = strstr(str,arg);
-
-	if (!s)
-		return NULL;
-
-	s += strlen(arg);
-
-	return const_cast<char*>(s);
-}
-
-// -----------------------------------
-bool cmpCGIarg(char *str, const char *arg, const char *value)
-{
-	if ((!str) || (!strlen(value)))
-		return false;
-
-	if (strnicmp(str,arg,strlen(arg)) == 0)
-	{
-
-		str += strlen(arg);
-
-		return strncmp(str,value,strlen(value))==0;
-	}else
-		return false;
-}
-// -----------------------------------
-bool hasCGIarg(const char *str, const char *arg)
-{
-	if (!str)
-		return false;
-
-	const char *s = strstr(str,arg);
-
-	if (!s)
-		return false;
-
-	return true;
-}
-
 
 // ---------------------------
 void GnuID::encode(Host *h, const char *salt1, const char *salt2, unsigned char salt3)
@@ -474,7 +429,7 @@ void LogBuffer::dumpHTML(Stream &out)
 			{
 				tim.setFromTime(times[sp]);
 
-				out.writeString(tim.cstr());
+				out.writeString(tim.c_str());
 				out.writeString(" <b>[");
 				out.writeString(getTypeStr(types[sp]));
 				out.writeString("]</b> ");
@@ -482,7 +437,7 @@ void LogBuffer::dumpHTML(Stream &out)
 			str.set(&buf[bp]);
 			str.convertTo(String::T_HTML);
 
-			out.writeString(str.cstr());
+			out.writeString(str.c_str());
 			out.writeString("<br>");
 
 			sp++;

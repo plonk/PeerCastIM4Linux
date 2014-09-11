@@ -654,7 +654,7 @@ bool GnuStream::readHit(Stream &data, ChanHit &ch,int hops,GnuID &id)
 					info.init(n);
 					char idStr[64];
 					info.id.toStr(idStr);
-					LOG_NETWORK("got hit %s %s",idStr,info.name.cstr());
+					LOG_NETWORK("got hit %s %s",idStr,info.name.c_str());
 
 					ch.upTime = n->findAttrInt("uptime");
 

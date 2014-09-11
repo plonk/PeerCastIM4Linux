@@ -2,6 +2,7 @@
 #include <iostream>
 #include <boost/format.hpp>
 
+#include "common/http.h"
 #include "util.h"
 
 namespace util
@@ -18,17 +19,6 @@ namespace util
         { ".html", MIME_HTML },
         { ".htm", MIME_HTML },
     };
-
-    //! Returns file name extension, including the dot. "" if none.
-    string extension(const string& filename)
-    {
-        auto p = filename.rfind('.');
-        if (p == string::npos) {
-            return "";
-        } else {
-            return string(filename.begin() + p, filename.end());
-        }
-    }
 
     vector<string> split(const string& str, const string& delimiter)
     {

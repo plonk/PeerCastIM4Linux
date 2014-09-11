@@ -40,7 +40,7 @@ void URLSource::stream(Channel *ch)
 		if (url.isEmpty())
 			url = baseurl;
 
-		url = streamURL(ch,url.cstr());
+		url = streamURL(ch,url.c_str());
 		if (url == tmpUrl){
 			sys->sleep(2000);
 		}
@@ -220,7 +220,7 @@ int URLSource::getSourceRate()
 
 			if ((!nextURL.isEmpty()) && (res==302))
 			{
-				LOG_CHANNEL("Channel redirect: %s",nextURL.cstr());
+				LOG_CHANNEL("Channel redirect: %s",nextURL.c_str());
 				inputSocket->close();
 				delete inputSocket;
 				inputSocket = NULL;
@@ -300,7 +300,7 @@ int URLSource::getSourceRate()
 				}
 				try
 				{
-					url = streamURL(ch,url.cstr());
+					url = streamURL(ch,url.c_str());
 				}catch(StreamException &)
 				{}
 			}
@@ -314,7 +314,7 @@ int URLSource::getSourceRate()
 			if (!ch->info.id.isSet())
 			{
 				ch->info.id = chanMgr->broadcastID;
-				ch->info.id.encode(NULL,ch->info.name.cstr(),ch->info.genre,ch->info.bitrate);
+				ch->info.id.encode(NULL,ch->info.name.c_str(),ch->info.genre,ch->info.bitrate);
 			}
 
 			if (ch->info.contentType == ChanInfo::T_ASX)

@@ -27,6 +27,7 @@
 #include "common/pcp.h"
 #include "common/atom.h"
 #include "common/version2.h"
+#include "common/cgi.h"
 #ifdef _DEBUG
 #include "chkMemoryLeak.h"
 #define DEBUG_NEW new(__FILE__, __LINE__)
@@ -911,7 +912,7 @@ void ServMgr::checkFirewall()
 
 		LOG_DEBUG("Checking firewall..");
 		Host host;
-		host.fromStrName(servMgr->rootHost.cstr(),DEFAULT_PORT);
+		host.fromStrName(servMgr->rootHost.c_str(),DEFAULT_PORT);
 
 		ClientSocket *sock = sys->createSocket();
 		if (!sock)
@@ -1048,14 +1049,14 @@ void ServMgr::saveSettings(const char *fn)
 		iniFile.writeIntValue("maxRelaysPerChannel",chanMgr->maxRelaysPerChannel);
 		iniFile.writeIntValue("firewallTimeout",firewallTimeout);
 		iniFile.writeBoolValue("forceNormal",forceNormal);
-		iniFile.writeStrValue("rootMsg",rootMsg.cstr());
+		iniFile.writeStrValue("rootMsg",rootMsg.c_str());
 		iniFile.writeStrValue("authType",servMgr->authType==ServMgr::AUTH_COOKIE?"cookie":"http-basic");
 		iniFile.writeStrValue("cookiesExpire",servMgr->cookieList.neverExpire==true?"never":"session");
 		iniFile.writeStrValue("htmlPath",servMgr->htmlPath);
 		iniFile.writeIntValue("minPGNUIncoming",servMgr->minGnuIncoming);
 		iniFile.writeIntValue("maxPGNUIncoming",servMgr->maxGnuIncoming);
 		iniFile.writeIntValue("maxServIn",servMgr->maxServIn);
-		iniFile.writeStrValue("chanLog",servMgr->chanLog.cstr());
+		iniFile.writeStrValue("chanLog",servMgr->chanLog.c_str());
 
 		networkID.toStr(idStr);
 		iniFile.writeStrValue("networkID",idStr);
@@ -1063,13 +1064,13 @@ void ServMgr::saveSettings(const char *fn)
 
 		iniFile.writeSection("Broadcast");
 		iniFile.writeIntValue("broadcastMsgInterval",chanMgr->broadcastMsgInterval);
-		iniFile.writeStrValue("broadcastMsg",chanMgr->broadcastMsg.cstr());
+		iniFile.writeStrValue("broadcastMsg",chanMgr->broadcastMsg.c_str());
 		iniFile.writeIntValue("icyMetaInterval",chanMgr->icyMetaInterval);
 		chanMgr->broadcastID.toStr(idStr);
 		iniFile.writeStrValue("broadcastID",idStr);
 		iniFile.writeIntValue("hostUpdateInterval",chanMgr->hostUpdateInterval);
 		iniFile.writeIntValue("maxControlConnections",servMgr->maxControl);
-		iniFile.writeStrValue("rootHost",servMgr->rootHost.cstr());
+		iniFile.writeStrValue("rootHost",servMgr->rootHost.c_str());
 
 		iniFile.writeSection("Client");
 		iniFile.writeIntValue("refreshHTML",refreshHTML);
@@ -1106,7 +1107,7 @@ void ServMgr::saveSettings(const char *fn)
 			iniFile.writeSection("PP");
 #ifdef WIN32
 			iniFile.writeBoolValue("ppClapSound", servMgr->ppClapSound);
-			iniFile.writeStrValue("ppClapSoundPath", servMgr->ppClapSoundPath.cstr());
+			iniFile.writeStrValue("ppClapSoundPath", servMgr->ppClapSoundPath.c_str());
 #endif
 		}
 
@@ -1117,7 +1118,7 @@ void ServMgr::saveSettings(const char *fn)
 		iniFile.writeBoolValue("writeLogFile",servMgr->writeLogFile);
 
 		//VP-EX
-		iniFile.writeStrValue("rootHost2",servMgr->rootHost2.cstr());
+		iniFile.writeStrValue("rootHost2",servMgr->rootHost2.c_str());
 		iniFile.writeBoolValue("autoPort0Kick",servMgr->autoPort0Kick);
 		iniFile.writeBoolValue("allowOnlyVP",servMgr->allowOnlyVP);
 		iniFile.writeIntValue("kickKeepTime",servMgr->kickKeepTime);
@@ -1142,8 +1143,8 @@ void ServMgr::saveSettings(const char *fn)
 			iniFile.writeIntValue("guiConnListDisplays", servMgr->guiConnListDisplays);
 
 			iniFile.writeBoolValue("guiTitleModify", servMgr->guiTitleModify);
-			iniFile.writeStrValue("guiTitleModifyNormal", servMgr->guiTitleModifyNormal.cstr());
-			iniFile.writeStrValue("guiTitleModifyMinimized", servMgr->guiTitleModifyMinimized.cstr());
+			iniFile.writeStrValue("guiTitleModifyNormal", servMgr->guiTitleModifyNormal.c_str());
+			iniFile.writeStrValue("guiTitleModifyMinimized", servMgr->guiTitleModifyMinimized.c_str());
 
 			iniFile.writeBoolValue("guiAntennaNotifyIcon", servMgr->guiAntennaNotifyIcon);
 		}
@@ -1198,9 +1199,9 @@ void ServMgr::saveSettings(const char *fn)
 				char idstr[128];
 				bcid->id.toStr(idstr);
 				iniFile.writeStrValue("id",idstr);
-				iniFile.writeStrValue("name",bcid->name.cstr());
-				iniFile.writeStrValue("email",bcid->email.cstr());
-				iniFile.writeStrValue("url",bcid->url.cstr());
+				iniFile.writeStrValue("name",bcid->name.c_str());
+				iniFile.writeStrValue("email",bcid->email.c_str());
+				iniFile.writeStrValue("url",bcid->url.c_str());
 				iniFile.writeBoolValue("valid",bcid->valid);
 				iniFile.writeLine("[End]");
 
@@ -1219,13 +1220,13 @@ void ServMgr::saveSettings(const char *fn)
 
 					iniFile.writeSection("RelayChannel");
 					iniFile.writeStrValue("name",c->getName());
-					iniFile.writeStrValue("genre",c->info.genre.cstr());
+					iniFile.writeStrValue("genre",c->info.genre.c_str());
 					if (!c->sourceURL.isEmpty())
-						iniFile.writeStrValue("sourceURL",c->sourceURL.cstr());
+						iniFile.writeStrValue("sourceURL",c->sourceURL.c_str());
 					iniFile.writeStrValue("sourceProtocol",ChanInfo::getProtocolStr(c->info.srcProtocol));
 					iniFile.writeStrValue("contentType",ChanInfo::getTypeStr(c->info.contentType));
 					iniFile.writeIntValue("bitrate",c->info.bitrate);
-					iniFile.writeStrValue("contactURL",c->info.url.cstr());
+					iniFile.writeStrValue("contactURL",c->info.url.c_str());
 					iniFile.writeStrValue("id",idstr);
 					iniFile.writeBoolValue("stayConnected",c->stayConnected);
 
@@ -1664,7 +1665,7 @@ void ServMgr::loadSettings(const char *fn)
 					info.bcID = chanMgr->broadcastID;
 					Channel *c = chanMgr->createChannel(info,NULL);
 					if (c)
-						c->startURL(sourceURL.cstr());
+						c->startURL(sourceURL.c_str());
 				}
 			} else if (iniFile.isName("[Host]"))
 			{
@@ -1855,7 +1856,7 @@ int ServMgr::findChannel(ChanInfo &info)
 	addReplyID(pack.id);
 	int cnt = broadcast(pack,NULL);
 
-	LOG_NETWORK("Querying network: %s %s - %d servents",info.name.cstr(),idStr,cnt);
+	LOG_NETWORK("Querying network: %s %s - %d servents",info.name.c_str(),idStr,cnt);
 
 	return cnt;
 #endif
@@ -2133,7 +2134,7 @@ void ServMgr::writeRootAtoms(AtomStream &atom, bool getUpdate)
 		atom.writeString(PCP_ROOT_URL,"download.php");
 		atom.writeInt(PCP_ROOT_CHECKVER,PCP_ROOT_VERSION);
 		atom.writeInt(PCP_ROOT_NEXT,chanMgr->hostUpdateInterval);
-		atom.writeString(PCP_MESG_ASCII,rootMsg.cstr());
+		atom.writeString(PCP_MESG_ASCII,rootMsg.c_str());
 		if (getUpdate)
 			atom.writeParent(PCP_ROOT_UPDATE,0);
 
@@ -2438,11 +2439,11 @@ bool	BCID::writeVariable(Stream &out, const String &var)
 	if (var == "id")
 		id.toStr(buf);
 	else if (var == "name")
-		strcpy(buf,name.cstr());
+		strcpy(buf,name.c_str());
 	else if (var == "email")
-		strcpy(buf,email.cstr());
+		strcpy(buf,email.c_str());
 	else if (var == "url")
-		strcpy(buf,url.cstr());
+		strcpy(buf,url.c_str());
 	else if (var == "valid")
 		strcpy(buf,valid?"Yes":"No");
 	else
@@ -2472,7 +2473,7 @@ bool ServMgr::writeVariable(Stream &out, const String &var)
 	{
 		str.setFromStopwatch(getUptime());
 		str.convertTo(String::T_HTML);
-		strcpy(buf,str.cstr());
+		strcpy(buf,str.c_str());
 	}else if (var == "numRelays")
 		sprintf(buf,"%d",numStreams(Servent::T_RELAY,true));
 	else if (var == "numDirect")
@@ -2488,7 +2489,7 @@ bool ServMgr::writeVariable(Stream &out, const String &var)
 	else if (var == "serverIP")
 		serverHost.IPtoStr(buf);
 	else if (var == "ypAddress")
-		strcpy(buf,rootHost.cstr());
+		strcpy(buf,rootHost.c_str());
 	else if (var == "password")
 		strcpy(buf,password);
 	else if (var == "isFirewalled")
@@ -2588,7 +2589,7 @@ bool ServMgr::writeVariable(Stream &out, const String &var)
 
 	// VP-EX
 	else if (var == "ypAddress2")
-		strcpy(buf,rootHost2.cstr());
+		strcpy(buf,rootHost2.c_str());
 	else if (var.startsWith("autoPort0Kick")) {
 		if (var == "autoPort0Kick.0")
 			strcpy(buf, (autoPort0Kick == 0) ? "1":"0");

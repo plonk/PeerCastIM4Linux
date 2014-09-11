@@ -276,7 +276,7 @@ void PCPStream::readRootAtoms(AtomStream &atom, int numc,BroadcastState &bcs)
 			unsigned int newVer = atom.readInt();
 			if (newVer > PCP_CLIENT_VERSION)
 			{
-				strcpy(servMgr->downloadURL,url.cstr());
+				strcpy(servMgr->downloadURL,url.c_str());
 				peercastApp->notifyMessage(ServMgr::NT_UPGRADE,"There is a new version available, please click here to upgrade your client.");
 			}
 			LOG_DEBUG("PCP got version check: %d / %d",newVer,PCP_CLIENT_VERSION);
@@ -306,11 +306,11 @@ void PCPStream::readRootAtoms(AtomStream &atom, int numc,BroadcastState &bcs)
 			String newMsg;
 
 			atom.readString(newMsg.data,sizeof(newMsg.data),d);
-			if (!newMsg.isSame(servMgr->rootMsg.cstr()))
+			if (!newMsg.isSame(servMgr->rootMsg.c_str()))
 			{
 				servMgr->rootMsg = newMsg;
-				LOG_DEBUG("PCP got new root mesg: %s",servMgr->rootMsg.cstr());
-				peercastApp->notifyMessage(ServMgr::NT_PEERCAST,servMgr->rootMsg.cstr());
+				LOG_DEBUG("PCP got new root mesg: %s",servMgr->rootMsg.c_str());
+				peercastApp->notifyMessage(ServMgr::NT_PEERCAST,servMgr->rootMsg.c_str());
 			}
 		}else
 		{
@@ -637,7 +637,7 @@ void PCPStream::readChanAtoms(AtomStream &atom,int numc,BroadcastState &bcs)
 				try
 				{
 					FileStream file;
-					file.openWriteAppend(servMgr->chanLog.cstr());
+					file.openWriteAppend(servMgr->chanLog.c_str());
 
                     XML::Node *rn = new XML::Node("update time=\"%d\"",sys->getTime());
                     XML::Node *n = chl->info.createChannelXML();
@@ -914,7 +914,7 @@ int PCPStream::procAtom(AtomStream &atom,ID4 id,int numc, int dlen,BroadcastStat
 	{
 		String msg;
 		atom.readString(msg.data,sizeof(msg.data),dlen);
-		LOG_DEBUG("PCP got text: %s",msg.cstr());
+		LOG_DEBUG("PCP got text: %s",msg.c_str());
 	}else if (id == PCP_BCST)
 	{
 		r = readBroadcastAtoms(atom,numc,bcs);

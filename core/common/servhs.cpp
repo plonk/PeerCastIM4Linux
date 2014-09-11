@@ -41,58 +41,6 @@ using namespace std;
 using namespace util;
 
 // -----------------------------------
-char *nextCGIarg(char *cp, char *cmd, char *arg)
-{
-	if (!*cp)
-		return NULL;
-
-	int cnt=0;
-
-	// fetch command
-	while (*cp)
-	{
-		char c = *cp++;
-		if (c == '=')
-			break;
-		else
-			*cmd++ = c;
-
-		cnt++;
-		if (cnt >= (MAX_CGI_LEN-1))
-			break;
-	}
-	*cmd = 0;
-
-	cnt=0;
-	// fetch arg
-	while (*cp)
-	{
-		char c = *cp++;
-		if (c == '&')
-			break;
-		else
-			*arg++ = c;
-
-		cnt++;
-		if (cnt >= (MAX_CGI_LEN-1))
-			break;
-	}
-	*arg = 0;
-
-	return cp;
-}
-// -----------------------------------
-bool getCGIargBOOL(char *a)
-{
-	return (strcmp(a,"1")==0);
-}
-// -----------------------------------
-int getCGIargINT(char *a)
-{
-	return atoi(a);
-}
-
-// -----------------------------------
 static bool beginWith(const char* str, const char* prefix)
 {
     return strncmp(str, prefix, strlen(prefix)) == 0;
@@ -415,7 +363,7 @@ void Servent::handshakeHTTP(HTTP &http, bool isHTTP)
 				}
 			loginPassword.set(in+7);
 
-			LOG_DEBUG("ICY client: %s %s",loginPassword.cstr(),mount?mount:"unknown");
+			LOG_DEBUG("ICY client: %s %s",loginPassword.c_str(),mount?mount:"unknown");
 		}
 
 		if (mount)
@@ -723,14 +671,11 @@ bool Servent::handshakeAuth(HTTP &http,const char *args,bool local)
 	char user[1024],pass[1024];
 	user[0] = pass[0] = 0;
 
-	char *pwd  = getCGIarg(args, "pass=");
+	auto pwd = getCGIarg_s(args, "pass");
 
-	if ((pwd) && strlen(servMgr->password))
+	if (pwd == "" && strlen(servMgr->password))
 	{
-		String tmp = pwd;
-		char *as = strstr(tmp.cstr(),"&");
-		if (as) *as = 0;
-		if (strcmp(tmp,servMgr->password)==0)
+		if (strcmp(pwd.c_str(), servMgr->password)==0)
 		{
 		    while (http.nextHeader());
 			return true;
@@ -941,9 +886,9 @@ void Servent::handshakeICY(Channel::SRC_TYPE type, bool isHTTP)
 
 
 	info.id = chanMgr->broadcastID;
-	info.id.encode(NULL,info.name.cstr(),loginMount.cstr(),info.bitrate);
+	info.id.encode(NULL,info.name.c_str(),loginMount.c_str(),info.bitrate);
 
-	LOG_DEBUG("Incoming source: %s : %s",info.name.cstr(),ChanInfo::getTypeStr(info.contentType));
+	LOG_DEBUG("Incoming source: %s : %s",info.name.c_str(),ChanInfo::getTypeStr(info.contentType));
 
 
 	if (isHTTP)
@@ -962,7 +907,7 @@ void Servent::handshakeICY(Channel::SRC_TYPE type, bool isHTTP)
 	info.comment = chanMgr->broadcastMsg;
 	info.bcID = chanMgr->broadcastID;
 
-	c = chanMgr->createChannel(info,loginMount.cstr());
+	c = chanMgr->createChannel(info,loginMount.c_str());
 	if (!c)
 		throw HTTPException(HTTP_SC_UNAVAILABLE,503);
 
@@ -1052,7 +997,7 @@ void Servent::handshakeRemoteFile(const char *dirName)
         .writeLineF("%s %s",HTTP_HS_SERVER,PCX_AGENT)
         .writeLineF("%s %s",HTTP_HS_CACHE,"no-cache")
         .writeLineF("%s %s",HTTP_HS_CONNECTION,"close")
-        .writeLineF("%s %s",HTTP_HS_CONTENT,contentType.cstr());
+        .writeLineF("%s %s",HTTP_HS_CONTENT,contentType.c_str());
 
 	sock->writeLine("");
 

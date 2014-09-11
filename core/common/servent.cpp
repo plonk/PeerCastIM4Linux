@@ -706,7 +706,7 @@ void Servent::handshakeIn()
 			sock->writeLine(PCX_DL_URL);
 		}
 
-		sock->writeLineF("%s %s",PCX_HS_MSG,servMgr->rootMsg.cstr());
+		sock->writeLineF("%s %s",PCX_HS_MSG,servMgr->rootMsg.c_str());
 	}
 
 
@@ -928,11 +928,11 @@ bool Servent::handshakeStream(ChanInfo &chanInfo)
 				{
 					do
 					{
-						if (strstr(agent.cstr(),"PeerCast/0.119") != NULL)
+						if (strstr(agent.c_str(),"PeerCast/0.119") != NULL)
 						{
 							char strip[256];
 							h.toStr(strip);
-							LOG_ERROR("Block v0.119 Servent : %s (%s)",strip,agent.cstr());
+							LOG_ERROR("Block v0.119 Servent : %s (%s)",strip,agent.c_str());
 							chanReady = false;
 							break;
 						}
@@ -1258,10 +1258,10 @@ bool Servent::handshakeStream(ChanInfo &chanInfo)
 			sock->writeLine(ICY_OK);
 
 			sock->writeLineF("%s %s",HTTP_HS_SERVER,PCX_AGENT);
-			sock->writeLineF("icy-name:%s",chanInfo.name.cstr());
+			sock->writeLineF("icy-name:%s",chanInfo.name.c_str());
 			sock->writeLineF("icy-br:%d",chanInfo.bitrate);
-			sock->writeLineF("icy-genre:%s",chanInfo.genre.cstr());
-			sock->writeLineF("icy-url:%s",chanInfo.url.cstr());
+			sock->writeLineF("icy-genre:%s",chanInfo.genre.c_str());
+			sock->writeLineF("icy-url:%s",chanInfo.url.c_str());
 			sock->writeLineF("icy-metaint:%d",chanMgr->icyMetaInterval);
 			sock->writeLineF("%s %s",PCX_HS_CHANNELID,idStr);
 
@@ -1278,11 +1278,11 @@ bool Servent::handshakeStream(ChanInfo &chanInfo)
 
 				sock->writeLine("Accept-Ranges: none");
 
-				sock->writeLineF("x-audiocast-name: %s",chanInfo.name.cstr());
+				sock->writeLineF("x-audiocast-name: %s",chanInfo.name.c_str());
 				sock->writeLineF("x-audiocast-bitrate: %d",chanInfo.bitrate);
-				sock->writeLineF("x-audiocast-genre: %s",chanInfo.genre.cstr());
-				sock->writeLineF("x-audiocast-description: %s",chanInfo.desc.cstr());
-				sock->writeLineF("x-audiocast-url: %s",chanInfo.url.cstr());
+				sock->writeLineF("x-audiocast-genre: %s",chanInfo.genre.c_str());
+				sock->writeLineF("x-audiocast-description: %s",chanInfo.desc.c_str());
+				sock->writeLineF("x-audiocast-url: %s",chanInfo.url.c_str());
 				sock->writeLineF("%s %s",PCX_HS_CHANNELID,idStr);
 			}
 
@@ -1899,7 +1899,7 @@ void Servent::handshakeIncomingPCP(AtomStream &atom, Host &rhost, GnuID &rid, St
     }
 
 	if (version)
-		LOG_DEBUG("Incoming PCP is %s : v%d", agent.cstr(),version);
+		LOG_DEBUG("Incoming PCP is %s : v%d", agent.c_str(),version);
 
 
 	if (!rhost.globalIP() && servMgr->serverHost.globalIP())
@@ -2201,7 +2201,7 @@ int Servent::outgoingProc(ThreadInfo *thread)
 
 				if ((!bestHit.host.ip) && ((ctime-chanMgr->lastYPConnect) > MIN_YP_RETRY))
 				{
-					bestHit.host.fromStrName(servMgr->rootHost.cstr(),DEFAULT_PORT);
+					bestHit.host.fromStrName(servMgr->rootHost.c_str(),DEFAULT_PORT);
 					bestHit.yp = true;
 					chanMgr->lastYPConnect = ctime;
 				}
@@ -2474,7 +2474,7 @@ void Servent::sendRawChannel(bool sendHead, bool sendData)
 
 		setStatus(S_CONNECTED);
 
-		LOG_DEBUG("Starting Raw stream of %s at %d",ch->info.name.cstr(),streamPos);
+		LOG_DEBUG("Starting Raw stream of %s at %d",ch->info.name.c_str(),streamPos);
 
 		if (sendHead)
 		{
@@ -2568,7 +2568,7 @@ void Servent::sendRawMultiChannel(bool sendHead, bool sendData)
 				Channel *ch = chanMgr->findChannelByID(chanIDs[i]);
 				if (ch)
 				{
-					LOG_DEBUG("Starting RawMulti stream: %s",ch->info.name.cstr());
+					LOG_DEBUG("Starting RawMulti stream: %s",ch->info.name.c_str());
 					ch->headPack.writeRaw(*sock);
 					chanStreamPos[i] = ch->headPack.pos + ch->headPack.len;
 					chanStreamIndex[i] = ch->streamIndex;
@@ -2641,7 +2641,7 @@ void Servent::sendRawMetaChannel(int interval)
 
 		setStatus(S_CONNECTED);
 
-		LOG_DEBUG("Starting Raw Meta stream of %s (metaint: %d) at %d",ch->info.name.cstr(),interval,streamPos);
+		LOG_DEBUG("Starting Raw Meta stream of %s (metaint: %d) at %d",ch->info.name.c_str(),interval,streamPos);
 
 
 		String lastTitle,lastURL;
@@ -2722,7 +2722,7 @@ void Servent::sendRawMetaChannel(int interval)
 									title.convertTo(String::T_META);
 									url.convertTo(String::T_META);
 
-									sprintf(tmp,"StreamTitle='%s';StreamUrl='%s';\0",title.cstr(),url.cstr());
+									sprintf(tmp,"StreamTitle='%s';StreamUrl='%s';\0",title.c_str(),url.c_str());
 									int len = ((strlen(tmp) + 15+1) / 16);
 									sock->writeChar(len);
 									sock->write(tmp,len*16);
@@ -2730,7 +2730,7 @@ void Servent::sendRawMetaChannel(int interval)
 									lastTitle = *metaTitle;
 									lastURL = ch->info.url;
 
-									LOG_DEBUG("StreamTitle: %s, StreamURL: %s",lastTitle.cstr(),lastURL.cstr());
+									LOG_DEBUG("StreamTitle: %s, StreamURL: %s",lastTitle.c_str(),lastURL.c_str());
 
 								}else
 								{
@@ -2765,7 +2765,7 @@ void Servent::sendPeercastChannel()
 		if (!ch)
 			throw StreamException("Channel not found");
 
-		LOG_DEBUG("Starting PeerCast stream: %s",ch->info.name.cstr());
+		LOG_DEBUG("Starting PeerCast stream: %s",ch->info.name.c_str());
 
 		sock->writeTag("PCST");
 
@@ -3225,7 +3225,7 @@ bool	Servent::writeVariable(Stream &s, const String &var)
 			getHost().toStr(buf);
 	}
 	else if (var == "agent")
-		strcpy(buf,agent.cstr());
+		strcpy(buf,agent.c_str());
 	else if (var == "bitrate")
 	{
 		if (sock)
@@ -3241,7 +3241,7 @@ bool	Servent::writeVariable(Stream &s, const String &var)
 			uptime.setFromStopwatch(sys->getTime()-lastConnect);
 		else
 			uptime.set("-");
-		strcpy(buf,uptime.cstr());
+		strcpy(buf,uptime.c_str());
 	}else if (var.startsWith("gnet."))
 	{
 
@@ -3269,7 +3269,7 @@ bool	Servent::writeVariable(Stream &s, const String &var)
 			tstr.setFromStopwatch(tim);
 
 			if (nr)
-				strcpy(buf,tstr.cstr());
+				strcpy(buf,tstr.c_str());
 			else
 				strcpy(buf,"-");
 		}

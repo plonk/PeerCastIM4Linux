@@ -21,6 +21,7 @@
 #define _HTML_H
 
 // ---------------------------------------
+#include <string>
 #include "common/stream.h"
 
 // ---------------------------------------
@@ -47,9 +48,15 @@ public:
 	void	end();
 	void	setRefresh(int sec) { refresh = sec; }
 	void	setRefreshURL(const char *u) { refreshURL.set(u); }
+    void	setTitle(const char *t) { title = t; }
 	void	addHead();
 	void	startHTML();
 	void	startBody();
+
+    //! エラーページを作る。
+    void	errorPage(std::string title, std::string heading, std::string msg);
+    void	page404(std::string msg);
+    void	page403(std::string msg);
 
 private:
     void indent();

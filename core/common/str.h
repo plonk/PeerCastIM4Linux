@@ -7,6 +7,13 @@
 extern char *stristr(const char *s1, const char *s2);
 extern char *trimstr(char *s);
 
+
+#ifdef _UNIX
+// ------------------------------------
+#define stricmp strcasecmp
+#define strnicmp strncasecmp
+#endif
+
 // ------------------------------------
 //! String class that gets allocated on the stack.
 class String
@@ -166,8 +173,10 @@ public:
     //! タイプを変更する。
 	void convertTo(TYPE t);
 
-    //! C文字列で得る。
+    //! 変更可能なC文字列で得る。
 	char	*cstr() {return data;}
+    //! C文字列で得る。
+	const char	*c_str() const {return data;}
 
     //! 空白またはタブである。
 	static bool isWhitespace(char c) {return c==' ' || c=='\t';}

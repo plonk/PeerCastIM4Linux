@@ -2,6 +2,7 @@
 #include "common/servmgr.h"
 #include "common/channel.h"
 #include "common/stats.h"
+#include "common/cgi.h"
 
 // --------------------------------------
 Template::Template(const char *fileName, const char *args)
@@ -142,7 +143,7 @@ int Template::getIntVariable(const String &varName,int loop)
 	writeVariable(mem,varName,loop);
 
 	LOG_DEBUG("AAA %d %d %d %d", val[0], val[1], val[2], val[3]);
-	return atoi(val.cstr());
+	return atoi(val.c_str());
 }
 // --------------------------------------
 bool Template::getBoolVariable(const String &varName,int loop)
@@ -154,11 +155,11 @@ bool Template::getBoolVariable(const String &varName,int loop)
 
 	String tmp;
 	tmp = varName;
-	LOG_DEBUG("*** %s : %c", tmp.cstr(), val[0]);
+	LOG_DEBUG("*** %s : %c", tmp.c_str(), val[0]);
 
 	// integer
 	if ((val[0] >= '0') && (val[0] <= '9'))
-		return atoi(val.cstr()) != 0;
+		return atoi(val.c_str()) != 0;
 
 	// string
 	if (val[0]!=0)
@@ -213,7 +214,7 @@ void	Template::readLoop(Stream &in,Stream *outp,int loop)
 		{
 			int cnt = getIntVariable(var,loop);
 
-			LOG_DEBUG("loop_cnt : %s = %d", var.cstr(), cnt);
+			LOG_DEBUG("loop_cnt : %s = %d", var.c_str(), cnt);
 
 			if (cnt)
 			{

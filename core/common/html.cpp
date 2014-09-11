@@ -54,22 +54,22 @@ void HTMLBuilder::startBody()
 void HTMLBuilder::addHead()
 {
 	char buf[512];
-		startNode("head");
-			startTagEnd("title",title.cstr());
-			startTagEnd("meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\"");
+    startNode("head");
+    startTagEnd("title",title.c_str());
+    startTagEnd("meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\"");
 
-			if (!refreshURL.isEmpty())
-			{
-				sprintf(buf,"meta http-equiv=\"refresh\" content=\"%d;URL=%s\"",refresh,refreshURL.cstr());
-				startTagEnd(buf);
-			}else if (refresh)
-			{
-				sprintf(buf,"meta http-equiv=\"refresh\" content=\"%d\"",refresh);
-				startTagEnd(buf);
-			}
+    if (!refreshURL.isEmpty())
+    {
+        sprintf(buf,"meta http-equiv=\"refresh\" content=\"%d;URL=%s\"",refresh,refreshURL.c_str());
+        startTagEnd(buf);
+    }else if (refresh)
+    {
+        sprintf(buf,"meta http-equiv=\"refresh\" content=\"%d\"",refresh);
+        startTagEnd(buf);
+    }
 
 
-		end();
+    end();
 }
 // --------------------------------------
 void HTMLBuilder::startNode(const char *tag, const char *data)
@@ -195,3 +195,37 @@ void HTMLBuilder::indent()
 {
     out.writeString(string(tagLevel * 4, ' ').c_str());
 }
+// -----------------------------------
+#include "version2.h"
+#include "common/socket.h"
+void HTMLBuilder::errorPage(string title, string heading, string msg)
+{
+    char ip[80];
+    Host(ClientSocket::getIP(NULL), 0).IPtoStr(ip);
+
+    doctype();
+    startHTML();
+    startTag("head");
+    startTagEnd("title", title.c_str());
+    end();
+    startBody();
+    startTagEnd("h1", heading.c_str());
+    startTagEnd("p", msg.c_str());
+    startSingleTagEnd("hr");
+    startTagEnd("address", "%s at %s Port unknown", PCX_AGENTEX, ip);
+    end();
+    end();
+}
+
+// -----------------------------------
+void HTMLBuilder::page404(string msg)
+{
+    errorPage("404 Not Found", "Not Found", msg);
+}
+
+// -----------------------------------
+void HTMLBuilder::page403(string msg)
+{
+    errorPage("403 Forbidden", "Forbidden", msg);
+}
+

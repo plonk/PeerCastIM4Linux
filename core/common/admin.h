@@ -4,6 +4,7 @@
 #include "common/http.h"
 #include "common/html.h"
 #include "common/common.h"
+#include "common/cgi.h"
 
 class AdminController
 {

@@ -10,43 +10,30 @@
 using namespace std;
 using namespace util;
 
-extern char *nextCGIarg(char *cp, char *cmd, char *arg);
-extern bool getCGIargBOOL(char *a);
-extern int getCGIargINT(char *a);
-
-// -----------------------------------
-static void termArgs(char *str)
-{
-	if (str)
-	{
-		size_t slen = strlen(str);
-		for(size_t i=0; i<slen; i++)
-			if (str[i]=='&') str[i] = 0;
-	}
-}
-
 // -----------------------------------
 HTTPResponse AdminController::redirect(char *cmd)
 {
-    char *j = getCGIarg(cmd,"url=");
-
-    if (!j)
-        return HTTPResponse::redirect("/"); // エラー表示のほうがいい
-
-    termArgs(cmd);
-    String url;
-    url.set(j,String::T_ESC);
+    String url(getCGIarg_s(cmd,"url").c_str(), String::T_ESC);
     url.convertTo(String::T_ASCII);
+
+    if (url.isEmpty())
+        return HTTPResponse(200, {{ "Content-Type", "text/html" }},
+                            [=] (Stream& os)
+                            {
+                                HTMLBuilder(os).errorPage("Error", "Argument Format Error", "Empty URL");
+                            });
 
     if (!url.contains("http://"))
         url.prepend("http://");
 
     return HTTPResponse(200, { { "Content-Type", "text/html" } },
-                        [=](Stream &os) mutable
+                        [=](Stream &os)
                         {
                             HTMLBuilder hb(os);
 
-                            hb.setRefreshURL(url.cstr());
+                            hb.setRefreshURL(url.c_str());
+                            hb.setTitle("Redirecting...");
+
                             hb.doctype();
                             hb.startHTML();
                             hb.addHead();
@@ -221,7 +208,7 @@ HTTPResponse AdminController::add_bcid(char *cmd)
             result = true;
     }
 
-    LOG_DEBUG("Adding BCID : %s",bcid->name.cstr());
+    LOG_DEBUG("Adding BCID : %s",bcid->name.c_str());
     servMgr->addValidBCID(bcid);
     peercastInst->saveSettings();
     if (result)
@@ -515,7 +502,7 @@ HTTPResponse AdminController::fetch(char *cmd)
 
     Channel *c = chanMgr->createChannel(info,NULL);
     if (c)
-        c->startURL(curl.cstr());
+        c->startURL(curl.c_str());
 
     return HTTPResponse::redirect(format("/%s/relays.html", servMgr->htmlPath));
 }
@@ -753,7 +740,7 @@ HTTPResponse AdminController::login(char *cmd)
     else
         cookie = format("%s id=%s; path=/;", HTTP_HS_SETCOOKIE, idstr);
 
-    return HTTPResponse(303,
+    return HTTPResponse(302,
                         { { HTTP_HS_SETCOOKIE, cookie }, { "Location", format("/%s/index.html", servMgr->htmlPath) } },
                         [](Stream&) {});
 }
@@ -771,7 +758,7 @@ HTTPResponse AdminController::setmeta(char *cmd)
             chname.set(arg,String::T_ESC);
             chname.convertTo(String::T_ASCII);
 
-            Channel *c = chanMgr->findChannelByName(chname.cstr());
+            Channel *c = chanMgr->findChannelByName(chname.c_str());
             if (c && (c->isActive()) && (c->status == Channel::S_BROADCASTING)){
                 ChanInfo newInfo = c->info;
                 newInfo.ppFlags = ServMgr::bcstNone; //JP-MOD
@@ -781,25 +768,25 @@ HTTPResponse AdminController::setmeta(char *cmd)
                     chmeta.set(arg,String::T_ESC);
                     chmeta.convertTo(String::T_ASCII);
                     if (strcmp(curr,"desc")==0)
-                        newInfo.desc = chmeta.cstr();
+                        newInfo.desc = chmeta.c_str();
                     else if (strcmp(curr,"url")==0)
-                        newInfo.url = chmeta.cstr();
+                        newInfo.url = chmeta.c_str();
                     else if (strcmp(curr,"genre")==0)
-                        newInfo.genre = chmeta.cstr();
+                        newInfo.genre = chmeta.c_str();
                     else if (strcmp(curr,"comment")==0)
-                        newInfo.comment = chmeta.cstr();
+                        newInfo.comment = chmeta.c_str();
                     else if (strcmp(curr,"bcstClap")==0) //JP-MOD
                         newInfo.ppFlags |= ServMgr::bcstClap;
                     else if (strcmp(curr,"t_contact")==0)
-                        newInfo.track.contact = chmeta.cstr();
+                        newInfo.track.contact = chmeta.c_str();
                     else if (strcmp(curr,"t_title")==0)
-                        newInfo.track.title = chmeta.cstr();
+                        newInfo.track.title = chmeta.c_str();
                     else if (strcmp(curr,"t_artist")==0)
-                        newInfo.track.artist = chmeta.cstr();
+                        newInfo.track.artist = chmeta.c_str();
                     else if (strcmp(curr,"t_album")==0)
-                        newInfo.track.album = chmeta.cstr();
+                        newInfo.track.album = chmeta.c_str();
                     else if (strcmp(curr,"t_genre")==0)
-                        newInfo.track.genre = chmeta.cstr();
+                        newInfo.track.genre = chmeta.c_str();
                 }
                 c->updateInfo(newInfo);
 

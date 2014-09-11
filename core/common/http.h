@@ -186,6 +186,7 @@ public:
 
 #include "util.h"
 #include <functional>
+
 class HTTPResponse
 {
     typedef std::map<std::string,std::string> HTTPHeaders;
@@ -202,17 +203,16 @@ public:
     void writeToStream(Stream &os) {
         const char *SP = " ", *CRLF = "\r\n";
 
-        os.writeString((std::string("HTTP/1.0") + SP + std::to_string(status) + SP + messages[status] + CRLF).c_str());
+        os.writeString(util::format("%s %d %s\r\n", "HTTP/1.0", status, messages[status]).c_str());
         for (std::pair<std::string,std::string> header : headers)
         {
-            os.writeString(header.first.c_str());
-            os.writeString(":");
-            os.writeString(SP);
-            os.writeString(header.second.c_str());
-            os.writeString(CRLF);
+            os.writeString(header.first.c_str())
+                .writeString(":")
+                .writeString(SP)
+                .writeString(header.second.c_str())
+                .writeString(CRLF);
         }
-        os.writeString("Connection: close");
-        os.writeString(CRLF);
+        os.writeString("Connection: close").writeString(CRLF);
         os.writeString(CRLF);
         body(os);
     }

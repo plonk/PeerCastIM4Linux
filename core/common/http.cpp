@@ -240,3 +240,23 @@ map<int,string> HTTPResponse::messages = {
     { 504, "Gateway Time-out" },
     { 505, "HTTP Version not supported" },
 };
+
+// ---------------------------------------
+void HTTPResponse::writeToStream(Stream &os)
+{
+    const char *SP = " ", *CRLF = "\r\n";
+
+    os.writeString(util::format("%s %d %s\r\n", "HTTP/1.0", status, messages[status]).c_str());
+    for (std::pair<std::string,std::string> header : headers)
+    {
+        os.writeString(header.first.c_str())
+            .writeString(":")
+            .writeString(SP)
+            .writeString(header.second.c_str())
+            .writeString(CRLF);
+    }
+    os.writeString("Connection: close").writeString(CRLF);
+    os.writeString(CRLF);
+    body(os);
+}
+

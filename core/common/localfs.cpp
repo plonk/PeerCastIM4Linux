@@ -3,6 +3,7 @@
 #include "common/html.h"
 #include "common/http.h"
 #include <boost/filesystem.hpp>
+#include <boost/regex.hpp>
 #include "common/version2.h"
 #include "util.h"
 #include "common/template.h"
@@ -87,11 +88,15 @@ static HTTPResponse serveLocalFile(string fileName)
 // -----------------------------------
 HTTPResponse LocalFileServer::request(std::string path)
 {
-    vector<string> vs = split(path, "?");
-    string fsPath = documentRoot + vs[0];
-    string args = (vs.size() < 2) ? "" : vs[1];
+    using namespace boost;
+
+    static const regex e("([^?]*)(?:\\?)?(.*)");
+    cmatch results;
+    regex_match(path.c_str(), results, e);
+
+    string fsPath = documentRoot + results[1];
 
 	LOG_DEBUG("Writing local file: %s", fsPath.c_str());
 
-    return handleLocalFileRequest(fsPath.c_str(), args.c_str());
+    return handleLocalFileRequest(fsPath, results[2]);
 }

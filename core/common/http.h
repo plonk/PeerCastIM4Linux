@@ -200,22 +200,13 @@ public:
 
     static HTTPResponse redirect(std::string url) { return HTTPResponse(303, { {"Location", url } }, [](Stream &os) {}); }
 
-    void writeToStream(Stream &os) {
-        const char *SP = " ", *CRLF = "\r\n";
-
-        os.writeString(util::format("%s %d %s\r\n", "HTTP/1.0", status, messages[status]).c_str());
-        for (std::pair<std::string,std::string> header : headers)
+    template <typename... Args>
+    static HTTPResponse redirectF(const char *fmt, Args... args)
         {
-            os.writeString(header.first.c_str())
-                .writeString(":")
-                .writeString(SP)
-                .writeString(header.second.c_str())
-                .writeString(CRLF);
+            return redirect(util::format(fmt, args...));
         }
-        os.writeString("Connection: close").writeString(CRLF);
-        os.writeString(CRLF);
-        body(os);
-    }
+
+    void writeToStream(Stream &os);
 
 private:
     int status;

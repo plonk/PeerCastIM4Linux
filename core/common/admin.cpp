@@ -18,30 +18,30 @@ HTTPResponse AdminController::redirect(char *cmd)
 
     if (url.isEmpty())
         return HTTPResponse(200, {{ "Content-Type", "text/html" }},
-                            [=] (Stream& os)
-                            {
-                                HTMLBuilder(os).errorPage("Error", "Argument Format Error", "Empty URL");
-                            });
+                        [=] (Stream& os)
+                        {
+                            HTMLBuilder(os).errorPage("Error", "Argument Format Error", "Empty URL");
+                        });
 
     if (!url.contains("http://"))
         url.prepend("http://");
 
     return HTTPResponse(200, { { "Content-Type", "text/html" } },
-                        [=](Stream &os)
-                        {
-                            HTMLBuilder hb(os);
+                    [=](Stream &os)
+                    {
+                        HTMLBuilder hb(os);
 
-                            hb.setRefreshURL(url.c_str());
-                            hb.setTitle("Redirecting...");
+                        hb.setRefreshURL(url.c_str());
+                        hb.setTitle("Redirecting...");
 
-                            hb.doctype();
-                            hb.startHTML();
-                            hb.addHead();
-                            hb.startBody();
-                            hb.startTagEnd("h3","Please wait...");
-                            hb.end();
-                            hb.end();
-                        });
+                        hb.doctype();
+                        hb.startHTML();
+                        hb.addHead();
+                        hb.startBody();
+                        hb.startTagEnd("h3","Please wait...");
+                        hb.end();
+                        hb.end();
+                    });
 }
 
 static HTTPResponse handshakeXML();
@@ -79,9 +79,9 @@ static HTTPResponse handshakeXML()
 
 	rn->add(new XML::Node("servent uptime=\"%d\"",servMgr->getUptime()));
 	rn->add(new XML::Node("bandwidth out=\"%d\" in=\"%d\"",
-		stats.getPerSecond(Stats::BYTESOUT)-stats.getPerSecond(Stats::LOCALBYTESOUT),
-		stats.getPerSecond(Stats::BYTESIN)-stats.getPerSecond(Stats::LOCALBYTESIN)
-		));
+                          stats.getPerSecond(Stats::BYTESOUT)-stats.getPerSecond(Stats::LOCALBYTESOUT),
+                          stats.getPerSecond(Stats::BYTESIN)-stats.getPerSecond(Stats::LOCALBYTESIN)
+                ));
 	rn->add(new XML::Node("connections total=\"%d\" relays=\"%d\" direct=\"%d\"",servMgr->totalConnected(),servMgr->numStreams(Servent::T_RELAY,true),servMgr->numStreams(Servent::T_DIRECT,true)));
 
 	XML::Node *an = new XML::Node("channels_relayed total=\"%d\"",chanMgr->numChannels());
@@ -128,31 +128,31 @@ static HTTPResponse handshakeXML()
 	xml->write(ds);
 
     return HTTPResponse(200,
-                        {
-                            { HTTP_HS_SERVER, PCX_AGENT },
-                            { HTTP_HS_CONTENT, MIME_XML },
-                            { HTTP_HS_LENGTH, to_string(ds.getLength()) }
-                        },
-                        [=](Stream &os)
-                        {
-                            // write HTTP body
-                            xml->write(os);
-                            delete xml;
-                        });
+                    {
+                        { HTTP_HS_SERVER, PCX_AGENT },
+                        { HTTP_HS_CONTENT, MIME_XML },
+                        { HTTP_HS_LENGTH, to_string(ds.getLength()) }
+                    },
+                    [=](Stream &os)
+                    {
+                        // write HTTP body
+                        xml->write(os);
+                        delete xml;
+                    });
 }
 
 HTTPResponse AdminController::clearlog(char *cmd)
 {
     sys->logBuf->clear();
 
-    return HTTPResponse::redirect(format("/%s/viewlog.html", servMgr->htmlPath));
+    return HTTPResponse::redirectF("/%s/viewlog.html", servMgr->htmlPath);
 }
 
 HTTPResponse AdminController::save(char *cmd)
 {
     peercastInst->saveSettings();
 
-    return HTTPResponse::redirect(format("/%s/settings.html", servMgr->htmlPath));
+    return HTTPResponse::redirectF("/%s/settings.html", servMgr->htmlPath);
 }
 
 HTTPResponse AdminController::reg(char *cmd)
@@ -160,7 +160,7 @@ HTTPResponse AdminController::reg(char *cmd)
     char idstr[128];
     chanMgr->broadcastID.toStr(idstr);
 
-    return HTTPResponse::redirect(format("http://www.peercast.org/register/?id=%s", idstr));
+    return HTTPResponse::redirectF("http://www.peercast.org/register/?id=%s", idstr);
 }
 
 HTTPResponse AdminController::edit_bcid(char *cmd)
@@ -183,7 +183,7 @@ HTTPResponse AdminController::edit_bcid(char *cmd)
     }
     peercastInst->saveSettings();
 
-    return HTTPResponse::redirect(format("/%s/bcid.html", servMgr->htmlPath));
+    return HTTPResponse::redirectF("/%s/bcid.html", servMgr->htmlPath);
 }
 
 HTTPResponse AdminController::add_bcid(char *cmd)
@@ -216,7 +216,7 @@ HTTPResponse AdminController::add_bcid(char *cmd)
         return HTTPResponse(200, {{ "Content-Type", "text/plain" }}, [](Stream& os) { os.writeString("OK"); });
     }else
     {
-        return HTTPResponse::redirect(format("/%s/bcid.html", servMgr->htmlPath));
+        return HTTPResponse::redirectF("/%s/bcid.html", servMgr->htmlPath);
     }
 }
 
@@ -439,17 +439,16 @@ HTTPResponse AdminController::apply(char *cmd)
         char ipstr[64];
         lh.toStr(ipstr);
 
-        response = HTTPResponse::redirect(format("http://%s/%s/settings.html", ipstr, servMgr->htmlPath));
+        response = HTTPResponse::redirectF("http://%s/%s/settings.html", ipstr, servMgr->htmlPath);
 
         servMgr->serverHost.port = newPort;
         servMgr->restartServer=true;
     }else
     {
-        response = HTTPResponse::redirect(format("/%s/settings.html", servMgr->htmlPath));
+        response = HTTPResponse::redirectF("/%s/settings.html", servMgr->htmlPath);
     }
 
     peercastInst->saveSettings();
-
     peercastApp->updateSettings();
 
     if ((servMgr->isRoot) && (brRoot))
@@ -504,7 +503,7 @@ HTTPResponse AdminController::fetch(char *cmd)
     if (c)
         c->startURL(curl.c_str());
 
-    return HTTPResponse::redirect(format("/%s/relays.html", servMgr->htmlPath));
+    return HTTPResponse::redirectF("/%s/relays.html", servMgr->htmlPath);
 }
 
 HTTPResponse AdminController::stopserv(char *cmd)
@@ -519,7 +518,7 @@ HTTPResponse AdminController::stopserv(char *cmd)
                 s->abort();
         }
     }
-    return HTTPResponse::redirect(format("/%s/connections.html", servMgr->htmlPath));
+    return HTTPResponse::redirectF("/%s/connections.html", servMgr->htmlPath);
 }
 
 HTTPResponse AdminController::hitlist(char *cmd)
@@ -556,7 +555,7 @@ HTTPResponse AdminController::hitlist(char *cmd)
     {
         sys->sleep(500);
 
-        return HTTPResponse::redirect(format("/%s/relays.html", servMgr->htmlPath));
+        return HTTPResponse::redirectF("/%s/relays.html", servMgr->htmlPath);
     }
     return HTTPResponse::redirect("/"); // ここでいい？
 }
@@ -578,14 +577,14 @@ HTTPResponse AdminController::clear(char *cmd)
         }
     }
 
-    return HTTPResponse::redirect(format("/%s/index.html", servMgr->htmlPath));
+    return HTTPResponse::redirectF("/%s/index.html", servMgr->htmlPath);
 }
 
 HTTPResponse AdminController::upgrade(char *cmd)
 {
     if (servMgr->downloadURL[0])
     {
-        return HTTPResponse::redirect(format("/admin?cmd=redirect&url=%s", servMgr->downloadURL));
+        return HTTPResponse::redirectF("/admin?cmd=redirect&url=%s", servMgr->downloadURL);
     }else {
         return HTTPResponse::redirect("/"); // 何かページを表示するべき？;
     }
@@ -603,7 +602,7 @@ HTTPResponse AdminController::connect(char *cmd)
         s=s->next;
     }
 
-    return HTTPResponse::redirect(format("/%s/connections.html", servMgr->htmlPath));
+    return HTTPResponse::redirectF("/%s/connections.html", servMgr->htmlPath);
 }
 
 HTTPResponse AdminController::shutdown(char *cmd)
@@ -630,7 +629,7 @@ HTTPResponse AdminController::stop(char *cmd)
 
     sys->sleep(500);
 
-    return HTTPResponse::redirect(format("/%s/relays.html", servMgr->htmlPath));
+    return HTTPResponse::redirectF("/%s/relays.html", servMgr->htmlPath);
 }
 
 HTTPResponse AdminController::bump(char *cmd)
@@ -647,7 +646,7 @@ HTTPResponse AdminController::bump(char *cmd)
     if (c)
         c->bump = true;
 
-    return HTTPResponse::redirect(format("/%s/relays.html", servMgr->htmlPath));
+    return HTTPResponse::redirectF("/%s/relays.html", servMgr->htmlPath);
 }
 
 HTTPResponse AdminController::keep(char *cmd)
@@ -666,7 +665,7 @@ HTTPResponse AdminController::keep(char *cmd)
         c->stayConnected = !c->stayConnected;
     } //JP-Patch
 
-    return HTTPResponse::redirect(format("/%s/relays.html", servMgr->htmlPath));
+    return HTTPResponse::redirectF("/%s/relays.html", servMgr->htmlPath);
 }
 
 HTTPResponse AdminController::relay(char *cmd)
@@ -696,7 +695,7 @@ HTTPResponse AdminController::relay(char *cmd)
         c->startGet();
     }
 
-    return HTTPResponse::redirect(format("/%s/relays.html", servMgr->htmlPath));
+    return HTTPResponse::redirectF("/%s/relays.html", servMgr->htmlPath);
 }
 
 HTTPResponse AdminController::net_add(char *cmd)
@@ -741,8 +740,8 @@ HTTPResponse AdminController::login(char *cmd)
         cookie = format("%s id=%s; path=/;", HTTP_HS_SETCOOKIE, idstr);
 
     return HTTPResponse(302,
-                        { { HTTP_HS_SETCOOKIE, cookie }, { "Location", format("/%s/index.html", servMgr->htmlPath) } },
-                        [](Stream&) {});
+                    { { HTTP_HS_SETCOOKIE, cookie }, { "Location", format("/%s/index.html", servMgr->htmlPath) } },
+                    [](Stream&) {});
 }
 
 HTTPResponse AdminController::setmeta(char *cmd)
@@ -852,19 +851,19 @@ HTTPResponse AdminController::send(char *cmd)
 	}catch(StreamException &e)
 	{
 		return HTTPResponse(200, {{ "Content-Type", "text/html" }},
-                            [=](Stream &os)
-                            {
-                                HTMLBuilder hb(os);
+                        [=](Stream &os)
+                        {
+                            HTMLBuilder hb(os);
 
-                                hb.doctype();
-                                hb.startTagEnd("title", "ERROR - %s",e.msg);
-                                hb.startTagEnd("h1", "ERROR - %s",e.msg);
-                                LOG_ERROR("admin: %s",e.msg);
-                            });
+                            hb.doctype();
+                            hb.startTagEnd("title", "ERROR - %s",e.msg);
+                            hb.startTagEnd("h1", "ERROR - %s",e.msg);
+                            LOG_ERROR("admin: %s",e.msg);
+                        });
 	}
 }
 
 HTTPResponse AdminController::unknown(char *cmd)
 {
-    return HTTPResponse::redirect(format("/%s/index.html", servMgr->htmlPath));
+    return HTTPResponse::redirectF("/%s/index.html", servMgr->htmlPath);
 }

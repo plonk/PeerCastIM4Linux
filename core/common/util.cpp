@@ -1,5 +1,6 @@
 // ---------------------------
 #include <iostream>
+#include <algorithm>
 #include <boost/format.hpp>
 
 #include "common/http.h"
@@ -23,14 +24,17 @@ namespace util
     vector<string> split(const string& str, const string& delimiter)
     {
         vector<string> ret;
-        size_t start = 0, index;
+        size_t head = 0, tail;
 
-        while ( (index = str.find(delimiter, start)) != string::npos)
+        while ( (tail = str.find(delimiter, head)) != string::npos)
         {
-            ret.push_back( string(str.begin()+start, str.begin()+index) );
-            start = index + delimiter.size();
+            ret.push_back( string(str.begin()+head, str.begin()+tail) );
+            head = tail + delimiter.size();
         }
-        ret.push_back( string(str.begin()+start, str.end()) );
+        ret.push_back( string(str.begin()+head, str.end()) );
+
+        auto newEnd = remove(ret.begin(), ret.end(), "");
+        ret.resize(newEnd - ret.begin());
 
         return ret;
     }

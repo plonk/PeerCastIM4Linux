@@ -666,10 +666,14 @@ void Servent::handshakeRTSP(RTSP &rtsp)
 	throw HTTPException(HTTP_SC_BADREQUEST,400);
 }
 // -----------------------------------
-bool Servent::handshakeAuth(HTTP &http,const char *args,bool local)
+bool Servent::handshakeAuth(HTTP &http,const char *relativeUrl,bool local)
 {
 	char user[1024],pass[1024];
 	user[0] = pass[0] = 0;
+    string args;
+
+    if (strstr(relativeUrl, "?"))
+        args = strstr(relativeUrl, "?") + 1;
 
 	auto pwd = getCGIarg_s(args, "pass");
 

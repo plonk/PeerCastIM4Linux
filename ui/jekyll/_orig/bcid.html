@@ -1,0 +1,72 @@
+---
+layout: default
+---
+<form action="/admin" method=get>
+  <input type=hidden value="add_bcid" name=cmd>
+  <table class=infotable style="width: auto; margin: auto;">
+    <tbody>
+      <tr class=legend>
+	<th colspan="2">New BCID</td>
+      </tr>
+      <tr>
+	<td>ID</td>
+	<td><input name=id size="40"></td>
+      </tr>
+      <tr>
+	<td>Name</td>
+	<td><input name=name size="32"></td>
+      </tr>
+      <tr>
+	<td>Email</td>
+	<td><input name=email size="32"></td>
+      </tr>
+      <tr>
+	<td>URL</td>
+	<td><input name=url size="32"></td>
+      </tr>
+      <tr>
+	<td colspan="2"><INPUT type=submit value="Add" name=submit></td>
+      </tr>
+    </tbody>
+  </table>
+</form>
+<p>&nbsp;</p>
+<table class=infotable style="margin: auto; width: auto;">
+  <tbody>
+    <tr class=legend>
+      <th colspan=2>Current BCIDs</td>
+    </tr>
+    {@loop servMgr.numValidBCID}
+    <tr>
+      <td>ID</td>
+      <td>{$loop.bcid.id}</td>
+    </tr>
+    <tr>
+      <td>Name</td>
+      <td>{$loop.bcid.name}</td>
+    </tr>
+    <tr>
+      <td>Email</td>
+      <td>{$loop.bcid.email}</td>
+    </tr>
+    <tr>
+      <td>URL</td>
+      <td>{$loop.bcid.url}</td>
+    </tr>
+    <tr>
+      <td>Valid</td>
+      <td>{$loop.bcid.valid}</td>
+    </tr>
+    <tr>
+      <td colspan="2">
+	<a href="/admin?cmd=edit_bcid&amp;id={$loop.bcid.id}&amp;del">Delete</a> |
+	<a href="/admin?cmd=edit_bcid&amp;id={$loop.bcid.id}&amp;valid=1">Enable</a> |
+	<a href="/admin?cmd=edit_bcid&amp;id={$loop.bcid.id}&amp;valid=0">Disable</a>
+      </td>
+    </tr>
+    <tr style="background: transparent !important;">
+      <td colspan="2">&nbsp;</td>
+    </tr>
+    {@end}
+  </tbody>
+</table>

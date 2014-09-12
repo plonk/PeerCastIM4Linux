@@ -242,20 +242,23 @@ map<int,string> HTTPResponse::messages = {
 };
 
 // ---------------------------------------
+#include <time.h>
+#include <version2.h>
 void HTTPResponse::writeToStream(Stream &os)
 {
+    using namespace util;
     const char *SP = " ", *CRLF = "\r\n";
 
     os.writeString(util::format("%s %d %s\r\n", "HTTP/1.0", status, messages[status]).c_str());
     for (std::pair<std::string,std::string> header : headers)
     {
-        os.writeString(header.first.c_str())
-            .writeString(":")
-            .writeString(SP)
-            .writeString(header.second.c_str())
-            .writeString(CRLF);
+        os.writeStringF("%s: %s\r\n",
+                        header.first.c_str(),
+                        header.second.c_str());
     }
-    os.writeString("Connection: close").writeString(CRLF);
+    os.writeStringF("Date: %s\r\n", rfc1123Time(time(NULL)).c_str());
+    os.writeStringF("Server: %s\r\n", PCX_AGENT);
+    os.writeString("Connection: close\r\n");
     os.writeString(CRLF);
     body(os);
 }

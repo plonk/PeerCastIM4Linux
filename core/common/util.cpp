@@ -65,4 +65,18 @@ namespace util
     {
         return str(fmt);
     }
+
+    string rfc1123Time(time_t t)
+    {
+        static const char* dow[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+        static const char* mon[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Nov", "Oct", "Dec" };
+        tm tm;
+        char fmt[30], buf[30];
+
+        gmtime_r(&t, &tm);
+        strftime(fmt, sizeof(fmt), "%%s, %d %%s %Y %H:%M:%S GMT", &tm);
+        snprintf(buf, sizeof(buf), fmt, dow[tm.tm_wday], mon[tm.tm_mon]);
+
+        return buf;
+    }
 };

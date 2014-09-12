@@ -66,14 +66,20 @@ static HTTPResponse serveLocalFile(string fileName)
         return HTTPResponse(200,
                             {
                                 { "Content-Type", type },
+                                { "Content-Length", to_string( file_size(fileName) ) },
+                                { "Last-Modified", rfc1123Time(last_write_time(fileName)) }
                             },
                             [=] (Stream& os) mutable
                             {
                                 FileStream file;
 
                                 file.openReadOnly(fileName.c_str());
-                                while (!file.eof())
-                                    os.writeChar(file.readChar());
+                                while (true)
+                                {
+                                    auto c = file.readChar();
+                                    if (file.eof()) break;
+                                    os.writeChar(c);
+                                }
                             });
     }catch (StreamException &e)
     {

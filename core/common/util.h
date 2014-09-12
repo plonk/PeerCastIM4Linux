@@ -9,6 +9,7 @@
 #include <tuple>
 #include <vector>
 #include <boost/format.hpp>
+#include <time.h>
 
 namespace util
 {
@@ -36,6 +37,8 @@ namespace util
         boost::format fmt(sfmt);
         return format(fmt, args...);
     }
+
+    string rfc1123Time(time_t t);
 };
 
 #endif

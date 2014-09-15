@@ -80,6 +80,7 @@ static HTTPResponse serveLocalFile(string fileName)
                                     if (file.eof()) break;
                                     os.writeChar(c);
                                 }
+                                file.close();
                             });
     }catch (StreamException &e)
     {

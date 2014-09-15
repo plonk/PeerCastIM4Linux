@@ -247,27 +247,34 @@ void String::UNKNOWN2UNICODE(const char *in,bool safe)
 }
 
 // -----------------------------------
+#include <map>
 void String::ASCII2HTML(const char *in)
 {
-	char *op = data;
-	char *oe = data+MAX_LEN-10;
-	unsigned char c;
-	const char *p = in;
-	while (c = *p++)
-	{
+    using namespace std;
 
-		if (((c >= '0') && (c <= '9')) || ((c >= 'a') && (c <= 'z')) || ((c >= 'A') && (c <= 'Z')))
+	char *op = data;
+	char *oe = data + MAX_LEN - 10;
+	unsigned char c;
+    static map<char,string> entities =
+        { { '&', "&amp;" },
+          { '"', "&quot;" },
+          { '<', "&lt;" },
+          { '>', "&gt;" } };
+
+	while ((c = *in++) && op < oe)
+	{
+		if (c == '&' || c == '"' || c == '<' || c == '>')
 		{
-			*op++ = c;
+            const string& entity = entities[c];
+
+			sprintf(op, "%s", entity.c_str());
+			op += entity.size();
 		}else
 		{
-			sprintf(op,"&#x%02X;",(int)c);
-			op+=6;
+			*op++ = c;
 		}
-		if (op >= oe)
-			break;
 	}
-	*op = 0;
+	*op = '\0';
 }
 // -----------------------------------
 void String::ASCII2ESC(const char *in, bool safe)

@@ -82,4 +82,4 @@ memorystream_unittest.o : memorystream_unittest.cc $(USER_DIR)/stream.h $(GTEST_
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $<
 
 test_all : host_unittest.o string_unittest.o utf8_unittest.o memorystream_unittest.o gtest_main.a ../ui/linux/libpeercast.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -lpthread -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -lpthread -lboost_filesystem -lboost_system -lboost_regex -o $@

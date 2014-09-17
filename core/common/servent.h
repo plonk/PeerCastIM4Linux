@@ -30,6 +30,7 @@
 #include "common/rtsp.h"
 #include "common/pcp.h"
 #include "common/addrCont.h"
+#include <string>
 #ifdef _WIN32
 #include "win32/ts_vector.h"
 #else
@@ -168,7 +169,8 @@ public:
 	void	handshakeHTML(char *);
 	void	handshakeXML();
 	void	handshakeCMD(char *);
-	bool	handshakeAuth(HTTP &,const char *,bool);
+    bool	handshakeAuth(HTTP &http,std::string args,bool local);
+
 	void	handshakeIn();
 	void	handshakeOut();
 
@@ -189,7 +191,7 @@ public:
     void	handleHeadMethod(HTTP &http, char *in, bool isHTTP);
 
 	void	handshakeRemoteFile(const char *);
-	void	handshakeLocalFile(const char *);
+	void	handshakeLocalFile(const char *, const HTTPHeaders&);
 
 	static void	handshakeOutgoingPCP(AtomStream &,Host &,GnuID &,String &,bool);
 	static void	handshakeIncomingPCP(AtomStream &,Host &,GnuID &,String &);

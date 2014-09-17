@@ -73,7 +73,9 @@ void Servent::handleGetMethod(HTTP &http, char *in)
             throw HTTPException(HTTP_SC_UNAVAILABLE,503);
 
         if (handshakeAuth(http,fn,true))
-            handshakeLocalFile(dirName);
+        {
+            handshakeLocalFile(dirName, http.getHeaders());
+        }
     }else if (beginWith(fn,"/admin/?") || beginWith(fn,"/admin?"))
     {
         if (!isAllowed(ALLOW_HTML))
@@ -196,7 +198,6 @@ void Servent::handlePostMethod(HTTP &http, char *in)
     {
         if (!isAllowed(ALLOW_HTML))
             throw HTTPException(HTTP_SC_UNAVAILABLE,503);
-
 
         LOG_DEBUG("Admin client");
         while(http.nextHeader()){
@@ -666,20 +667,16 @@ void Servent::handshakeRTSP(RTSP &rtsp)
 	throw HTTPException(HTTP_SC_BADREQUEST,400);
 }
 // -----------------------------------
-bool Servent::handshakeAuth(HTTP &http,const char *relativeUrl,bool local)
+bool Servent::handshakeAuth(HTTP &http,string args,bool local)
 {
 	char user[1024],pass[1024];
 	user[0] = pass[0] = 0;
-    string args;
 
-    if (strstr(relativeUrl, "?"))
-        args = strstr(relativeUrl, "?") + 1;
+	auto pwd = getCGIarg_s(args.c_str(), "pass");
 
-	auto pwd = getCGIarg_s(args, "pass");
-
-	if (pwd == "" && strlen(servMgr->password))
+	if (!pwd.empty() && strlen(servMgr->password) != 0)
 	{
-		if (strcmp(pwd.c_str(), servMgr->password)==0)
+		if (pwd == servMgr->password)
 		{
 		    while (http.nextHeader());
 			return true;
@@ -751,7 +748,7 @@ bool Servent::handshakeAuth(HTTP &http,const char *relativeUrl,bool local)
 		String file = servMgr->htmlPath;
 		file.append("/login.html");
 		if (local)
-			handshakeLocalFile(file);
+			handshakeLocalFile(file, http.getHeaders());
 		else
 			handshakeRemoteFile(file);
 	}
@@ -930,12 +927,23 @@ static string getApplicationDirectory()
 		return peercastApp->getPath();
     }
 }
+#include <functional>
+template <typename T, typename F>
+T& tap(T&& thing, F logger)
+{
+    logger(thing);
+    return thing;
+}
 // -----------------------------------
-void Servent::handshakeLocalFile(const char *absPath)
+void Servent::handshakeLocalFile(const char *absPath, const HTTPHeaders& headers)
 {
     LocalFileServer lfs(getApplicationDirectory());
 
-    lfs.request(absPath).writeToStream(*sock);
+    tap(lfs.request(absPath, headers),
+        [=] (const HTTPResponse& res) -> void
+        {
+            LOG_DEBUG("%d %s", res.getStatus(), absPath);
+        }).writeToStream(*sock);
 }
 
 // -----------------------------------

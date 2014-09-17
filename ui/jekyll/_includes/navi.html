@@ -10,29 +10,50 @@
     </div> 
     <div class="collapse navbar-collapse" id="jump-links">
       <ul class="nav navbar-nav">
-        <li><a href="index.html">
+        <li {% if page.url contains "index.html" %} class="active" {% endif %}>
+          <a href="index.html">
             <span class="glyphicon glyphicon-info-sign"></span>
-            {%t Information %}</a></li>
-        <li><a href="relays.html">
+            {%t Information %}
+          </a>
+        </li>
+        <li {% if page.url contains "relays.html" %} class="active" {% endif %}>
+          <a href="relays.html">
             <span class="glyphicon glyphicon-list"></span>
-            {%t Relays %}</a></li>
-        <li><a href="broadcast.html">
+            {%t Relays %}
+          </a>
+        </li>
+        <li {% if page.url contains "broadcast.html" %} class="active" {% endif %}>
+          <a href="broadcast.html">
             <span class="glyphicon glyphicon-upload"></span>
-            {%t Broadcast %}</a></li>
-        <li><a href="connections.html">
+            {%t Broadcast %}
+          </a>
+        </li>
+        <li {% if page.url contains "connections.html" %} class="active" {% endif %}>
+          <a href="connections.html">
             <span class="glyphicon glyphicon-signal"></span>
-            {%t Connections %}</a></li>
-        <li><a href="settings.html">
+            {%t Connections %}
+          </a>
+        </li>
+        <li {% if page.url contains "settings.html" %} class="active" {% endif %}>
+          <a href="settings.html">
             <span class="glyphicon glyphicon-cog"></span>
-            {%t Settings %}</a></li>
-        <li><a href="viewlog.html">
+            {%t Settings %}
+          </a>
+        </li>
+        <li {% if page.url contains "viewlog.html" %} class="active" {% endif %}>
+          <a href="viewlog.html">
             <span class="glyphicon glyphicon-list-alt"></span>
-            {%t View Log %}</a></li>
+            {%t View Log %}
+          </a>
+        </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="logout.html">
+        <li {% if page.url contains "logout.html" %} class="active" {% endif %}>
+          <a href="logout.html">
             <span class="glyphicon glyphicon-off"></span>
-            {%t Quit %}</a></li>
+            {%t Quit %}
+          </a>
+        </li>
       </ul>
     </div>
   </div>

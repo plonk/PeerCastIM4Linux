@@ -22,6 +22,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <string>
 #include "common/common.h"
 #include "common/socket.h"
 #include "common/channel.h"
@@ -42,13 +43,15 @@
 
 #include "common/icy.h"
 #include "common/url.h"
-
+    
 #include "common/version2.h"
 #ifdef _DEBUG
 #include "chkMemoryLeak.h"
 #define DEBUG_NEW new(__FILE__, __LINE__)
 #define new DEBUG_NEW
 #endif
+
+using namespace std;
 
 // -----------------------------------
 const char *Channel::srcTypes[]=
@@ -3356,49 +3359,42 @@ void ChanHit::writeAtoms(AtomStream &atom,GnuID &chanID)
 	}
 }
 // -----------------------------------
+static const char* nodeColor(ChanHit *self)
+{
+    if (self->firewalled)
+    {
+        return (self->numRelays==0) ? "red" : "orange";
+    }else
+    {
+        if (!self->relay)
+        {
+            return (self->numRelays==0) ? "purple" : "blue";
+        }else
+        {
+            return "green";
+        }
+    }
+}
+// -----------------------------------
+static string hostnameOrIP(const Host& rhost)
+{
+    //JP-EX
+    char hostname[256];
+
+    if (servMgr->enableGetName && ClientSocket::getHostname(hostname, sizeof(hostname), rhost.ip))  // BOF対策っぽい
+        ; // hostname is set
+    else
+        rhost.IPtoStr(hostname);
+
+    return hostname;
+}
+// -----------------------------------
 bool	ChanHit::writeVariable(Stream &out, const String &var)
 {
 	char buf[1024];
 
 	if (var == "rhost0")
-	{
-		if (servMgr->enableGetName) //JP-EX s
-		{
-			char buf2[256];
-			if (firewalled)
-			{
-				if (numRelays==0)
-					strcpy(buf,"<font color=red>");
-				else
-					strcpy(buf,"<font color=orange>");
-			}
-			else {
-				if (!relay){
-					if (numRelays==0){
-						strcpy(buf,"<font color=purple>");
-					} else {
-						strcpy(buf,"<font color=blue>");
-					}
-				} else {
-					strcpy(buf,"<font color=green>");
-				}
-			}
-
-			rhost[0].toStr(buf2);
-			strcat(buf,buf2);
-
-			char h_name[128];
-			if (ClientSocket::getHostname(h_name,sizeof(h_name),rhost[0].ip)) // BOF対策っぽい
-			{
-				strcat(buf,"[");
-				strcat(buf,h_name);
-				strcat(buf,"]");
-			}
-			strcat(buf,"</font>");
-		} //JP-EX e
-		else
-			rhost[0].toStr(buf);
-	}
+        snprintf(buf, sizeof(buf), "<font color=%s>%s:%hu</font>", nodeColor(this), hostnameOrIP(rhost[0]).c_str(), rhost[0].port);
 	else if (var == "rhost1")
 		rhost[1].toStr(buf);
 	else if (var == "numHops")

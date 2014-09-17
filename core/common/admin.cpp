@@ -735,9 +735,9 @@ HTTPResponse AdminController::login(char *cmd)
 
     string cookie;
     if (servMgr->cookieList.neverExpire)
-        cookie = format("%s id=%s; path=/; expires=\"Mon, 01-Jan-3000 00:00:00 GMT\";", HTTP_HS_SETCOOKIE, idstr);
+        cookie = format("id=%s; path=/; expires=\"Mon, 01-Jan-3000 00:00:00 GMT\";", idstr);
     else
-        cookie = format("%s id=%s; path=/;", HTTP_HS_SETCOOKIE, idstr);
+        cookie = format("id=%s; path=/;", idstr);
 
     return HTTPResponse(302,
                     { { HTTP_HS_SETCOOKIE, cookie }, { "Location", format("/%s/index.html", servMgr->htmlPath) } },
@@ -798,6 +798,7 @@ HTTPResponse AdminController::setmeta(char *cmd)
 
 HTTPResponse AdminController::send(char *cmd)
 {
+    LOG_DEBUG("send: %s", cmd);
 	try
 	{
         if (cmpCGIarg(cmd,"cmd=","redirect"))

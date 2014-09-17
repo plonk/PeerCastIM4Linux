@@ -246,13 +246,13 @@ public:
 	}
 
     //! Convert to string in dot-decimal notation.
-	void	IPtoStr(char *str)
+	void	IPtoStr(char *str) const
 	{
 		sprintf(str,"%d.%d.%d.%d",(ip>>24)&0xff,(ip>>16)&0xff,(ip>>8)&0xff,(ip)&0xff);
 	}
 
     //! Convert to string in dot-decimal notation plus port number.
-	void	toStr(char *str)
+	void	toStr(char *str) const
 	{
 		sprintf(str,"%d.%d.%d.%d:%d",(ip>>24)&0xff,(ip>>16)&0xff,(ip>>8)&0xff,(ip)&0xff,port);
 	}

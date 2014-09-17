@@ -190,7 +190,7 @@ public:
 	int	writeUTF8(unsigned int);
 
 	// text
-    int		readLine(char *in, int max);
+    size_t  readLine(char *in, int max);
 
     int		readWord(char *, int);
 	int		readBase64(char *, int);

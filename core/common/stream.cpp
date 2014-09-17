@@ -233,22 +233,22 @@ void Stream::updateTotals(unsigned int in, unsigned int out)
 	}
 }
 // -------------------------------------
-int	Stream::readLine(char *in, int max)
+size_t Stream::readLine(char *in, int max)
 {
-    int i=0;
+	size_t i = 0;
 	max -= 2;
 
 	while(max--)
-    {
-    	char c;
-    	read(&c,1);
+	{
+		char c;
+		read(&c,1);
 		if (c == '\n')
 			break;
 		if (c == '\r')
 			continue;
-        in[i++] = c;
-    }
-    in[i] = 0;
+		in[i++] = c;
+	}
+	in[i] = '\0';
 	return i;
 }
 // -------------------------------------

@@ -39,6 +39,9 @@ namespace util
     }
 
     string rfc1123Time(time_t t);
+    time_t parseRfc1123Time(string str);
+
+    string getMimeType(string ext);
 };
 
 #endif

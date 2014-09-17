@@ -2,6 +2,8 @@
 #include <iostream>
 #include <algorithm>
 #include <boost/format.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/regex.hpp>
 
 #include "common/http.h"
 #include "util.h"
@@ -66,17 +68,50 @@ namespace util
         return str(fmt);
     }
 
+    static const char* daysOfWeek[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+    static const char* monthNames[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Nov", "Oct", "Dec" };
+
     string rfc1123Time(time_t t)
     {
-        static const char* dow[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-        static const char* mon[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Nov", "Oct", "Dec" };
         tm tm;
         char fmt[30], buf[30];
 
         gmtime_r(&t, &tm);
         strftime(fmt, sizeof(fmt), "%%s, %d %%s %Y %H:%M:%S GMT", &tm);
-        snprintf(buf, sizeof(buf), fmt, dow[tm.tm_wday], mon[tm.tm_mon]);
+        snprintf(buf, sizeof(buf), fmt, daysOfWeek[tm.tm_wday], monthNames[tm.tm_mon]);
 
         return buf;
+    }
+
+    time_t parseRfc1123Time(string str)
+    {
+        using namespace boost::gregorian;
+        using namespace boost::posix_time;
+        using namespace boost;
+
+        static const regex e("..., (\\d+) (...) (\\d{4}) (\\d{2}):(\\d{2}):(\\d{2}) GMT");
+        cmatch m;
+
+        regex_match(str.c_str(), m, e);
+        const string& day = m[1], mon = m[2], year = m[3], hour = m[4], min = m[5], sec = m[6];
+
+        auto it = find_if(begin(monthNames), end(monthNames), [&] (const char* x) { return mon == x; });
+        if (it == end(monthNames))
+            throw runtime_error("format error");
+
+        int monthOrd = it - begin(monthNames) + 1;
+
+        ptime t( date(atoi(year.c_str()), monthOrd, atoi(day.c_str())),
+                 time_duration(atoi(hour.c_str()),
+                               atoi(min.c_str()),
+                               atoi(sec.c_str()),
+                               0) );
+
+        return (t - from_time_t(0)).total_seconds();
+    }
+
+    string getMimeType(string ext)
+    {
+        return (MIMETypes.find(ext)==MIMETypes.end()) ? "application/octet-stream" : MIMETypes[ext];
     }
 };

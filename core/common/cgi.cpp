@@ -13,11 +13,16 @@ std::string getCGIarg_s(std::string query, std::string name)
     {
         auto equation = split(def, "=");
 
-        if (equation.size() != 2)
-            throw runtime_error(format("format error: %s", def));
+        if (equation.size() == 1)
+            equation.push_back("");
 
-        if (equation[0] == name)
-            return equation[1];
+        if (equation.size() == 2)
+        {
+            if (equation[0] == name)
+                return equation[1];
+        } else {
+            throw runtime_error(format("format error: %s", def));
+        }
     }
     return "";
 }

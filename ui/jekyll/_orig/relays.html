@@ -2,18 +2,20 @@
 layout: default
 refresh: "{$servMgr.refreshHTML}"
 ---
-<TABLE class="infotable">
+<TABLE class="infotable" style="width: 100%;">
+    <thead>
+      <TR>
+        <Th></Th>
+        <Th>{%t Channel %}</Th>
+        <Th>{%t Bitrate %}</Th>
+        <Th>{%t Stream %}</Th>
+        <Th>{%t Total Relays %}</Th>
+        <Th>{%t Local Relays %}</Th>
+        <Th>{%t Status %}</Th>
+        <Th>{%t Keep %}</Th>
+      </TR>
+    </thead>
   <TBODY>
-    <TR>
-      <Th></Th>
-      <Th>{%t Channel %}</Th>
-      <Th>{%t Bitrate %} (kb/s)</Th>
-      <Th>{%t Stream %}</Th>
-      <Th>{%t Total Relays %}</Th>
-      <Th>{%t Local Relays %}</Th>
-      <Th>{%t Status %}</Th>
-      <Th>{%t Keep %}</Th>
-    </TR>
     {@loop chanMgr.numChannels} 
     <tr>
       <TD class=centered>
@@ -21,32 +23,30 @@ refresh: "{$servMgr.refreshHTML}"
       </TD>
 
       <TD>
-        <b>{$loop.channel.name}</b> 
-        <br>
-        <span class="normal-small">
-          {$loop.channel.track.artist} - {$loop.channel.track.title} 
+        <b>{$loop.channel.name}</b>
+        <span class="normal-small float-right" style="min-width: 10em;">
+          {$loop.channel.desc} 
         </span>
-        <br>
-        <span>
-	  <b><a href="relayinfo.html?id={$loop.channel.id}">{%t Info %}</a></b> 
-	  - <b><a href="tree.html?id={$loop.channel.id}">{%t Tree %}</a></b> 
+        <div class="btn-group">
+	  <a href="relayinfo.html?id={$loop.channel.id}" class="btn btn-default btn-xs">{%t Info %}</a>
+	  <a href="tree.html?id={$loop.channel.id}" class="btn btn-default btn-xs">{%t Tree %}</a>
           {@if loop.channel.contactURL}
-          - <b><a href="{$loop.channel.contactURL}">{%t WWW %}</a></b> 
+          <a href="{$loop.channel.contactURL}" class="btn btn-default btn-xs">{%t WWW %}</a>
           {@end}
-	  - <b><a href="/admin?cmd=keep&amp;id={$loop.channel.id}">{%t Keep %}</a></b> 
-	  - <b><a href="/admin?cmd=bump&amp;id={$loop.channel.id}">{%t Bump %}</a></b> 
-	  - <b><a href="/admin?cmd=stop&amp;id={$loop.channel.id}">{%t Stop %}</a></b> 
-	</span>
+	  <a href="/admin?cmd=keep&amp;id={$loop.channel.id}" class="btn btn-default btn-xs">{%t Keep %}</a>
+	  <a href="/admin?cmd=bump&amp;id={$loop.channel.id}" class="btn btn-default btn-xs">{%t Bump %}</a>
+	  <a href="/admin?cmd=stop&amp;id={$loop.channel.id}" class="btn btn-default btn-xs">{%t Stop %}</a>
+        </div>
       </TD>
 
-      <TD class=centered>{$loop.channel.bitrate}</TD>
+      <TD class=centered>{$loop.channel.bitrate} kbit/s</TD>
       <TD class=centered>
         <a href="{$loop.channel.proto}{$servMgr.serverLocalIP}:{$servMgr.serverPort1}/stream/{$loop.channel.id}{$loop.channel.ext}">
           {$loop.channel.type}
         </a>
       </TD>
-      <TD class=centered>{$loop.channel.totalListeners} / {$loop.channel.totalRelays}</TD>
-      <TD class=centered>{$loop.channel.localListeners} / {$loop.channel.localRelays}</TD>
+      <TD class=centered style="white-space: nowrap">{$loop.channel.totalListeners} / {$loop.channel.totalRelays}</TD>
+      <TD class=centered style="white-space: nowrap">{$loop.channel.localListeners} / {$loop.channel.localRelays}</TD>
       <TD class=centered>{$loop.channel.status}</TD>
       <TD class=centered>{$loop.channel.keep}</TD>
     </TR>

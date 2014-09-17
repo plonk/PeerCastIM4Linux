@@ -1,4 +1,8 @@
 en:
+  PeerCast on: PeerCast on
+  loginPassword: Password
+  Login: Login
+
   # index
   Broadcasting has been disabled: Broadcasting has been disabled
   Please contact peercast_org: Please contact peercast.org

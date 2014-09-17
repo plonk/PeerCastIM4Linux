@@ -1,4 +1,8 @@
 ja:
+  PeerCast on: PeerCast on
+  loginPassword: パスワード
+  Login: ログイン
+
   # index
   Broadcasting has been disabled: 配信機能は無効にされました
   Please contact peercast_org: "peercast.org に連絡してください"
@@ -22,31 +26,31 @@ ja:
   Internet: インターネット
   GNet packets/sec: GNet packets/sec
 
-  Connections: コネクション
+  Connections: 接続
   Direct: ダイレクト
   Relay: リレー
-  Incoming: 要求 # 検討する
+  Incoming: 受信 # 検討する
   Port: ポート
 
   # navi
   Relays: リレー
-  Broadcast: 配信する
+  Broadcast: 配信
   Settings: 設定
-  View Log: ログ表示
-  Quit: ログアウト
+  View Log: ログ
+  Quit: 終了
 
   # relays
 
   Channel: チャンネル
-  Bitrate: ビットレート
+  Bitrate: 転送速度
   Stream: ストリーム
-  Total Relays: リレー 合計
-  Local Relays: ローカル リレー
+  Total Relays: 合計
+  Local Relays: ローカル
   Status: ステータス
   Keep: キープ
 
   Info: 情報
-  Tree: リレーツリー
+  Tree: ツリー
   WWW: URL
   Bump: 再接続
   Stop: 停止
@@ -102,7 +106,7 @@ ja:
 
   Save Settings: 設定を保存
 
-  Server: サーバー
+  Server: サーバ
   DJ Message: DJ Message
   ICY MetaInterval: ICY MetaInterval
   Mode: モード
@@ -116,14 +120,14 @@ ja:
   Max_ Controls In: Max. Controls In
   Max_ Connections In: Max. Connections In
 
-  Filters: Filters
+  Filters: フィルタ
   IP Mask: IP Mask
   Direct: Direct
   Private: Private
   Ban: Ban
 
-  Security: Security
-  Allow on port: Allow on port
+  Security: セキュリティ
+  Allow on port: 許可するポート
   Broadcasting: Broadcasting
 
   Authentication: 認証
@@ -136,12 +140,12 @@ ja:
   End of session: セッションごと
   Never: 期限なし
 
-  Log: Log
-  Debug: Debug
-  Errors: Errors
-  Channels: Channels
+  Log: ログ
+  Debug: デバッグ
+  Errors: エラー
+  Channels: チャンネル
 
-  Root Mode: Root Mode
+  Root Mode: ルートモード
   Host Update (sec): Host Update (sec)
   Message: Message
   Get Update: Get Update

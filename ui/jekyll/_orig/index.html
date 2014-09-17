@@ -8,124 +8,136 @@ layout: default
 </p>
 {@end}
 
-<TABLE class="column-container">
-  <TBODY>
-    <TR>
-      <TD class=pagecol>
-        <TABLE class=infotable>
-	  <TBODY>
-	    <TR class=legend>
-	      <TD colSpan=2>{%t Information %}</TD>
-	    </TR>
-	    <TR>
-	      <TD>{%t Server IP %}</TD>
-	      <TD>{$servMgr.serverIP}</TD>
-	    </TR>
-	    <TR>
-	      <TD>{%t Uptime %}</TD>
-	      <TD>{$servMgr.uptime}</TD>
-	    </TR>
-	    <TR>
-	      <TD>{%t Channel cache %}</TD>
-	      <TD>{$chanMgr.numHitLists} - <a href="/admin?cmd=clear&amp;hitlists=1">{%t Clear %}</a></TD>
-	    </TR>
-	    <TR>
-	      <TD>{%t Firewalled %}</TD>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12 col-sm-6 col-md-5">
+      <TABLE class="infotable">
+        <caption>
+          {%t Information %}
+        </caption>
+        <TBODY>
+          <TR>
+	        <Th>{%t Server IP %}</Th>
+	        <TD>{$servMgr.serverIP}</TD>
+          </TR>
+          <TR>
+	        <Th>{%t Uptime %}</th>
+	        <TD>{$servMgr.uptime}</TD>
+          </TR>
+          <TR>
+	        <Th>{%t Channel cache %}</Th>
+	        <TD class=numeric>{$chanMgr.numHitLists}&nbsp;
+              <a href="/admin?cmd=clear&amp;hitlists=1" class="btn btn-default btn-xs float-right">
+                <span class="glyphicon glyphicon-trash"></span>
+                {%t Clear %}
+              </a>
+            </TD>
+          </TR>
+          <TR>
+	        <Th>{%t Firewalled %}</Th>
+	        <TD class=centered>{@if servMgr.firewallKnown} {@if servMgr.isFirewalled}
+	          <strong class=red>{%t Yes %}</strong> {@else} <span class=green>{%t No %}</span> {@end} {@else} {%t Unknown %} {@end} </TD>
+          </TR>
+          <TR>
+	        <th>{%t XML stats %}</th>
+	        <TD class=centered>
+              <A href="/admin?cmd=viewxml" class="btn btn-default btn-xs">
+                <span class="glyphicon glyphicon-folder-open"></span>
+                {%t View %}
+              </A>
+            </TD>
+          </TR>
+          <TR>
+	        <th>{%t GNet Host cache %}</th>
+	        <TD class=numeric>{$servMgr.numServHosts}&nbsp;
+              <A href="/admin?cmd=clear&amp;hostcache=1" class="btn btn-default btn-xs float-right">
+                <span class="glyphicon glyphicon-trash"></span>
+                {%t Clear %}
+              </A>
+            </TD>
+          </TR>
+          <TR>
+	        <Th>{%t Host options %}</Th>
+	        <TD>{@if servMgr.isRoot}Root{@end} {@if servMgr.isPrivate}Licensed{@end} {@if servMgr.forceYP}ForceYP{@end}</TD>
+          </TR>
+        </TBODY>
+      </TABLE>
+    </div>
 
-
-	      <TD>{@if servMgr.firewallKnown} {@if servMgr.isFirewalled}
-		<strong class=red>{%t Yes %}</strong> {@else} <span class=green>{%t No %}</span> {@end} {@else} {%t Unknown %} {@end} </TD>
-	    </TR>
+    <div class="col-xs-12 col-sm-6 col-md-7">
+      <TABLE class="infotable numeric">
+        <caption>
+          {%t Bandwidth %}
+        </caption>
+        <TBODY>
+          <thead>
             <TR>
-	      <TD>{%t XML stats %}</TD>
-	      <TD><A href="/admin?cmd=viewxml">{%t View %}</A></TD>
-	    </TR>
-	    <TR>
-	      <TD>{%t GNet Host cache %}</TD>
-	      <TD>{$servMgr.numServHosts} - <A href="/admin?cmd=clear&amp;hostcache=1">{%t Clear %}</A></TD>
-	    </TR>
-	    <TR>
-	      <TD>{%t Host options %}</TD>
-	      <TD>{@if servMgr.isRoot}Root{@end} {@if servMgr.isPrivate}Licensed{@end} {@if servMgr.forceYP}ForceYP{@end}</TD>
-	    </TR>
-	  </TBODY>
-	</TABLE>
+	          <TD></TD>
+	          <Th>{%t In %}</Th>
+	          <Th>{%t Out %}</Th>
+	          <Th>{%t Total %}</Th>
+            </TR>
+          </thead>
+          <TR>
+	        <Th>{%t Total %} (kbit/s)</Th>
+	        <TD style="min-width: 4.5em;">{$stats.totalInPerSec}</TD>
+	        <TD style="min-width: 4.5em;">{$stats.totalOutPerSec}</TD>
+	        <TD style="min-width: 4.5em;">{$stats.totalPerSec}</TD>
+          </TR>
+          <TR>
+	        <Th>{%t Internet %} (kbit/s)</Th>
+	        <TD>{$stats.wanInPerSec}</TD>
+	        <TD>{$stats.wanOutPerSec}</TD>
+	        <TD>{$stats.wanTotalPerSec}</TD>
+          </TR>
+          <TR>
+	        <Th>GNet (kbit/s)</Th>
+	        <TD>{$stats.netInPerSec}</TD>
+	        <TD>{$stats.netOutPerSec}</TD>
+	        <TD>{$stats.netTotalPerSec}</TD>
+          </TR>
+          <TR>
+	        <Th>{%t GNet packets/sec %}</Th>
+	        <TD>{$stats.packInPerSec}</TD>
+	        <TD>{$stats.packOutPerSec}</TD>
+	        <TD>{$stats.packTotalPerSec}</TD>
+          </TR>
+        </TBODY>
+      </TABLE>
+    </div>
 
-      </TD>
-
-      <TD class=pagecol>
-
-        <TABLE class=infotable>
-	  <TBODY>
-	    <TR class=legend>
-	      <TD colSpan=4>{%t Bandwidth %}</TD>
-	    </TR>
-	    <TR>
-	      <TD></TD>
-	      <Th>{%t In %}</Th>
-	      <Th>{%t Out %}</Th>
-	      <Th>{%t Total %}</Th>
-	    </TR>
-	    <TR>
-	      <TD>{%t Total %} (Kbits/s)</TD>
-	      <TD>{$stats.totalInPerSec}</TD>
-	      <TD>{$stats.totalOutPerSec}</TD>
-	      <TD>{$stats.totalPerSec}</TD>
-	    </TR>
-	    <TR>
-	      <TD>{%t Internet %} (Kbits/s)</TD>
-	      <TD>{$stats.wanInPerSec}</TD>
-	      <TD>{$stats.wanOutPerSec}</TD>
-	      <TD>{$stats.wanTotalPerSec}</TD>
-	    </TR>
-	    <TR>
-	      <TD>GNet (Kbits/s)</TD>
-	      <TD>{$stats.netInPerSec}</TD>
-	      <TD>{$stats.netOutPerSec}</TD>
-	      <TD>{$stats.netTotalPerSec}</TD>
-	    </TR>
-	    <TR>
-	      <TD>{%t GNet packets/sec %}</TD>
-	      <TD>{$stats.packInPerSec}</TD>
-	      <TD>{$stats.packOutPerSec}</TD>
-	      <TD>{$stats.packTotalPerSec}</TD>
-	    </TR>
-	  </TBODY>
-	</TABLE>
-
-	<table class=infotable>
-	  <tr class=legend>
-	    <td colspan="2">{%t Connections %}</td>
-	  </tr>
-	  <tr>
-	    <td>{%t Direct %}
-	    </td>
-	    <td>{$servMgr.numDirect}</td>
-	  </tr>
-	  <tr>
-	    <td>{%t Relay %}</td>
-	    <td>{$servMgr.numRelays}</td>
-	  </tr>
-	  <tr>
-	    <td>CIN / COUT</td>
-	    <td>{$servMgr.numCIN}
-	      / {$servMgr.numCOUT}</td>
-	  </tr>
-	  <tr>
-	    <td>PGNU</td>
-	    <td>{$servMgr.numPGNU}</td>
-	  </tr>
-	  <tr>
-	    <td>{%t Incoming %}</td>
-	    <td>{$servMgr.numIncoming}</td>
-	  </tr>
-	  <tr>
-	    <td>{%t Port %} {$servMgr.serverPort1} / {$servMgr.serverPort2}</td>
-	    <td>{$servMgr.numActive1} / {$servMgr.numActive2}</td>
-	  </tr>
-	</table>
-
-      </TD>
-    </TR>
-  </TBODY>
-</TABLE>
+    <div class="col-xs-12 col-sm-6 col-md-7">
+      <table class="infotable numeric">
+        <caption>{%t Connections %}</caption>
+        <tbody>
+          <tr>
+	        <th>{%t Direct %}
+	        </th>
+	        <td>{$servMgr.numDirect}</td>
+          </tr>
+          <tr>
+	        <th>{%t Relay %}</th>
+	        <td>{$servMgr.numRelays}</td>
+          </tr>
+          <tr>
+	        <th>CIN / COUT</th>
+	        <td>{$servMgr.numCIN}
+	          / {$servMgr.numCOUT}</td>
+          </tr>
+          <tr>
+	        <th>PGNU</th>
+	        <td>{$servMgr.numPGNU}</td>
+          </tr>
+          <tr>
+	        <th>{%t Incoming %}</th>
+	        <td>{$servMgr.numIncoming}</td>
+          </tr>
+          <tr>
+	        <th>{%t Port %} {$servMgr.serverPort1} / {$servMgr.serverPort2}</th>
+	        <td>{$servMgr.numActive1} / {$servMgr.numActive2}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

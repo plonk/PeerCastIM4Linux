@@ -1,0 +1,107 @@
+---
+---
+table#header { width: 100% }
+.red { color: red }
+.green { color: green }
+.normal { }
+.centered { text-align: center}
+* { font-family: Verdana, Arial, Helvetica, sans-serif; }
+body {
+    padding-top: 70px;
+    // font-size: 12px;
+    // background-color: #ddd;
+}
+
+div#container {
+    background-color: white;
+    border: ridge 2px;
+}
+
+/*
+a {
+    color: blue;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+*/
+
+table#navigation {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    th, td {
+        width: 14.3%;
+        text-align: center;
+        border: ridge 2px;
+    }
+}
+
+table.column-container {
+    .pagecol {
+        vertical-align: top;
+    }
+}
+
+.float-right { float: right }
+table.infotable {
+    width: 300px;
+    margin-bottom: 1em;
+
+    border-collapse: separate;
+    border-spacing: 2px 2px;
+
+    thead {
+        tr {
+            /* background: #ddd !important; */ 
+            background: #f5f5f5 !important;
+            th { text-align: center; white-space: nowrap }
+        }
+    }
+
+    tr:nth-child(odd) { background: #ddd }
+    tr:nth-child(even) { background: #f5f5f5 }
+
+    th, td { padding: 2px 5px 2px 5px; }
+    th { white-space: nowrap }
+
+    caption {
+        margin: 0px 2px 0px 2px;
+        padding: 2px 5px 5px 2px;
+        /* background: #ccc; */
+        background: transparent;
+        font-weight: bold;
+        font-size: large;
+        text-align: left
+    }
+}
+
+td.numeric {
+    text-align: right
+}
+
+table.numeric {
+    td { text-align: right }
+}
+
+hr.footer-hr { border: 0; height: 1px; background: #ccc }
+
+div#copyright {
+    text-align: center;
+}
+
+.normal-small { font-size: smaller }
+
+table.form {
+    caption { font-size: x-large }
+    tbody {
+        th { font-weight: normal; text-align: right; padding-right: 1em;  }
+        tr { height: 4em; background: transparent !important };
+    }
+}
+
+table.full-width { width: 100%; }
+input[type=checkbox] { vertical-align: text-bottom; }

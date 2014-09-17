@@ -1,4 +1,8 @@
 de:
+  PeerCast on: "PeerCast - Aktuelle IP-Adresse:"
+  loginPassword: Passwort eingeben
+  Login: Anmelden
+
   # index
   Broadcasting has been disabled: Broadcasting has been disabled
   Please contact peercast_org: Please contact peercast.org

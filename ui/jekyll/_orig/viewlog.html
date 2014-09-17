@@ -2,12 +2,11 @@
 layout: default
 ---
 <p class="normal">
-  <A href="/admin?cmd=clearlog">
-    {%t Clear Log %}
-    <BR>
-  </A>
-  <A href="#bottom">
+  <A href="#bottom" class="btn btn-default">
     {%t View tail %}
+  </A>
+  <A href="/admin?cmd=clearlog" class="btn btn-warning">
+    {%t Clear Log %}
   </A>
   <a name="top"></a>
 </p>
@@ -17,7 +16,7 @@ layout: default
 </p>
 
 <p class="normal">
-  <A href="#top">
+  <A href="#top" class="btn btn-default">
     <span class="normal">{%t View top %}</span>
   </A>
   <A name=bottom></A>

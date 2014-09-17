@@ -4,37 +4,35 @@ layout: default
 <FORM action="/admin" method=get>
   <INPUT type=hidden value=fetch
          name=cmd>
-  <TABLE class=infotable style="margin: auto; width: auto; ">
+  <TABLE class="infotable form full-width" style="margin: auto;">
+<caption>{%t External Source %}</caption>
     <TBODY>
-      <TR class="legend">
-        <Th colSpan=2>{%t External Source %}</Th>
+      <TR>
+        <Th>URL ({%t Required %})</Th>
+        <TD><INPUT required type="url" class="form-control" size=40 name=url placeholder=""> </TD>
       </TR>
       <TR>
-        <TD>URL ({%t Required %})</TD>
-        <TD><INPUT size=40 name=url placeholder="http://"> </TD>
+        <Th>{%t Name %}</Th>
+        <TD><INPUT type="text" class="form-control" size=40 name=name> </TD>
       </TR>
       <TR>
-        <TD>{%t Name %}</TD>
-        <TD><INPUT size=40 name=name> </TD>
+        <Th>{%t Description %}</Th>
+        <TD><INPUT type="text" class="form-control" size=40 name=desc> </TD>
       </TR>
       <TR>
-        <TD>{%t Description %}</TD>
-        <TD><INPUT size=40 name=desc> </TD>
+        <TH>{%t Genre %}</TH>
+        <TD><INPUT type="text" class="form-control" size=40 name=genre placeholder=""> </TD>
       </TR>
       <TR>
-        <TD>{%t Genre %}</TD>
-        <TD><INPUT size=40 name=genre placeholder="ypGame etc."> </TD>
+        <TH>{%t Contact %}</TH>
+        <TD><INPUT type="url" class="form-control" size=40 name=contact placeholder=""> </TD>
       </TR>
       <TR>
-        <TD>{%t Contact %}</TD>
-        <TD><INPUT size=40 name=contact placeholder="http://"> </TD>
+        <TH>{%t Bitrate %} (kbit/s)</TH>
+        <TD><INPUT type="text" class="form-control" size=40 name=bitrate placeholder=""> </TD>
       </TR>
       <TR>
-        <TD>{%t Bitrate %} (kb/s)</TD>
-        <TD><INPUT size=40 name=bitrate placeholder="auto"> </TD>
-      </TR>
-      <TR>
-        <TD>{%t Type %}</TD>
+        <TH>{%t Type %}</TH>
         <TD>
           <SELECT name=type>
             <OPTION value=UNKNOWN selected>{%t Unknown %}</OPTION>
@@ -48,14 +46,12 @@ layout: default
         </TD>
       </TR>
       <TR>
-        <TD>{%t Extensions %}</TD>
+        <TH>{%t Extensions %}</TH>
         <TD>
           <INPUT type=checkbox id=clap name=bcstClap value=1> <label for="clap">{%t Clap %}</label></TD>
       </TR>
-      <TR>
-        <TD colSpan=2 class=centered>
-          <INPUT type=submit value="{%t Create Relay %}" name=stream>
-        </TD>
-      </TR>
   </TABLE>
+<p class=centered style="margin-top: 1em; ">
+          <INPUT type=submit value="{%t Create Relay %}" name=stream class="btn btn-primary">
+</p>
 </FORM>

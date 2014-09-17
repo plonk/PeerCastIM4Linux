@@ -1,211 +1,216 @@
 ---
 layout: default
 ---
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#basic" data-toggle="tab">{%t Basic Settings %}</a></li>
+  <li><a href="#advanced" data-toggle="tab">{%t Advanced Settings %}</a></li>
+  <li><a href="#server" data-toggle="tab">{%t Server %}</a></li>
+  <li><a href="#network" data-toggle="tab">{%t Network %}</a></li>
+  <li><a href="#filters" data-toggle="tab">{%t Filters %}</a></li>
+  <li><a href="#security" data-toggle="tab">{%t Security %}</a></li>
+  <li><a href="#authentication" data-toggle="tab">{%t Authentication %}</a></li>
+  <li><a href="#log" data-toggle="tab">{%t Log %}</a></li>
+  {@if servMgr.isRoot}
+  <li><a href="#root" data-toggle="tab">{%t Root Mode %}</a></li>
+  {@else}
+  <li class=disabled><a href="#root">{%t Root Mode %}</a></li>
+  {@end}
+</ul>
+
+<!- ******************************************************** ->
+
 <div class="form-group">
-<FORM action="/admin" method=get>
-  <INPUT type=hidden value=apply name=cmd>
-  <TABLE class="column-container">
-    <TR>
-      <TD class=pagecol width="50%">
+  <FORM action="/admin" method=get>
+    <INPUT type=hidden value=apply name=cmd>
 
-        <table class=infotable>
-          <tr class=legend>
-            <td colspan="2">
-              {%t Basic Settings %}
-            </td>
-          </tr>
+    <div class="tab-content" style="width: 50%; margin: 1em auto 1em auto; min-height: 16em;">
 
-          <TR>
-            <TD>{%t Port %}</TD>
-            <TD>
-              <INPUT size=10 value={$servMgr.serverPort1} name=port>
-            </TD>
-          </TR>
+      <div class="tab-pane active" id="basic">
+        <table class="infotable form">
+          <caption>
+            {%t Basic Settings %}
+          </caption>
+          <tbody>
 
-          <TR>
-            <TD>{%t Password %}</TD>
-            <TD>
-              <INPUT name=passnew type=password size="10" maxlength="32" {@if servMgr.password}value={$servMgr.password}{@end}>
-            </TD>
-          </TR>
-
-          <TR>
-            <TD>{%t Max_ Relays %}</TD>
-            <TD>
-              <INPUT size=5 value={$servMgr.maxRelays} name=maxrelays>
-            </TD>
-          </TR>
-
-          <TR>
-            <TD>{%t Max_ Direct %}</TD>
-            <TD>
-              <INPUT size=5 value={$servMgr.maxDirect} name=maxdirect>
-            </TD>
-          </TR>
-
-          <TR>
-            <TD>{%t Language %}</TD>
-            <TD>
-              <!-- current language must be selected -->
-              <select name="htmlPath" size="1" id="htmlPath">
-                <option value="en">{%t English %}</option>
-                <option value="fr">{%t French %}</option>
-                <option value="de">{%t German %}</option>
-                <option value="ja" selected>{%t Japanese %}</option>
-              </select>
-            </TD>
-          </TR>
-        </table>
-
-      </TD>
-
-      <TD>
-        <table class=infotable>
-          <tr class=legend>
-            <td colspan="2">
-              {%t Advanced Settings %}
-            </td>
-          </tr>
-
-          <TR>
-            <TD>{%t autoRelayKeep %}</TD>
-            <TD>
-              <select name=autoRelayKeep>
-                <option value=0 {@if servMgr.autoRelayKeep.0}SELECTED{@end}>{%t Disabled %}</option>
-                <option value=1 {@if servMgr.autoRelayKeep.1}SELECTED{@end}>{%t Enabled %}</option>
-                <option value=2 {@if servMgr.autoRelayKeep.2}SELECTED{@end}>{%t Enabled %} ({%t until no relays %})</option>
-              </select>
-            </TD>
-          </TR>
-
-          <TR>
-            <TD>{%t autoMaxRelaySetting %}</TD>
-            <TD>
-              <INPUT name=autoMaxRelaySetting size="5" maxlength="3" value={$servMgr.autoMaxRelaySetting}>
-            </TD>
-          </TR>
-
-          <TR>
-            <TD>{%t autoBumpSkipCount %}</TD>
-            <TD>
-              <INPUT size=5 value={$servMgr.autoBumpSkipCount} name=autoBumpSkipCount>
-            </TD>
-          </TR>
-
-          <TR>
-            <TD>{%t kickPushStartRelays %}</TD>
-            <TD>
-              <INPUT size=5 value={$servMgr.kickPushStartRelays} name=kickPushStartRelays>
-            </TD>
-          </TR>
-
-          <TR>
-            <TD>{%t kickPushInterval %}</TD>
-            <TD>
-              <INPUT size=5 value={$servMgr.kickPushInterval} name=kickPushInterval>
-            </TD>
-          </TR>
-
-          <TR>
-            <TD>{%t allowConnectPCST %}</TD>
-            <TD>
-              <INPUT type=checkbox value=1 name=allowConnectPCST {@if servMgr.allowConnectPCST}CHECKED{@end} >
-            </TD>
-          </TR>
-
-          <TR>
-            <TD>{%t enableGetName %}</TD>
-            <TD>
-              <INPUT type=checkbox value=1 name=enableGetName {@if servMgr.enableGetName}CHECKED{@end}>
-            </TD>
-          </TR>
-
-          <TR>
-            <TD>{%t autoPort0Kick %}</TD>
-            <TD>
-              <select name=autoPort0Kick>
-                <option value=0 {@if servMgr.autoPort0Kick.0}SELECTED{@end}>{%t Disabled %}</option>
-                <option value=1 {@if servMgr.autoPort0Kick.1}SELECTED{@end}>{%t Enabled %}</option>
-              </select>
-            </TD>
-          </TR>
-
-          <TR>
-            <TD>{%t allowOnlyVP %}</TD>
-            <TD>
-              <select name=allowOnlyVP>
-                <option value=0 {@if servMgr.allowOnlyVP.0}SELECTED{@end}>{%t Disabled %}</option>
-                <option value=1 {@if servMgr.allowOnlyVP.1}SELECTED{@end}>{%t Enabled %}</option>
-              </select>
-            </TD>
-          </TR>
-
-          <TR>
-            <TD>{%t kickKeepTime %}</TD>
-            <TD>
-              <INPUT size=5 value={$servMgr.kickKeepTime} name=kickKeepTime>
-            </TD>
-          </TR>
-
-          <TR>
-            <TD>{%t maxRelaysIndexTxt %}</TD>
-            <TD>
-              <INPUT size=5 value={$servMgr.maxRelaysIndexTxt} name=maxRelaysIndexTxt>
-            </TD>
-          </TR>
-
-          <TR>
-            <TD>{%t disableAutoBumpIfDirect %}</TD>
-            <TD>
-              <INPUT type=checkbox value=1 name=disableAutoBumpIfDirect {@if servMgr.disableAutoBumpIfDirect}CHECKED{@end}>
-            </TD>
-          </TR>
-
-          <TR>
-            <TD>{%t asxDetailedMode %}</TD>
-            <TD>
-              <select name=asxDetailedMode>
-                <option value=0 {@if servMgr.asxDetailedMode.0}SELECTED{@end}>{%t Disabled %}</option>
-                <option value=1 {@if servMgr.asxDetailedMode.1}SELECTED{@end}>Shift-JIS</option>
-                <option value=2 {@if servMgr.asxDetailedMode.2}SELECTED{@end}>UTF-8</option>
-              </select>
-            </TD>
-          </TR>
-
-        </table>
-      </TD>
-    </TR>
-
-    <!-- Save Settings Button -->
-    <TR class=centered>
-      <TD colspan="2">
-        <INPUT type=submit value="{%t Save Settings %}" name=submit>
-      </TD>
-    </TR>
-
-    <TR>
-      <TD class=pagecol>
-        <TABLE class=infotable>
-          <TBODY>
-            <TR class=legend>
-              <TD colSpan=2>
-                {%t Server %}
+            <TR>
+              <TH>{%t Port %}</TH>
+              <TD>
+                <INPUT type=number min="0" max="65535" value="{$servMgr.serverPort1}" name=port>
               </TD>
             </TR>
+
             <TR>
-              <TD>{%t DJ Message %}</TD>
+              <TH>{%t Password %}</TH>
+              <TD>
+                <INPUT name=passnew type=password size="10" maxlength="32" {@if servMgr.password}value={$servMgr.password}{@end}>
+              </TD>
+            </TR>
+
+            <TR>
+              <TH>{%t Max_ Relays %}</TH>
+              <TD>
+                <INPUT type=number min=0 value={$servMgr.maxRelays} name=maxrelays>
+              </TD>
+            </TR>
+
+            <TR>
+              <TH>{%t Max_ Direct %}</TH>
+              <TD>
+                <INPUT type=number min=0 value={$servMgr.maxDirect} name=maxdirect>
+              </TD>
+            </TR>
+
+            <TR>
+              <TH>{%t Language %}</TH>
+              <TD>
+                <!-- current language must be selected -->
+                <select name="htmlPath" id="htmlPath">
+                  <option value="en">{%t English %}</option>
+                  <option value="fr">{%t French %}</option>
+                  <option value="de">{%t German %}</option>
+                  <option value="ja" selected>{%t Japanese %}</option>
+                </select>
+              </TD>
+            </TR>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tab-pane" id="advanced">
+        <table class="infotable form">
+          <caption>
+            {%t Advanced Settings %}
+          </caption>
+          <tbody>
+            <TR>
+              <TH>{%t autoRelayKeep %}</TH>
+              <TD>
+                <select name=autoRelayKeep>
+                  <option value=0 {@if servMgr.autoRelayKeep.0}SELECTED{@end}>{%t Disabled %}</option>
+                  <option value=1 {@if servMgr.autoRelayKeep.1}SELECTED{@end}>{%t Enabled %}</option>
+                  <option value=2 {@if servMgr.autoRelayKeep.2}SELECTED{@end}>{%t Enabled %} ({%t until no relays %})</option>
+                </select>
+              </TD>
+            </TR>
+
+            <TR>
+              <TH>{%t autoMaxRelaySetting %}</TH>
+              <TD>
+                <INPUT type=number min=0 name=autoMaxRelaySetting maxlength="3" value={$servMgr.autoMaxRelaySetting}>
+              </TD>
+            </TR>
+
+            <TR>
+              <TH>{%t autoBumpSkipCount %}</TH>
+              <TD>
+                <INPUT type=number min=0 value={$servMgr.autoBumpSkipCount} name=autoBumpSkipCount>
+              </TD>
+            </TR>
+
+            <TR>
+              <TH>{%t kickPushStartRelays %}</TH>
+              <TD>
+                <INPUT type=number min=0 value={$servMgr.kickPushStartRelays} name=kickPushStartRelays>
+              </TD>
+            </TR>
+
+            <TR>
+              <TH>{%t kickPushInterval %}</TH>
+              <TD>
+                <INPUT type=number min=0 value={$servMgr.kickPushInterval} name=kickPushInterval>
+              </TD>
+            </TR>
+
+            <TR>
+              <TH>{%t allowConnectPCST %}</TH>
+              <TD>
+                <INPUT type=checkbox value=1 name=allowConnectPCST {@if servMgr.allowConnectPCST}CHECKED{@end} >
+              </TD>
+            </TR>
+
+            <TR>
+              <TH>{%t enableGetName %}</TH>
+              <TD>
+                <INPUT type=checkbox value=1 name=enableGetName {@if servMgr.enableGetName}CHECKED{@end}>
+              </TD>
+            </TR>
+
+            <TR>
+              <TH>{%t autoPort0Kick %}</TH>
+              <TD>
+                <select name=autoPort0Kick>
+                  <option value=0 {@if servMgr.autoPort0Kick.0}SELECTED{@end}>{%t Disabled %}</option>
+                  <option value=1 {@if servMgr.autoPort0Kick.1}SELECTED{@end}>{%t Enabled %}</option>
+                </select>
+              </TD>
+            </TR>
+
+            <TR>
+              <TH>{%t allowOnlyVP %}</TH>
+              <TD>
+                <select name=allowOnlyVP>
+                  <option value=0 {@if servMgr.allowOnlyVP.0}SELECTED{@end}>{%t Disabled %}</option>
+                  <option value=1 {@if servMgr.allowOnlyVP.1}SELECTED{@end}>{%t Enabled %}</option>
+                </select>
+              </TD>
+            </TR>
+
+            <TR>
+              <TH>{%t kickKeepTime %}</TH>
+              <TD>
+                <INPUT type=number min=0 value={$servMgr.kickKeepTime} name=kickKeepTime>
+              </TD>
+            </TR>
+
+            <TR>
+              <TH>{%t maxRelaysIndexTxt %}</TH>
+              <TD>
+                <INPUT type=number min=0 value={$servMgr.maxRelaysIndexTxt} name=maxRelaysIndexTxt>
+              </TD>
+            </TR>
+
+            <TR>
+              <TH>{%t disableAutoBumpIfDirect %}</TH>
+              <TD>
+                <INPUT type=checkbox value=1 name=disableAutoBumpIfDirect {@if servMgr.disableAutoBumpIfDirect}CHECKED{@end}>
+              </TD>
+            </TR>
+
+            <TR>
+              <TH>{%t asxDetailedMode %}</TH>
+              <TD>
+                <select name=asxDetailedMode>
+                  <option value=0 {@if servMgr.asxDetailedMode.0}SELECTED{@end}>{%t Disabled %}</option>
+                  <option value=1 {@if servMgr.asxDetailedMode.1}SELECTED{@end}>Shift-JIS</option>
+                  <option value=2 {@if servMgr.asxDetailedMode.2}SELECTED{@end}>UTF-8</option>
+                </select>
+              </TD>
+            </TR>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="tab-pane" id="server">
+        <TABLE class="infotable form">
+          <caption>
+            {%t Server %}
+          </caption>
+          <TBODY>
+
+            <TR>
+              <TH>{%t DJ Message %}</TH>
               <TD>
                 <INPUT {@if chanMgr.djMessage}value="{$chanMgr.djMessage}"{@end} name=djmsg>
               </TD>
             </TR>
             <TR>
-              <TD>{%t ICY MetaInterval %}</TD>
+              <TH>{%t ICY MetaInterval %}</TH>
               <TD>
-                <INPUT size=5 value={$chanMgr.icyMetaInterval} name=icymeta>
+                <INPUT type=number value={$chanMgr.icyMetaInterval} name=icymeta>
               </TD>
             </TR>
             <TR>
-              <TD>{%t Mode %}</TD>
+              <TH>{%t Mode %}</TH>
               <TD>
                 <INPUT type=radio {@if !servMgr.isRoot}CHECKED{@end} value=0 name=root id="mode_normal">
                 <label class=italicized for="mode_normal">Normal</label>
@@ -214,178 +219,168 @@ layout: default
                 <label class=italicized for="mode_root">Root</label> </TD>
             </TR>
             <TR>
-              <TD>{%t Refresh HTML (sec) %}</TD>
+              <TH>{%t Refresh HTML (sec) %}</TH>
               <TD>
-                <INPUT size=10 value={$servMgr.refreshHTML} name=refresh> </TD>
+                <INPUT type=number min=0 value={$servMgr.refreshHTML} name=refresh> </TD>
             </TR>
           </TBODY>
         </TABLE>
-      </TD>
+      </div>
 
-      <TD class=pagecol>
-        <TABLE class=infotable>
+      <div class="tab-pane" id="network">
+        <TABLE class="infotable form">
+          <caption>
+            {%t Network %}
+          </caption>
           <TBODY>
-            <TR class=legend>
-              <TD colSpan=2>
-                {%t Network %}
-              </TD>
-            </TR>
             <TR>
-              <TD>{%t YP Address 1 %}</TD>
+              <TH>{%t YP Address 1 %}</TH>
               <TD>
                 <input {@if servMgr.ypAddress}value={$servMgr.ypAddress}{@end} name=yp>
               </TD>
             </TR>
             <TR>
-              <TD>{%t YP Address 2 %}</TD>
+              <TH>{%t YP Address 2 %}</TH>
               <TD>
                 <input {@if servMgr.ypAddress2}value={$servMgr.ypAddress2}{@end} name=yp2>
               </TD>
             </TR>
             <TR>
-              <TD>{%t Max_ Output %} (Kbits/s)</TD>
+              <TH>{%t Max_ Output %} (Kbits/s)</TH>
               <TD>
-                <INPUT size=5 value={$servMgr.maxBitrateOut} name=maxup>
+                <INPUT type=number min=0 value={$servMgr.maxBitrateOut} name=maxup>
               </TD>
             </TR>
             <TR>
-              <TD>{%t Max_ Relays Per Channel %}</TD>
+              <TH>{%t Max_ Relays Per Channel %}</TH>
               <TD>
-                <INPUT size=5 value={$chanMgr.maxRelaysPerChannel} name=maxrelaypc>
+                <INPUT type=number min=0 value={$chanMgr.maxRelaysPerChannel} name=maxrelaypc>
               </TD>
             </TR>
             <TR>
-              <TD>{%t Max_ Controls In %}</TD>
+              <TH>{%t Max_ Controls In %}</TH>
               <TD>
-                <INPUT size=5 value={$servMgr.maxControlsIn} name=maxcin>
+                <INPUT type=number min=0 value={$servMgr.maxControlsIn} name=maxcin>
               </TD>
             </TR>
             <TR>
-              <TD>{%t Max_ Connections In %}</TD>
+              <TH>{%t Max_ Connections In %}</TH>
               <TD>
-                <INPUT name=maxsin id="maxsin" value={$servMgr.maxServIn} size=5>
+                <INPUT name=maxsin id="maxsin" value={$servMgr.maxServIn} type=number min=0>
               </TD>
             </TR>
           </TBODY>
         </TABLE>
-      </TD>
-    </TR>
+      </div>
 
-    <TR>
-      <TD class=pagecol>
-        <TABLE class=infotable>
+      <div class="tab-pane" id="filters">
+        <TABLE class="infotable form">
+          <caption>
+            {%t Filters %}
+          </caption>
           <TBODY>
-            <TR class=legend>
-              <TD colSpan=5>
-                {%t Filters %}
-              </TD>
-            </TR>
-            <TR class=legend>
-              <TD>
+            <TR>
+              <TH>
                 {%t IP Mask %}
-              </TD>
-              <TD>
+              </TH>
+              <TH>
                 {%t Network %}
-              </TD>
-              <TD>
+              </TH>
+              <TH>
                 {%t Direct %}
-              </TD>
-              <TD>
+              </TH>
+              <TH>
                 {%t Private %}
-              </TD>
-              <TD>
+              </TH>
+              <TH>
                 {%t Ban %}
-              </TD>
+              </TH>
             </TR>
             {@loop servMgr.numFilters}
             <TR>
               <TD>
                 <INPUT value={$loop.filter.ip} name=filt_ip>
               </TD>
-              <TD>
+              <TD class=centered>
                 <INPUT type=checkbox {@if loop.filter.network}CHECKED{@end} value=1 name=filt_nw{$loop.index}>
               </TD>
-              <TD>
+              <TD class=centered>
                 <INPUT type=checkbox {@if loop.filter.direct}CHECKED{@end} value=1 name=filt_di{$loop.index}>
               </TD>
-              <TD>
+              <TD class=centered>
                 <INPUT type=checkbox {@if loop.filter.private}CHECKED{@end} value=1 name=filt_pr{$loop.index}>
               </TD>
-              <TD>
+              <TD class=centered>
                 <INPUT type=checkbox {@if loop.filter.banned}CHECKED{@end} value=1 name=filt_bn{$loop.index}>
               </TD>
             </TR>
             {@end}
         </TABLE>
-      </TD>
-      <TD class=pagecol>
-        <TABLE class=infotable>
+      </div>
+
+      <div class="tab-pane" id="security">
+        <TABLE class="infotable form">
+          <caption>
+            {%t Security %}
+          </caption>
           <TBODY>
-            <TR class=legend>
-              <TD colSpan=3>
-                {%t Security %}
-              </TD>
-            </TR>
-            <TR class=legend>
-              <TD>
+            <TR>
+              <TH>
                 {%t Allow on port %}: 
-              </TD>
-              <TD>
+              </TH>
+              <TH>
                 {$servMgr.serverPort1}
-              </TD>
-              <TD>
+              </TH>
+              <TH>
                 {$servMgr.serverPort2}
-              </TD>
+              </TH>
             </TR>
             <TR>
-              <TD>HTML</TD>
-              <TD>
+              <TH>HTML</TH>
+              <TD class=centered>
                 <INPUT type=checkbox {@if servMgr.allow.HTML1}CHECKED{@end} value=1 name=allowHTML1>
               </TD>
-              <TD>
+              <Td class=centered>
                 <INPUT type=checkbox {@if servMgr.allow.HTML2}CHECKED{@end} value=1 name=allowHTML2>
-              </TD>
+              </Td>
             </TR>
             <TR>
-              <TD>{%t Broadcasting %}</TD>
-              <TD>
+              <TH>{%t Broadcasting %}</TH>
+              <TD class=centered>
                 <INPUT type=checkbox {@if servMgr.allow.broadcasting1}CHECKED{@end} value=1 name=allowBroadcast1>
               </TD>
-              <TD>
+              <TD class=centered>
                 <INPUT type=checkbox {@if servMgr.allow.broadcasting2}CHECKED{@end} value=1 name=allowBroadcast2>
               </TD>
             </TR>
             <TR>
-              <TD>{%t Network %}</TD>
-              <TD>
+              <TH>{%t Network %}</TH>
+              <TD class=centered>
                 <INPUT type=checkbox {@if servMgr.allow.network1}CHECKED{@end} value=1 name=allowNetwork1>
               </TD>
               <TD>
               </TD>
             </TR>
             <TR>
-              <TD>{%t Direct %}</TD>
-              <TD>
+              <TH>{%t Direct %}</TH>
+              <TD class=centered>
                 <INPUT type=checkbox {@if servMgr.allow.direct1}CHECKED{@end} value=1 name=allowDirect1>
               </TD>
-              <TD> </TD>
+              <TD>
+              </TD>
             </TR>
           </TBODY>
         </TABLE>
-      </TD>
-    </TR>
+      </div>
 
-    <TR>
-      <TD class=pagecol>
-        <TABLE class=infotable>
+      <div class="tab-pane" id="authentication">
+        <TABLE class="infotable form">
           <TBODY>
-            <TR class=legend>
-              <TD colSpan=2>
-                {%t Authentication %}
-              </TD>
-            </TR>
+            <caption>
+              {%t Authentication %}
+            </caption>
             <TR>
-              <TD>{%t HTML Authentication %}</TD>
+              <TH>{%t HTML Authentication %}</TH>
               <TD>
                 <INPUT type=radio {@if servMgr.auth.useCookies}CHECKED{@end} value=cookie name=auth>
                 <I>{%t Cookies %}<BR>
@@ -393,7 +388,7 @@ layout: default
                 <I>{%t Basic HTTP %}</I> </TD>
             </TR>
             <TR>
-              <TD>{%t Cookie Expire %}</TD>
+              <TH>{%t Cookie Expire %}</TH>
               <TD>
                 <INPUT type=radio {@if servMgr.auth.useSessionCookies}CHECKED{@end} value=session name=expire>
                 <I>{%t End of session %}<BR>
@@ -402,105 +397,101 @@ layout: default
             </TR>
           </TBODY>
         </TABLE>
-      </TD>
+      </div>
 
-      <TD class=pagecol>
-        <TABLE class=infotable>
+      <div class="tab-pane" id="log">
+        <TABLE class="infotable form">
+          <caption>
+            {%t Log %}
+          </caption>
           <TBODY>
-            <TR class=legend>
-              <TD colSpan=2>
-                {%t Log %}
-              </TD>
-            </TR>
             <TR>
-              <TD width="50%">{%t Debug %}</TD>
+              <TH width="50%">{%t Debug %}</TH>
               <TD>
                 <INPUT type=checkbox {@if servMgr.log.debug}CHECKED{@end} value=1 name=logDebug>
               </TD>
             </TR>
             <TR>
-              <TD>{%t Errors %}</TD>
+              <TH>{%t Errors %}</TH>
               <TD>
                 <INPUT type=checkbox {@if servMgr.log.errors}CHECKED{@end} value=1 name=logErrors>
               </TD>
             </TR>
             <TR>
-              <TD>{%t Network %}</TD>
+              <TH>{%t Network %}</TH>
               <TD>
                 <INPUT type=checkbox {@if servMgr.log.gnet}CHECKED{@end} value=1 name=logNetwork>
               </TD>
             </TR>
             <TR>
-              <TD>{%t Channels %}</TD>
+              <TH>{%t Channels %}</TH>
               <TD>
                 <INPUT type=checkbox {@if servMgr.log.channel}CHECKED{@end} value=1 name=logChannel>
               </TD>
             </TR>
           </TBODY>
         </TABLE>
-      </TD>
-    </TR>
+      </div>
 
-    {@if servMgr.isRoot}
-
-    <TR>
-      <TD>
-        <TABLE class=infotable>
+      <div class="tab-pane" id="root">
+        {@if servMgr.isRoot}
+        <TABLE class="infotable form">
+          <caption>
+            {%t Root Mode %}
+          </caption>
           <TBODY>
-            <TR class=legend>
-              <TD colSpan=2>
-                {%t Root Mode %}
-              </TD>
-            </TR>
+
             <TR>
-              <TD>{%t Host Update (sec) %}</TD>
+              <TH>{%t Host Update (sec) %}</TH>
               <TD>
-                <INPUT size=5 {@if chanMgr.hostUpdateInterval}value={$chanMgr.hostUpdateInterval}{@end} name=huint>
+                <INPUT type=number min=0 {@if chanMgr.hostUpdateInterval}value={$chanMgr.hostUpdateInterval}{@end} name=huint>
               </TD>
             </TR>
             <TR>
-              <TD>{%t Message %}</TD>
+              <TH>{%t Message %}</TH>
               <TD>
                 <INPUT size=30 {@if servMgr.rootMsg}value={$servMgr.rootMsg}{@end} name=pcmsg>
               </TD>
             </TR>
             <TR>
-              <TD>{%t Get Update %}</TD>
+              <TH>{%t Get Update %}</TH>
               <TD>
                 <INPUT type=checkbox value=1 name=getupd>
               </TD>
             </TR>
             <TR>
-              <TD>{%t Send %}</TD>
+              <TH>{%t Send %}</TH>
               <TD>
                 <INPUT type=checkbox value=1 name=brroot>
               </TD>
             </TR>
-	    <TR>
-              <TD>Min. PGNU In</TD>
+	        <TR>
+              <TH>Min. PGNU In</TH>
               <TD>
-                <INPUT size=5 value={$servMgr.minPGNUIn} name=minpgnu>
+                <INPUT type=number min=0 value={$servMgr.minPGNUIn} name=minpgnu>
               </TD>
             </TR>
             <TR>
-              <TD>Max. PGNU In</TD>
+              <TH>Max. PGNU In</TH>
               <TD>
-                <INPUT size=5 value={$servMgr.maxPGNUIn} name=maxpgnu>
+                <INPUT type=number min=0 value={$servMgr.maxPGNUIn} name=maxpgnu>
               </TD>
             </TR>
             <TR>
-              <TD>Broadcast IDs</TD>
+              <TH>Broadcast IDs</TH>
               <TD>
-                <a href="bcid.html">{%t View %}</a>
+                <a href="bcid.html" class="btn btn-sm btn-default">
+                  <span class="glyphicon glyphicon-folder-open"></span>
+                  {%t View %}
+                </a>
               </TD>
             </TR>
           </TBODY>
         </TABLE>
-      </TD>
-      <TD></TD>
-    </TR>
-    {@end}
 
-  </TABLE>
-</FORM>
+        {@end}
+      </div>
+    </div>
+    <div class="centered"><INPUT type=submit class="btn btn-primary" value="{%t Save Settings %}" name=submit></div>
+  </FORM>
 </div>

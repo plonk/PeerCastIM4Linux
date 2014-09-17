@@ -1,0 +1,176 @@
+---
+layout: default
+---
+<!-- forms for searching -->
+<form method="get" action="http://www.google.co.jp/search" target="search" id="amazon">
+  <input type="hidden" name="hl" value="ja">
+  <input type="hidden" name="ie" value="utf8">
+  <input type="hidden" name="q" value="{@if page.channel.track.artist}{$page.channel.track.artist} {@end}{$page.channel.track.title}">
+  <input type="hidden" name="sitesearch" value="www.amazon.co.jp">
+</form>
+
+<form method="get" action="http://www.google.co.jp/search" target="search" id="google">
+  <input type="hidden" name="hl" value="ja">
+  <input type="hidden" name="ie" value="utf8">
+  <input type="hidden" name="q" value="{@if page.channel.track.artist}{$page.channel.track.artist} {@end}{$page.channel.track.title}">
+</form>
+<!-- -->
+
+<ul class="nav nav-tabs" style="margin: 0 auto 1em auto; ">
+  <li class="active"><a href="#channel" data-toggle="tab">チャンネル情報</a></li>
+  <li><a href="#track" data-toggle="tab">受信中タイトル情報</a></li>
+  {@if page.channel.numHits}
+  <li><a href="#hits" data-toggle="tab">ノード情報</a></li>
+  {@else}
+  <li class=disabled><a href="#hits">ノード情報</a></li>
+  {@end}
+</ul>
+
+
+<form action="/admin" method="GET">
+  <input type="hidden" name="cmd" value="setmeta" />
+  <div class="tab-content">
+    <div class="tab-pane active" id="channel">
+      <table class="infotable"  style="margin: auto;">
+        <caption>チャンネル情報</caption>
+        <tr>
+          <th>チャンネル名</th>
+          <td><input type="hidden" name="name" value="{$page.channel.name}"/>
+            <a href="peercast://pls/{$page.channel.id}">{$page.channel.name}</a></td>
+        </tr>
+        <tr>
+          <th>ジャンル</th>
+          <td><input {@if !page.channel.isBroadcast} disabled {@end} size="50" type="text" name="genre" value="{$page.channel.genre}" /></td>
+        </tr>
+        <tr>
+          <th>概要</th>
+          <td><input {@if !page.channel.isBroadcast} disabled {@end} size="50" type="text" name="desc" value="{$page.channel.desc}" /></td>
+        </tr>
+        <tr>
+          <th>URL</th>
+          <td style="white-space: nowrap;" >
+            <input {@if !page.channel.isBroadcast} disabled {@end} size="50" type="text" name="url" value="{$page.channel.contactURL}" />
+            <a class="btn btn-default btn-xs" style="vertical-align: text-bottom;" href="/admin?cmd=redirect&amp;url={$page.channel.contactURL}" target="_blank">
+              <span class="glyphicon glyphicon-folder-open"></span>
+              開く
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <th>配信者から…</th>
+          <td><input {@if !page.channel.isBroadcast} disabled {@end} size="50" type="text" name="comment" value="{$page.channel.comment}" /></td>
+        </tr>
+        <tr>
+          <th>拡張機能</th>
+          <td><input {@if !page.channel.isBroadcast} disabled {@end} type="checkbox" name="bcstClap" value="1" {@if page.channel.bcstClap}checked {@end}/> 拍手</td>
+        </tr>
+        <tr>
+          <th>ID</th>
+          <td><a href="http://{$servMgr.serverLocalIP}:{$servMgr.serverPort1}/pls/{$page.channel.id}.pls">{$page.channel.id}</a></td>
+        </tr>
+        <tr>
+          <th>形式</th>
+          <td>{$page.channel.type}</td>
+        </tr>
+        <tr>
+          <th>ビットレート</th>
+          <td>{$page.channel.bitrate} kbps</td>
+        </tr>
+        <tr>
+          <th>取得元</th>
+          <td>{$page.channel.sourceType}- {$page.channel.sourceProtocol}<br>
+            {$page.channel.sourceURL}</td>
+        </tr>
+        <tr>
+          <th>受信時間</th>
+          <td>{$page.channel.uptime}</td>
+        </tr>
+        <tr>
+          <th>状態</th>
+          <td>{$page.channel.status}</td>
+        </tr>
+        <tr>
+          <th>Position</th>
+          <td>{$page.channel.streamPos}</td>
+        </tr>
+        <tr>
+          <th>Head</th>
+          <td>{$page.channel.headPos} ({$page.channel.headLen} bytes)</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="tab-pane" id="track">
+      <table class=infotable style="margin: auto;">
+        <caption>
+          受信中タイトル情報
+        </caption>
+        <tr>
+          <th>アーティスト</th>
+          <td><input {@if !page.channel.isBroadcast} disabled {@end} size="50" type="text" name="t_artist" value="{$page.channel.track.artist}" /></td>
+        </tr>
+        <tr>
+          <th>タイトル</th>
+          <td><input {@if !page.channel.isBroadcast} disabled {@end} size="50" type="text" name="t_title" value="{$page.channel.track.title}" /></td>
+        </tr>
+        <tr>
+          <th>アルバム</th>
+          <td><input {@if !page.channel.isBroadcast} disabled {@end} size="50" type="text" name="t_album" value="{$page.channel.track.album}" /></td>
+        </tr>
+        <tr>
+          <th>ジャンル</th>
+          <td><input {@if !page.channel.isBroadcast} disabled {@end} size="50" type="text" name="t_genre" value="{$page.channel.track.genre}" /></td>
+        </tr>
+        <tr>
+          <th>連絡先</th>
+          <td><input {@if !page.channel.isBroadcast} disabled {@end} size="50" type="text" name="t_contact" value="{$page.channel.track.contactURL}" /></td>
+        </tr>
+        <tr>
+          <th>検索</th>
+          <td>
+            <button class="btn btn-default btn-xs" form="amazon" name="btnI" value="Amazon">Amazon</button>
+            <button class="btn btn-default btn-xs" form="google" name="btnG" value="Google">Google</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="tab-pane" id="hits">
+      {@if page.channel.numHits}
+      <table class="infotable" style="width: auto;">
+        <thead>
+          <tr>
+            <th>IP:ポート</th>
+            <th>ホップ</th>
+            <th>リスナー</th>
+            <th>リレー</th>
+            <th>接続時間</th>
+            <th>ポート閉鎖</th>
+            <th>エージェント</th>
+            <th>更新</th>
+          </tr>
+        </thead>
+
+        {@loop page.channel.numHits}
+        <tr>
+          <td>{$loop.hit.rhost0} <!-- {$loop.hit.rhost1} --></td>
+          <td class=numeric>{$loop.hit.numHops}</td>
+          <td class=numeric>{$loop.hit.numListeners}</td>
+          <td class=numeric>{$loop.hit.numRelays}</td>
+          <td class=numeric>{$loop.hit.uptime}</td>
+          <td class=centered>{@if loop.hit.isFirewalled}Yes{@else}No{@end}</td>
+          <td>{@if loop.hit.agent}{$loop.hit.agent}{@else}不明{@end}</td>
+          <td class=numeric>{$loop.hit.update}</td>
+        </tr>
+        {@end}
+      </table>
+      {@end}
+    </div>
+
+  </div> <!-- tab-content -->
+
+  <p class=centered style="margin-top: 1em;">
+    <input class="btn btn-primary" {@if !page.channel.isBroadcast} disabled {@end} type="submit" name="_no_key_meta_" value="更新"/>
+  </p>
+</form>
+

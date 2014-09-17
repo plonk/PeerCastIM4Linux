@@ -5,21 +5,30 @@
   </head>
 
   <body>
-    <div id=container>
-      <div id=inner>
-        <table id=header>
-          <tr>
-            <td> {% include logo.html %} </td>
-            <td> {% include message.html %} </td>
-          </tr>
-        </table>
+    <div id=wrap>
+      <div class=container>
+        <div id=inner>
+          <table id=header>
+            <tr>
+              <td> {% include message.html %} </td>
+            </tr>
+          </table>
 
-        {% include navi.html %}
+          {% include navi.html %}
 
-        {{ content }}
+          {{ content }}
 
+        </div>
+      </div>
+      <div id="push"></div>
+    </div>
+
+    <div id=footer>
+      <div class=container>
         {% include footer.html %}
       </div>
     </div>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
   </body>
 </html>

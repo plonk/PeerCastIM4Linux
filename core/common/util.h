@@ -42,6 +42,7 @@ namespace util
     time_t parseRfc1123Time(string str);
 
     string getMimeType(string ext);
+    const char* colorcode(bool firewalled, bool relay, int numRelays);
 };
 
 #endif

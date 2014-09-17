@@ -33,6 +33,7 @@
 #include "common/peercast.h"
 #include "common/atom.h"
 #include "common/pcp.h"
+#include "common/util.h"
 #include "common/version2.h"
 #ifdef _DEBUG
 #include "chkMemoryLeak.h"
@@ -3100,6 +3101,24 @@ int Servent::serverProc(ThreadInfo *thread)
 }
 
 // -----------------------------------
+static bool getHostProperties(GnuID chanID, unsigned int ip, bool& isfw, bool& isRelay, int& numRelay)
+{
+    ChanHitList *chl = chanMgr->findHitListByID(chanID);
+    if (chl){
+        ChanHit *hit = chl->hit;
+        while(hit){
+            if (hit->host.isValid() && (ip == hit->host.ip)){
+                isfw = hit->firewalled;
+                isRelay = hit->relay;
+                numRelay = hit->numRelays;
+                return true;
+            }
+            hit = hit->next;
+        }
+    }
+    return false;
+}
+// -----------------------------------
 bool	Servent::writeVariable(Stream &s, const String &var)
 {
 	char buf[1024];
@@ -3110,119 +3129,26 @@ bool	Servent::writeVariable(Stream &s, const String &var)
 		strcpy(buf,getStatusStr());
 	else if (var == "address")
 	{
-		if (servMgr->enableGetName) //JP-EX s
-		{
-			getHost().toStr(buf);
-			char h_ip[64];
-			Host h = getHost();
-			h.toStr(h_ip);
+        //JP-EX s
+        Host h = getHost();
 
-/*			ChanHitList *hits[ChanMgr::MAX_HITLISTS];
-			int numHits=0;
-			for(int i=0; i<ChanMgr::MAX_HITLISTS; i++)
-			{
-				ChanHitList *chl = &chanMgr->hitlists[i];
-				if (chl->isUsed())
-					hits[numHits++] = chl;
-			}
-			bool ishit,isfw;
-			ishit = isfw = false;
-			int numRelay = 0;
-			if (numHits)
-			{
-				for(int k=0; k<numHits; k++)
-				{
-					ChanHitList *chl = hits[k];
-					if (chl->isUsed())
-					{
-						for (int j=0; j<ChanHitList::MAX_HITS; j++)
-						{
-							ChanHit *hit = &chl->hits[j];
-							if (hit->host.isValid() && (h.ip == hit->host.ip))
-							{
-								ishit = true;
-								if (hit->firewalled)
-									isfw = true;
-								numRelay += hit->numRelays;
-							}
-						}
-					}
-				}
-			}
-			strcpy(buf,"");
-			if (ishit == true)
-			{
-				if (isfw == true)
-				{
-					if (numRelay== 0)
-						strcat(buf,"<font color=red>");
-					else
-						strcat(buf,"<font color=orange>");
-				}
-				else
-					strcat(buf,"<font color=green>");
-			}
-			strcat(buf,h_ip);
-			char h_name[128];
-			if (ClientSocket::getHostname(h_name,h.ip))
-			{
-				strcat(buf,"[");
-				strcat(buf,h_name);
-				strcat(buf,"]");
-			}
-			if (ishit == true)
-			{
-				strcat(buf,"</font>");
-			}
-		} //JP-EX e*/
+        bool isfw = false;
+        bool isRelay = true;
+        int numRelay = 0;
 
+        getHostProperties(chanID, h.ip, isfw, isRelay, numRelay);
 
-			bool isfw = false;
-			bool isRelay = true;
-			int numRelay = 0;
-			ChanHitList *chl = chanMgr->findHitListByID(chanID);
-			if (chl){
-				ChanHit *hit = chl->hit;
-				while(hit){
-					if (hit->host.isValid() && (h.ip == hit->host.ip)){
-						isfw = hit->firewalled;
-						isRelay = hit->relay;
-						numRelay = hit->numRelays;
-						break;
-					}
-					hit = hit->next;
-				}
-			}
-			strcpy(buf, "");
-			if (isfw){
-				if (numRelay == 0){
-					strcat(buf,"<font color=red>");
-				} else {
-					strcat(buf,"<font color=orange>");
-				}
-			} else {
-				if (!isRelay){
-					if (numRelay==0){
-						strcpy(buf,"<font color=purple>");
-					} else {
-						strcpy(buf,"<font color=blue>");
-					}
-				} else {
-					strcpy(buf,"<font color=green>");
-				}
-			}
-			strcat(buf,h_ip);
-			char h_name[128];
-			if (ClientSocket::getHostname(h_name,sizeof(h_name),h.ip)) //JP-MOD(BOF対策)
-			{
-				strcat(buf,"[");
-				strcat(buf,h_name);
-				strcat(buf,"]");
-			}
-			strcat(buf,"</font>");
-		}
-		else
-			getHost().toStr(buf);
+        char h_name[128];
+        if (servMgr->enableGetName &&
+            ClientSocket::getHostname(h_name, sizeof(h_name), h.ip)) //JP-MOD(BOF対策)
+        {
+            // h_name is set
+        }else {
+            h.IPtoStr(h_name);
+        }
+        snprintf(buf, sizeof(buf),
+                 "<font color=%s>%s:%hu</font>",
+                 util::colorcode(isfw, isRelay, numRelay), h_name, h.port);
 	}
 	else if (var == "agent")
 		strcpy(buf,agent.c_str());
@@ -3233,7 +3159,7 @@ bool	Servent::writeVariable(Stream &s, const String &var)
 			unsigned int tot = sock->bytesInPerSec+sock->bytesOutPerSec;
 			sprintf(buf,"%.1f",BYTES_TO_KBPS(tot));
 		}else
-			strcpy(buf,"0");
+			strcpy(buf,"0.0");
 	}else if (var == "uptime")
 	{
 		String uptime;

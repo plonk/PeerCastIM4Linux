@@ -114,4 +114,21 @@ namespace util
     {
         return (MIMETypes.find(ext)==MIMETypes.end()) ? "application/octet-stream" : MIMETypes[ext];
     }
+
+    const char* colorcode(bool firewalled, bool relay, int numRelays)
+    {
+        if (firewalled)
+        {
+            return (numRelays==0) ? "red" : "orange";
+        }else
+        {
+            if (!relay)
+            {
+                return (numRelays==0) ? "purple" : "blue";
+            }else
+            {
+                return "green";
+            }
+        }
+    }
 };

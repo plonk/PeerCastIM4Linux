@@ -35,6 +35,7 @@
 #include "common/peercast.h"
 #include "common/atom.h"
 #include "common/pcp.h"
+#include "common/util.h"
 
 #include "common/mp3.h"
 #include "common/ogg.h"
@@ -3361,19 +3362,7 @@ void ChanHit::writeAtoms(AtomStream &atom,GnuID &chanID)
 // -----------------------------------
 static const char* nodeColor(ChanHit *self)
 {
-    if (self->firewalled)
-    {
-        return (self->numRelays==0) ? "red" : "orange";
-    }else
-    {
-        if (!self->relay)
-        {
-            return (self->numRelays==0) ? "purple" : "blue";
-        }else
-        {
-            return "green";
-        }
-    }
+    return util::colorcode(self->firewalled, self->relay, self->numRelays);
 }
 // -----------------------------------
 static string hostnameOrIP(const Host& rhost)

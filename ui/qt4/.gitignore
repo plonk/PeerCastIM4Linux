@@ -1,0 +1,6 @@
+Makefile
+html
+moc_gui.cpp
+peercast
+peercast.pro
+ui_mainform.h

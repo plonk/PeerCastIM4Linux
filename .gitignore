@@ -8,3 +8,4 @@ peercast-build-desktop-PATH*
 ui/linux/peercast
 ui/osx/peercast
 html/
+core

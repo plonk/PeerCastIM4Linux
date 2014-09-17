@@ -20,7 +20,9 @@
 #ifndef _HTTP_H
 #define _HTTP_H
 
+#include <functional>
 #include "common/stream.h"
+#include "common/util.h"
 
 // -------------------------------------
 class HTTPException : public StreamException
@@ -153,6 +155,9 @@ public:
 
 };
 
+typedef std::pair<std::string,std::string> HTTPHeader;
+typedef std::map<std::string,std::string> HTTPHeaders;
+
 // --------------------------------------------
 //! Handles HTTP protocol.
 class HTTP : public IndirectStream
@@ -178,18 +183,21 @@ public:
 	char	*getArgStr();
 	int		getArgInt();
 
+    void	saveHeader(HTTPHeader h);
+    void	readHeaders();
+    const HTTPHeaders& getHeaders() { return headers; }
+
+
 	void	getAuthUserPass(char *, char *, size_t, size_t);
 
-	char	cmdLine[8192],*arg;
-
+	char	cmdLine[8192];
+private:
+    char *arg;
+    HTTPHeaders headers;
 };
-
-#include "util.h"
-#include <functional>
 
 class HTTPResponse
 {
-    typedef std::map<std::string,std::string> HTTPHeaders;
     typedef std::function<void(Stream&)> BodyGenerator;
     static std::map<int,std::string> messages;
 public:
@@ -208,6 +216,8 @@ public:
 
     void writeToStream(Stream &os);
 
+    int getStatus() const { return status; }
+    const HTTPHeaders& getHeaders() const { return headers; }
 private:
     int status;
     HTTPHeaders headers;

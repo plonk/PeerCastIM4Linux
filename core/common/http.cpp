@@ -30,6 +30,8 @@
 #endif
 using namespace std;
 
+static HTTPHeader parseHeader(const char *line);
+
 //-----------------------------------------
 bool HTTP::checkResponse(int r)
 {
@@ -72,9 +74,13 @@ bool	HTTP::nextHeader()
 	{
 		char *ap = strstr(cmdLine,":");
 		if (ap)
+        {
+            saveHeader(parseHeader(cmdLine));
+
 			while (*++ap)
 				if (*ap!=' ')
 					break;
+        }
 		arg = ap;
 		return true;
 	}else
@@ -82,7 +88,33 @@ bool	HTTP::nextHeader()
 		arg = NULL;
 		return false;
 	}
+}
+//-----------------------------------------
+void HTTP::readHeaders()
+{
+    while (nextHeader())
+        ;
+}
+//-----------------------------------------
+void HTTP::saveHeader(HTTPHeader h)
+{
+    headers.insert(h);
+}
+//-----------------------------------------
+static HTTPHeader parseHeader(const char *line)
+{
+    auto colon = strchr(line, ':');
 
+    if (colon == NULL)
+    {
+        throw runtime_error("argument format error");
+    }else
+    {
+        const char *p;
+        for (p = colon + 1; isspace(*p); ++p)
+            ;
+        return { string(line, colon), p };
+    }
 }
 //-----------------------------------------
 bool	HTTP::isHeader(const char *hs)

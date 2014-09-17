@@ -7,16 +7,18 @@
 #include "common/version2.h"
 #include "util.h"
 #include "common/template.h"
+#include <boost/optional.hpp>
 
 using namespace std;
 using namespace boost::filesystem;
 using namespace util;
 
 static HTTPResponse handleLocalFileRequest(string, string);
-static HTTPResponse serveLocalFile(string);
+static HTTPResponse serveLocalFile(string, boost::optional<string> mtime);
+static HTTPResponse serveTemplate(string path, string args);
 
 // -----------------------------------
-static HTTPResponse handleLocalFileRequest(string path, string args)
+static HTTPResponse handleLocalFileRequest(string path, string args, const HTTPHeaders& headers)
 {
     if (!exists(path))
         return HTTPResponse(404, { {"Content-Type", "text/html"}, },
@@ -35,53 +37,69 @@ static HTTPResponse handleLocalFileRequest(string path, string args)
     string ext = extension(path);
 	if (ext==".html" || ext==".htm")
 	{
-        try {
-            return HTTPResponse(200, { { "Content-Type", "text/html" }, },
-                                [=](Stream& os)
-                                {
-                                    Template templ(path.c_str(), args.c_str());
-                                    templ.writeToStream(os);
-                                });
-        } catch (StreamException &e)
-        {
-            return HTTPResponse(404, { { "Content-Type", "text/html" }, },
-                                [=](Stream& os)
-                                {
-                                    HTMLBuilder(os).page404(format("%s: %s", e.msg, path));
-                                });
-        }
+        return serveTemplate(path, args);
 	}else {
-        return serveLocalFile(path);
+        auto it = headers.find("If-Modified-Since");
+
+        if (it == headers.end())
+            return serveLocalFile(path, boost::none);
+        else
+            return serveLocalFile(path, headers.at("If-Modified-Since"));
     }
 }
 
 // -----------------------------------
-static HTTPResponse serveLocalFile(string fileName)
+static HTTPResponse serveTemplate(string path, string args)
 {
-    string ext = extension(fileName);
-
-    string type = (MIMETypes.find(ext)==MIMETypes.end()) ? "application/octet-stream" : MIMETypes[ext];
-
     try {
-        return HTTPResponse(200,
+        return HTTPResponse(200, { { "Content-Type", "text/html" }, },
+                            [=](Stream& os)
                             {
-                                { "Content-Type", type },
-                                { "Content-Length", to_string( file_size(fileName) ) },
-                                { "Last-Modified", rfc1123Time(last_write_time(fileName)) }
-                            },
-                            [=] (Stream& os) mutable
-                            {
-                                FileStream file;
-
-                                file.openReadOnly(fileName.c_str());
-                                while (true)
-                                {
-                                    auto c = file.readChar();
-                                    if (file.eof()) break;
-                                    os.writeChar(c);
-                                }
-                                file.close();
+                                Template templ(path.c_str(), args.c_str());
+                                templ.writeToStream(os);
                             });
+    } catch (StreamException &e)
+    {
+        return HTTPResponse(404, { { "Content-Type", "text/html" }, },
+                            [=](Stream& os)
+                            {
+                                HTMLBuilder(os).page404(format("%s: %s", e.msg, path));
+                            });
+    }
+}
+
+// -----------------------------------
+static HTTPResponse serveLocalFile(string fileName, boost::optional<string> lastModified)
+{
+    try {
+        string type = getMimeType(extension(fileName));
+        time_t fileMtime = last_write_time(fileName);
+
+        if (lastModified && parseRfc1123Time(*lastModified) == fileMtime)
+        {
+            return HTTPResponse(304, {}, [=] (Stream& os) {});
+        }else
+        {
+            return HTTPResponse(200,
+                                {
+                                    { "Content-Type", type },
+                                    { "Content-Length", to_string( file_size(fileName) ) },
+                                    { "Last-Modified", rfc1123Time(fileMtime) }
+                                },
+                                [=] (Stream& os)
+                                {
+                                    FileStream file;
+
+                                    file.openReadOnly(fileName.c_str());
+                                    while (true)
+                                    {
+                                        auto c = file.readChar();
+                                        if (file.eof()) break;
+                                        os.writeChar(c);
+                                    }
+                                    file.close();
+                                });
+        }
     }catch (StreamException &e)
     {
         string msg = string(e.msg) + ": " + fileName;
@@ -93,7 +111,7 @@ static HTTPResponse serveLocalFile(string fileName)
 }
 
 // -----------------------------------
-HTTPResponse LocalFileServer::request(std::string path)
+HTTPResponse LocalFileServer::request(std::string path, const HTTPHeaders& headers)
 {
     using namespace boost;
 
@@ -105,5 +123,5 @@ HTTPResponse LocalFileServer::request(std::string path)
 
 	LOG_DEBUG("Writing local file: %s", fsPath.c_str());
 
-    return handleLocalFileRequest(fsPath, results[2]);
+    return handleLocalFileRequest(fsPath, results[2], headers);
 }

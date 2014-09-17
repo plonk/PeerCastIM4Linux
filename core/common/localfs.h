@@ -12,7 +12,7 @@ class LocalFileServer
     LocalFileServer(const std::string& docroot) :
         documentRoot(docroot)
         {}
-    HTTPResponse request(std::string path);
+    HTTPResponse request(std::string path, const HTTPHeaders& h);
 
     std::string documentRoot;
 };

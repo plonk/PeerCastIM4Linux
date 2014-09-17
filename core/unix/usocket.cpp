@@ -50,7 +50,7 @@ void UClientSocket::init()
 // --------------------------------------------------
 bool ClientSocket::getHostname(char *str,size_t size,unsigned int ip) //JP-MOD
 {
-	if(size == 0)
+	if(size == 0 || ip == 0)
 		return false;
 
 	hostent *he;

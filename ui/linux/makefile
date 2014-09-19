@@ -1,7 +1,7 @@
 CPPFLAGS = -std=c++11 -g -Wall -Wno-unused-function -Wno-format-contains-nul -Wno-unused-but-set-variable -Wno-unknown-pragmas -Wno-reorder -Wno-parentheses -Wno-switch -Wno-unused-variable -Wno-unused-value -Wno-multichar -DENABLE_BINRELOC -pthread -D_UNIX -D_REENTRANT $(INCLUDES)
 LDFLAGS = -pthread
 LDSOFLAGS = -shared -Wl,-soname
-LIBS = -lboost_filesystem -lboost_system
+LIBS = -lboost_filesystem -lboost_system -lboost_regex
 
 #CPPFLAGS = -static -pthread -D__cplusplus -D_UNIX -D_LINUX_STATIC -D_REENTRANT $(INCLUDES)
 #LDFLAGS = -static -pthread
@@ -50,6 +50,10 @@ CORESOURCE = $(CORE)/unix/compat.cpp \
 	 $(CORE)/common/icy.cpp \
 	 $(CORE)/common/pcp.cpp \
 	 $(CORE)/common/localfs.cpp \
+	 $(CORE)/common/cgi.cpp \
+	 $(CORE)/common/util.cpp \
+	 $(CORE)/common/admin.cpp \
+	 $(CORE)/common/str.cpp \
 	 $(CORE)/common/jis.cpp
 
 
